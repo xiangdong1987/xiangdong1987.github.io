@@ -1,7 +1,24 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.8.5">Jekyll</generator><link href="/feed.xml" rel="self" type="application/atom+xml" /><link href="/" rel="alternate" type="text/html" /><updated>2019-03-26T20:11:35+08:00</updated><id>/feed.xml</id><title type="html">一叶障目</title><subtitle>学无止境</subtitle><entry><title type="html">Github免费博客空间</title><link href="/blog/2019/03/26/welcome-to-jekyll.html" rel="alternate" type="text/html" title="Github免费博客空间" /><published>2019-03-26T16:39:26+08:00</published><updated>2019-03-26T16:39:26+08:00</updated><id>/blog/2019/03/26/welcome-to-jekyll</id><content type="html" xml:base="/blog/2019/03/26/welcome-to-jekyll.html">&lt;p&gt;本来想自己买服务器，搭建自己的博客，突然google到一种不用服务器也可以做自己博客的方式，利用github pages搭建自己的博客个人实践，完全可行。步骤如下：&lt;/p&gt;
-&lt;h2 id=&quot;环境搭建&quot;&gt;环境搭建&lt;/h2&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.8.5">Jekyll</generator><link href="/feed.xml" rel="self" type="application/atom+xml" /><link href="/" rel="alternate" type="text/html" /><updated>2019-03-27T13:37:32+08:00</updated><id>/feed.xml</id><title type="html">一叶障目</title><subtitle>学无止境</subtitle><entry><title type="html">Github免费博客空间</title><link href="/blog/2019/03/26/welcome-to-jekyll.html" rel="alternate" type="text/html" title="Github免费博客空间" /><published>2019-03-26T16:39:26+08:00</published><updated>2019-03-26T16:39:26+08:00</updated><id>/blog/2019/03/26/welcome-to-jekyll</id><content type="html" xml:base="/blog/2019/03/26/welcome-to-jekyll.html">&lt;p&gt;本来想自己买服务器，搭建自己的博客，突然google到一种不用服务器也可以做自己博客的方式，利用github pages搭建自己的博客个人实践，完全可行。步骤如下：&lt;/p&gt;
+
+&lt;h3 id=&quot;创建代码库&quot;&gt;创建代码库&lt;/h3&gt;
+
 &lt;ul&gt;
   &lt;li&gt;创建一个自己的代码库blog&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;blockquote&gt;
+  &lt;ul&gt;
+    &lt;li&gt;注意下面两个设置&lt;/li&gt;
+  &lt;/ul&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;&lt;img src=&quot;/images/1.png&quot; alt=&quot;设置1&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/images/2.png&quot; alt=&quot;设置1&quot; /&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;安装环境&quot;&gt;安装环境&lt;/h3&gt;
+
+&lt;ul&gt;
   &lt;li&gt;安装ruby(已安装跳过)&lt;/li&gt;
   &lt;li&gt;安装jekyll
     &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;#安装jekyll 
@@ -23,14 +40,33 @@ bundle exec jekyll serve
 }
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
   &lt;/li&gt;
-  &lt;li&gt;注意：代码库目录和jekyll代码目录是不同目录，最后将代码库目录更新到github&lt;/li&gt;
+  &lt;li&gt;补充知识点可以利用参数-H 来指定主机
+    &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;bundle exec jekyll serve -H 192.168.112.20
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;blockquote&gt;
+  &lt;ul&gt;
+    &lt;li&gt;注意：代码库目录和jekyll代码目录是不同目录，最后将代码库目录更新到github&lt;/li&gt;
+  &lt;/ul&gt;
+&lt;/blockquote&gt;
+
+&lt;h3 id=&quot;博客撰写&quot;&gt;博客撰写&lt;/h3&gt;
+
+&lt;ul&gt;
   &lt;li&gt;从远端拉取自己的代码库
     &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;git clone https://github.com/xxxxxx/blog.git
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
   &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;构建部署&quot;&gt;构建部署&lt;/h3&gt;
+
+&lt;ul&gt;
   &lt;li&gt;构建代码到你的到blog目录
     &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;jekyll build --destination ../blog/
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
   &lt;/li&gt;
   &lt;li&gt;推送代码到远端&lt;/li&gt;
-&lt;/ul&gt;</content><author><name></name></author><summary type="html">本来想自己买服务器，搭建自己的博客，突然google到一种不用服务器也可以做自己博客的方式，利用github pages搭建自己的博客个人实践，完全可行。步骤如下： 环境搭建 创建一个自己的代码库blog 安装ruby(已安装跳过) 安装jekyll #安装jekyll gem install bundler jekyll #新建jekyll羡慕 jekyll new my_blog cd my_blog #开启本地服务 bundle exec jekyll serve 我是使用vm虚拟机为了方便本地调试，利用反向代理本地服务 server { listen 80; server_name ytiamo.com; location /{ proxy_pass http://127.0.0.1:4000; } } 注意：代码库目录和jekyll代码目录是不同目录，最后将代码库目录更新到github 从远端拉取自己的代码库 git clone https://github.com/xxxxxx/blog.git 构建代码到你的到blog目录 jekyll build --destination ../blog/ 推送代码到远端</summary></entry></feed>
+&lt;/ul&gt;</content><author><name></name></author><summary type="html">本来想自己买服务器，搭建自己的博客，突然google到一种不用服务器也可以做自己博客的方式，利用github pages搭建自己的博客个人实践，完全可行。步骤如下：</summary></entry></feed>
