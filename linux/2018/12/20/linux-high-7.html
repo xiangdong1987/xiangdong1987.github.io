@@ -3,17 +3,19 @@
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.6.0 -->
-<title>一叶障目 | 学无止境</title>
+<title>linux 高性能学习笔记7 | 一叶障目</title>
 <meta name="generator" content="Jekyll v3.8.5" />
-<meta property="og:title" content="一叶障目" />
+<meta property="og:title" content="linux 高性能学习笔记7" />
 <meta property="og:locale" content="en_US" />
-<meta name="description" content="学无止境" />
-<meta property="og:description" content="学无止境" />
-<link rel="canonical" href="/" />
-<meta property="og:url" content="/" />
+<meta name="description" content="概述 如何快速查找系统性能瓶颈" />
+<meta property="og:description" content="概述 如何快速查找系统性能瓶颈" />
+<link rel="canonical" href="/linux/2018/12/20/linux-high-7.html" />
+<meta property="og:url" content="/linux/2018/12/20/linux-high-7.html" />
 <meta property="og:site_name" content="一叶障目" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2018-12-20T16:39:26+08:00" />
 <script type="application/ld+json">
-{"@type":"WebSite","url":"/","headline":"一叶障目","name":"一叶障目","description":"学无止境","@context":"https://schema.org"}</script>
+{"@type":"BlogPosting","url":"/linux/2018/12/20/linux-high-7.html","headline":"linux 高性能学习笔记7","datePublished":"2018-12-20T16:39:26+08:00","dateModified":"2018-12-20T16:39:26+08:00","mainEntityOfPage":{"@type":"WebPage","@id":"/linux/2018/12/20/linux-high-7.html"},"description":"概述 如何快速查找系统性能瓶颈","@context":"https://schema.org"}</script>
 <!-- End Jekyll SEO tag -->
 <link rel="stylesheet" href="/assets/main.css"><link type="application/atom+xml" rel="alternate" href="/feed.xml" title="一叶障目" /></head>
 <body><header class="site-header" role="banner">
@@ -33,51 +35,51 @@
 </header>
 <main class="page-content" aria-label="Content">
       <div class="wrapper">
-        <div class="home">
-<h1 class="post-list-heading">帖子</h1>
-    <ul class="post-list"><li><span class="post-meta">Mar 26, 2019</span>
-        <h3>
-          <a class="post-link" href="/blog/2019/03/26/jekyll-blog.html">
-            Github免费博客空间
-          </a>
-        </h3></li><li><span class="post-meta">Dec 20, 2018</span>
-        <h3>
-          <a class="post-link" href="/linux/2018/12/20/linux-high-7.html">
-            linux 高性能学习笔记7
-          </a>
-        </h3></li><li><span class="post-meta">Dec 18, 2018</span>
-        <h3>
-          <a class="post-link" href="/linux/2018/12/18/linux-high-6.html">
-            linux 高性能学习笔记6
-          </a>
-        </h3></li><li><span class="post-meta">Dec 18, 2018</span>
-        <h3>
-          <a class="post-link" href="/linux/2018/12/18/linux-high-5.html">
-            linux 高性能学习笔记5
-          </a>
-        </h3></li><li><span class="post-meta">Dec 14, 2018</span>
-        <h3>
-          <a class="post-link" href="/linux/2018/12/14/linux-high-4.html">
-            linux 高性能学习笔记4
-          </a>
-        </h3></li><li><span class="post-meta">Nov 30, 2018</span>
-        <h3>
-          <a class="post-link" href="/linux/2018/11/30/linux-high-3.html">
-            linux 高性能学习笔记3
-          </a>
-        </h3></li><li><span class="post-meta">Nov 29, 2018</span>
-        <h3>
-          <a class="post-link" href="/linux/2018/11/29/linux-high-2.html">
-            linux 高性能学习笔记2
-          </a>
-        </h3></li><li><span class="post-meta">Nov 28, 2018</span>
-        <h3>
-          <a class="post-link" href="/linux/2018/11/28/linux-high-1.html">
-            linux 高性能学习笔记1
-          </a>
-        </h3></li></ul>
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
 
-    <p class="rss-subscribe">subscribe <a href="/feed.xml">via RSS</a></p></div>
+  <header class="post-header">
+    <h1 class="post-title p-name" itemprop="name headline">linux 高性能学习笔记7</h1>
+    <p class="post-meta">
+      <time class="dt-published" datetime="2018-12-20T16:39:26+08:00" itemprop="datePublished">Dec 20, 2018
+      </time></p>
+  </header>
+
+  <div class="post-content e-content" itemprop="articleBody">
+    <h3 id="概述">概述</h3>
+<p>如何快速查找系统性能瓶颈</p>
+
+<h3 id="概念">概念</h3>
+<p>如何快速查找系统性能瓶颈</p>
+<ol>
+  <li>cup指标</li>
+</ol>
+
+<ul>
+  <li>用户态cpu使用量，如果高说明应用处理压力大</li>
+  <li>内核态高，系统处理压力大</li>
+  <li>IO，iowait比较高，说明系统io上有瓶颈</li>
+  <li>中断比较高，说明系统有大量中断</li>
+  <li>出以上情况外还有steal 虚拟机使用情况
+    <ol>
+      <li>系统平均负载</li>
+      <li>进程切换</li>
+    </ol>
+    <ul>
+      <li>无法获取自愿的自愿上下文切换</li>
+      <li>被系统强制调度的上下文切换
+        <ol>
+          <li>cpu缓存命中率
+<img src="/images/3.png" alt="设置1" />
+性能之间的关联
+<img src="/images/4.png" alt="设置1" /></li>
+        </ol>
+      </li>
+    </ul>
+  </li>
+</ul>
+
+  </div><a class="u-url" href="/linux/2018/12/20/linux-high-7.html" hidden></a>
+</article>
 
       </div>
     </main><footer class="site-footer h-card">

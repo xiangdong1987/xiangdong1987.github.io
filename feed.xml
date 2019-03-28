@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.8.5">Jekyll</generator><link href="/feed.xml" rel="self" type="application/atom+xml" /><link href="/" rel="alternate" type="text/html" /><updated>2019-03-28T10:20:49+08:00</updated><id>/feed.xml</id><title type="html">一叶障目</title><subtitle>学无止境</subtitle><entry><title type="html">Github免费博客空间</title><link href="/blog/2019/03/26/welcome-to-jekyll.html" rel="alternate" type="text/html" title="Github免费博客空间" /><published>2019-03-26T16:39:26+08:00</published><updated>2019-03-26T16:39:26+08:00</updated><id>/blog/2019/03/26/welcome-to-jekyll</id><content type="html" xml:base="/blog/2019/03/26/welcome-to-jekyll.html">&lt;p&gt;本来想自己买服务器，搭建自己的博客，突然google到一种不用服务器也可以做自己博客的方式，利用github pages搭建自己的博客个人实践，完全可行。步骤如下：&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.8.5">Jekyll</generator><link href="/feed.xml" rel="self" type="application/atom+xml" /><link href="/" rel="alternate" type="text/html" /><updated>2019-03-28T14:03:35+08:00</updated><id>/feed.xml</id><title type="html">一叶障目</title><subtitle>学无止境</subtitle><entry><title type="html">Github免费博客空间</title><link href="/blog/2019/03/26/jekyll-blog.html" rel="alternate" type="text/html" title="Github免费博客空间" /><published>2019-03-26T16:39:26+08:00</published><updated>2019-03-26T16:39:26+08:00</updated><id>/blog/2019/03/26/jekyll-blog</id><content type="html" xml:base="/blog/2019/03/26/jekyll-blog.html">&lt;p&gt;本来想自己买服务器，搭建自己的博客，突然google到一种不用服务器也可以做自己博客的方式，利用github pages搭建自己的博客个人实践，完全可行。步骤如下：&lt;/p&gt;
 
 &lt;h3 id=&quot;创建代码库&quot;&gt;创建代码库&lt;/h3&gt;
 
@@ -69,4 +69,383 @@ bundle exec jekyll serve
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
   &lt;/li&gt;
   &lt;li&gt;推送代码到远端&lt;/li&gt;
-&lt;/ul&gt;</content><author><name></name></author><summary type="html">本来想自己买服务器，搭建自己的博客，突然google到一种不用服务器也可以做自己博客的方式，利用github pages搭建自己的博客个人实践，完全可行。步骤如下：</summary></entry></feed>
+&lt;/ul&gt;</content><author><name></name></author><summary type="html">本来想自己买服务器，搭建自己的博客，突然google到一种不用服务器也可以做自己博客的方式，利用github pages搭建自己的博客个人实践，完全可行。步骤如下：</summary></entry><entry><title type="html">linux 高性能学习笔记7</title><link href="/linux/2018/12/20/linux-high-7.html" rel="alternate" type="text/html" title="linux 高性能学习笔记7" /><published>2018-12-20T16:39:26+08:00</published><updated>2018-12-20T16:39:26+08:00</updated><id>/linux/2018/12/20/linux-high-7</id><content type="html" xml:base="/linux/2018/12/20/linux-high-7.html">&lt;h3 id=&quot;概述&quot;&gt;概述&lt;/h3&gt;
+&lt;p&gt;如何快速查找系统性能瓶颈&lt;/p&gt;
+
+&lt;h3 id=&quot;概念&quot;&gt;概念&lt;/h3&gt;
+&lt;p&gt;如何快速查找系统性能瓶颈&lt;/p&gt;
+&lt;ol&gt;
+  &lt;li&gt;cup指标&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;用户态cpu使用量，如果高说明应用处理压力大&lt;/li&gt;
+  &lt;li&gt;内核态高，系统处理压力大&lt;/li&gt;
+  &lt;li&gt;IO，iowait比较高，说明系统io上有瓶颈&lt;/li&gt;
+  &lt;li&gt;中断比较高，说明系统有大量中断&lt;/li&gt;
+  &lt;li&gt;出以上情况外还有steal 虚拟机使用情况
+    &lt;ol&gt;
+      &lt;li&gt;系统平均负载&lt;/li&gt;
+      &lt;li&gt;进程切换&lt;/li&gt;
+    &lt;/ol&gt;
+    &lt;ul&gt;
+      &lt;li&gt;无法获取自愿的自愿上下文切换&lt;/li&gt;
+      &lt;li&gt;被系统强制调度的上下文切换
+        &lt;ol&gt;
+          &lt;li&gt;cpu缓存命中率
+&lt;img src=&quot;/images/3.png&quot; alt=&quot;设置1&quot; /&gt;
+性能之间的关联
+&lt;img src=&quot;/images/4.png&quot; alt=&quot;设置1&quot; /&gt;&lt;/li&gt;
+        &lt;/ol&gt;
+      &lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;</content><author><name></name></author><summary type="html">概述 如何快速查找系统性能瓶颈</summary></entry><entry><title type="html">linux 高性能学习笔记5</title><link href="/linux/2018/12/18/linux-high-5.html" rel="alternate" type="text/html" title="linux 高性能学习笔记5" /><published>2018-12-18T16:39:26+08:00</published><updated>2018-12-18T16:39:26+08:00</updated><id>/linux/2018/12/18/linux-high-5</id><content type="html" xml:base="/linux/2018/12/18/linux-high-5.html">&lt;h3 id=&quot;概述&quot;&gt;概述&lt;/h3&gt;
+&lt;p&gt;对于IO问的分析思路&lt;/p&gt;
+
+&lt;h3 id=&quot;概念&quot;&gt;概念&lt;/h3&gt;
+&lt;ul&gt;
+  &lt;li&gt;进程状态
+    &lt;ul&gt;
+      &lt;li&gt;R是running 或 runable 的缩写，表示进程在CPU的就绪队列中，正在运行或者正在等待运行&lt;/li&gt;
+      &lt;li&gt;D是Disk sleep的缩写，也就是不可中断状态睡眠，一般表示进程正在跟硬件交互，并且交互过程不允许其他进程或中断打断&lt;/li&gt;
+      &lt;li&gt;Z是Zombie的缩写，它表示进程实际上已经结束了，但父进程还没回收它的资源&lt;/li&gt;
+      &lt;li&gt;S是interruptible sleep 也就是可中断状态睡眠，它正在等待事件的唤醒转变为R状态&lt;/li&gt;
+      &lt;li&gt;l是Idle的缩写，也就是空闲状态，用在不可中断睡眠的内核线程上。D是硬件交互，I是内核空闲，D占用CPU，I不占用&lt;/li&gt;
+      &lt;li&gt;丅暂停&lt;/li&gt;
+      &lt;li&gt;X DEAD 死亡进程&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;信号：SIGSTOP 暂停 SIGCONT 继续&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;新工具dstat ：可以同时观察 cpu  磁盘  网络以及内存使用情况&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;//每秒输出10组数据
+dstat 10 1 
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;pidstat 参数作用&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;//每秒输出20组数据 -d 磁盘操作
+pid -d -p 1 20
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;strace 进程追踪:变为了僵尸进程的进程是无法为追踪的&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;//追踪进程id
+strace -p pid
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;不能追踪只能使用其他工具&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;//记录代码段日志 回车进入调用关系
+perf record -g
+perf report
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;使用pstree查看调用级别&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;//查看某个进程占用pid
+pstree -aps pid
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;D状态是系统的一种保护机制，为了保护硬件间的交互不被打断。&lt;/li&gt;
+&lt;/ul&gt;</content><author><name></name></author><summary type="html">概述 对于IO问的分析思路</summary></entry><entry><title type="html">linux 高性能学习笔记6</title><link href="/linux/2018/12/18/linux-high-6.html" rel="alternate" type="text/html" title="linux 高性能学习笔记6" /><published>2018-12-18T16:39:26+08:00</published><updated>2018-12-18T16:39:26+08:00</updated><id>/linux/2018/12/18/linux-high-6</id><content type="html" xml:base="/linux/2018/12/18/linux-high-6.html">&lt;h3 id=&quot;概述&quot;&gt;概述&lt;/h3&gt;
+&lt;p&gt;对于中断问的理解与分析&lt;/p&gt;
+
+&lt;h3 id=&quot;概念&quot;&gt;概念&lt;/h3&gt;
+&lt;ul&gt;
+  &lt;li&gt;中断是一种异步机制，可以提高系统的并发性能&lt;/li&gt;
+  &lt;li&gt;中断的理解
+    &lt;ul&gt;
+      &lt;li&gt;外卖理论（无中断）
+        &lt;ul&gt;
+          &lt;li&gt;订外卖&lt;/li&gt;
+          &lt;li&gt;等外卖：要时不时的去看，错过了外卖就走了&lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/li&gt;
+      &lt;li&gt;外卖理论（有中断）
+        &lt;ul&gt;
+          &lt;li&gt;订外卖&lt;/li&gt;
+          &lt;li&gt;和外卖员协商好，到了给我打电话&lt;/li&gt;
+          &lt;li&gt;我可以去干别的了&lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;中断丢失
+    &lt;ul&gt;
+      &lt;li&gt;订了两个外卖，分别有不同的外卖员配送&lt;/li&gt;
+      &lt;li&gt;也都协商好了到了打电话&lt;/li&gt;
+      &lt;li&gt;当第一个外卖员来了，非要跟我电话1个小时，结果我错过了第二个外卖&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;为了防止中断丢失–软中断
+    &lt;ul&gt;
+      &lt;li&gt;上半部分快速处理中断&lt;/li&gt;
+      &lt;li&gt;下半部分用来延迟，上半部分为完成的部分，通常以内核线程方式运行&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;网卡接受数据过程
+    &lt;ul&gt;
+      &lt;li&gt;网卡接受到了数据使用硬中断，告诉cpu数据到了&lt;/li&gt;
+      &lt;li&gt;cpu立刻中断将数据读取到内存中，最后调用一个软中断&lt;/li&gt;
+      &lt;li&gt;触发下半部分中断，在内核状态下进行处理，解析协议逐层发送到应用&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;理解
+    &lt;ul&gt;
+      &lt;li&gt;上半部分直接处理硬件中断&lt;/li&gt;
+      &lt;li&gt;下半部分内核触发，就是通常状态下我们说的软中断，特点是延迟处理
+        &lt;ul&gt;
+          &lt;li&gt;软中断不仅仅是延迟处理&lt;/li&gt;
+          &lt;li&gt;还有内核调度&lt;/li&gt;
+          &lt;li&gt;RCU 锁（read copy update）&lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;如何查看中断情况&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;//查看软中断
+/pro/softirqs
+//查看硬中断
+/pro/interrupts
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;软中断类型
+    &lt;ul&gt;
+      &lt;li&gt;HI&lt;/li&gt;
+      &lt;li&gt;TIMER&lt;/li&gt;
+      &lt;li&gt;NET_TX：网络发送中断&lt;/li&gt;
+      &lt;li&gt;NET_RX：网络接受中断&lt;/li&gt;
+      &lt;li&gt;BLOCK&lt;/li&gt;
+      &lt;li&gt;IRQ_POLL&lt;/li&gt;
+      &lt;li&gt;TASKLET：任务中断，最常用的中断类型和cpu绑定（考虑cpu亲和是不利用这种机制实现）&lt;/li&gt;
+      &lt;li&gt;SCHED&lt;/li&gt;
+      &lt;li&gt;HRTIMER&lt;/li&gt;
+      &lt;li&gt;RCU：read copy update锁&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;</content><author><name></name></author><summary type="html">概述 对于中断问的理解与分析</summary></entry><entry><title type="html">linux 高性能学习笔记4</title><link href="/linux/2018/12/14/linux-high-4.html" rel="alternate" type="text/html" title="linux 高性能学习笔记4" /><published>2018-12-14T16:39:26+08:00</published><updated>2018-12-14T16:39:26+08:00</updated><id>/linux/2018/12/14/linux-high-4</id><content type="html" xml:base="/linux/2018/12/14/linux-high-4.html">&lt;h3 id=&quot;概述&quot;&gt;概述&lt;/h3&gt;
+&lt;p&gt;对于cup异常使用，无法找到原因的情况分析思路&lt;/p&gt;
+
+&lt;h3 id=&quot;分析思路&quot;&gt;分析思路&lt;/h3&gt;
+&lt;ul&gt;
+  &lt;li&gt;使用top 观察cup使用情况，是否能一眼看出使用cup高的进程&lt;/li&gt;
+  &lt;li&gt;发现整体非常高，但是每个进程用的却非常少时（多半是有一个瞬时进程不停的启动销毁）&lt;/li&gt;
+  &lt;li&gt;使用pidstat 观察进程使用cup情况，也没有发现异常高的程序&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;//所有进程使用cpu情况
+pidstat 1 
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;观察top 的task情况，检查各种状态下的任务情况如果R状态的任务过多时，要考虑是否有大量进程打开
+    &lt;ul&gt;
+      &lt;li&gt;top  b 命令打开高亮&lt;/li&gt;
+      &lt;li&gt;shift+&amp;lt; &amp;gt; 切换到S列观察运行中的程序&lt;/li&gt;
+      &lt;li&gt;R 改变排序状态&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;发现异常运行的进程使用pidstat 查看cup使用情况&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;//每隔一秒打印指定进程cpu使用情况
+pidstat -p pid 1
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;发现使用当前进程没有cpu使用信息，证明进程已经销毁了（如果怀疑有工具有问题，可以使用其他工具进行确认）&lt;/li&gt;
+  &lt;li&gt;同时发现此进程又使用其他的进程id启动了，可能有如下两种原因
+    &lt;ul&gt;
+      &lt;li&gt;进程不断的崩溃重启&lt;/li&gt;
+      &lt;li&gt;进程是短时进程，执行时间很短马上完成&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;使用pstree观察调用链，找到上级调用&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;//查看指定进程调用链
+pstree | grep stress 
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;分析上级调用代码，发现异常部分&lt;/li&gt;
+  &lt;li&gt;最后可以用perf top 来记录系统cup 使用情况&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;//记录cup 使用情况
+perf record -g
+//查看报告
+perf report
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;ul&gt;
+  &lt;li&gt;额外工具 execsnoop 工具可以查看短时进程情况  使用ftrace技术&lt;/li&gt;
+&lt;/ul&gt;</content><author><name></name></author><summary type="html">概述 对于cup异常使用，无法找到原因的情况分析思路</summary></entry><entry><title type="html">linux 高性能学习笔记3</title><link href="/linux/2018/11/30/linux-high-3.html" rel="alternate" type="text/html" title="linux 高性能学习笔记3" /><published>2018-11-30T16:39:26+08:00</published><updated>2018-11-30T16:39:26+08:00</updated><id>/linux/2018/11/30/linux-high-3</id><content type="html" xml:base="/linux/2018/11/30/linux-high-3.html">&lt;h3 id=&quot;概述&quot;&gt;概述&lt;/h3&gt;
+&lt;p&gt;本节主要是对cpu使用率进行学习&lt;/p&gt;
+
+&lt;h3 id=&quot;相关概念&quot;&gt;相关概念&lt;/h3&gt;
+&lt;ul&gt;
+  &lt;li&gt;cup使用率
+    &lt;ul&gt;
+      &lt;li&gt;linux 是多任务操作系统，他会将cup时间切片，通过轮流调度分配给各个任务&lt;/li&gt;
+      &lt;li&gt;节拍率，就是将cup时间分为多少分&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;grep 'CONFIG_HZ'= /boot/config-$(uname -r)
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;系统分析工具都是计算的间隔时间的使用率&lt;/li&gt;
+  &lt;li&gt;性能分析工具perf&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;//性能分析
+perf top 
+//记录性能日志 会生成 perf.data文件
+perf record     
+//查看日志
+perf report
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;相关参数
+    &lt;ul&gt;
+      &lt;li&gt;overhead 所占比例&lt;/li&gt;
+      &lt;li&gt;shared 进程名称&lt;/li&gt;
+      &lt;li&gt;object 动态共享对象类型&lt;/li&gt;
+      &lt;li&gt;symbol 符号名–函数名&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;总结&quot;&gt;总结&lt;/h3&gt;
+&lt;ul&gt;
+  &lt;li&gt;cup和nice占用过多说明，用户态进程占用过多的cpu需要着重排查&lt;/li&gt;
+  &lt;li&gt;系统cup高，排查系统调用过多排查系统调用问题&lt;/li&gt;
+  &lt;li&gt;io等待过高，排查系统存储是否出现问题&lt;/li&gt;
+  &lt;li&gt;软中断和硬中断，排查内核中的中断服务是否出现问题&lt;/li&gt;
+&lt;/ul&gt;</content><author><name></name></author><summary type="html">概述 本节主要是对cpu使用率进行学习</summary></entry><entry><title type="html">linux 高性能学习笔记2</title><link href="/linux/2018/11/29/linux-high-2.html" rel="alternate" type="text/html" title="linux 高性能学习笔记2" /><published>2018-11-29T16:39:26+08:00</published><updated>2018-11-29T16:39:26+08:00</updated><id>/linux/2018/11/29/linux-high-2</id><content type="html" xml:base="/linux/2018/11/29/linux-high-2.html">&lt;h3 id=&quot;概述&quot;&gt;概述&lt;/h3&gt;
+&lt;p&gt;cup上下文切换，是cup重要指标之一，它反映cup中进程竞争状态，如果频繁切换会大大的降低系统性能这节主要学习cup切换相关的内容&lt;/p&gt;
+
+&lt;h3 id=&quot;相关概念&quot;&gt;相关概念&lt;/h3&gt;
+&lt;ul&gt;
+  &lt;li&gt;cup寄存器和程序计数器
+    &lt;ul&gt;
+      &lt;li&gt;cup寄存器：内置在cup内部的很小的极快内存&lt;/li&gt;
+      &lt;li&gt;程序计数器：用来存储cup正在执行指令的位置，或者下一个要执行的指令的位置&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;它们两个结合就是cup上下文&lt;/li&gt;
+  &lt;li&gt;上下文切换：就是保存当前上下文，执行其他上下文 消耗cpu 10-100 纳秒或者微妙
+    &lt;ul&gt;
+      &lt;li&gt;进程上下文切换&lt;/li&gt;
+      &lt;li&gt;线程上下文切换&lt;/li&gt;
+      &lt;li&gt;中断上下文切换&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;进程状态
+    &lt;ul&gt;
+      &lt;li&gt;用户态&lt;/li&gt;
+      &lt;li&gt;内核态&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;系统调用。open,read,write  一次系统调用要两次的上下文切换&lt;/li&gt;
+  &lt;li&gt;进程切换：只从一个进程切换到另一个进程。比系统调用多一步：要保存虚拟内存和栈空间&lt;/li&gt;
+  &lt;li&gt;何时触发进程切换
+    &lt;ul&gt;
+      &lt;li&gt;为了公平调度，cpu被平均的分成了时间段，当时间段内程序没有执行完，需要切换到其他程序执行&lt;/li&gt;
+      &lt;li&gt;系统资源不足，比如内存不足，程序会被挂起&lt;/li&gt;
+      &lt;li&gt;进程主动挂起，如运行了sleep&lt;/li&gt;
+      &lt;li&gt;当有优先级高的进程进入cpu等待队列中是&lt;/li&gt;
+      &lt;li&gt;发生硬件中断，会执行中断任务，挂起当前进程&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;线程和进程的区别：线程是调度的基本单位，进程是拥有资源的基本单位&lt;/li&gt;
+  &lt;li&gt;对于同一cpu来讲，中断比进程有更高的优先级
+    &lt;h3 id=&quot;场景练习&quot;&gt;场景练习&lt;/h3&gt;
+  &lt;/li&gt;
+  &lt;li&gt;查看上下文切换情况命令&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;vmstat  5
+//查看对应进程的上下文切换状态
+pidstat -w 5
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;切换类型
+    &lt;ul&gt;
+      &lt;li&gt;自愿上下文切换：无法获取资源，如内存满了，IO等待&lt;/li&gt;
+      &lt;li&gt;非自愿上下文切换：有大量进程争抢cup产生&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;模拟多进程争抢cpu资源的情况&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;//模拟1000个线程争抢cpu
+sysbench --threads=1000 --max-time=300 threads run 
+//查看系统cpu切换情况
+vmstat 1 1
+//产看进程cpu使用情况
+pidstat -w -u 1
+//产看线程的cpu切换情况
+pidstat -wt 1
+//产看中断次数
+watch cat /proc/interrupts
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;</content><author><name></name></author><summary type="html">概述 cup上下文切换，是cup重要指标之一，它反映cup中进程竞争状态，如果频繁切换会大大的降低系统性能这节主要学习cup切换相关的内容</summary></entry><entry><title type="html">linux 高性能学习笔记1</title><link href="/linux/2018/11/28/linux-high-1.html" rel="alternate" type="text/html" title="linux 高性能学习笔记1" /><published>2018-11-28T16:39:26+08:00</published><updated>2018-11-28T16:39:26+08:00</updated><id>/linux/2018/11/28/linux-high-1</id><content type="html" xml:base="/linux/2018/11/28/linux-high-1.html">&lt;h3 id=&quot;概述&quot;&gt;概述&lt;/h3&gt;
+&lt;p&gt;为了学习线上问题处理，我们需要刻意练习线上各种问题的产生原因，从而从根本上解决问题。&lt;/p&gt;
+
+&lt;h3 id=&quot;系统压测练习&quot;&gt;系统压测练习&lt;/h3&gt;
+&lt;ul&gt;
+  &lt;li&gt;安装系统压测工具stress和sysstat&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;sudo apt-get install stress sysstat
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h3 id=&quot;场景练习&quot;&gt;场景练习&lt;/h3&gt;
+&lt;ul&gt;
+  &lt;li&gt;cpu密集型:模拟两个cpu100%情况&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;stress --cpu 2 --timeout 600
+//每隔5秒监控cupload
+watch -d uptime 5
+//每个cup的使用情况
+mpstat -P ALL 5
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;io密集型&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;//stress 无法模拟
+stress -i 2 --timeout 600
+//stress-ng 来模拟
+stress-ng -i 2 --hdd 1 --timeout 600
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;大量进程&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;stress -c 8 --timeout 600
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;</content><author><name></name></author><summary type="html">概述 为了学习线上问题处理，我们需要刻意练习线上各种问题的产生原因，从而从根本上解决问题。</summary></entry></feed>

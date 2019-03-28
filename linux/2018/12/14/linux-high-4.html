@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.6.0 -->
+<title>linux 高性能学习笔记4 | 一叶障目</title>
+<meta name="generator" content="Jekyll v3.8.5" />
+<meta property="og:title" content="linux 高性能学习笔记4" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="概述 对于cup异常使用，无法找到原因的情况分析思路" />
+<meta property="og:description" content="概述 对于cup异常使用，无法找到原因的情况分析思路" />
+<link rel="canonical" href="/linux/2018/12/14/linux-high-4.html" />
+<meta property="og:url" content="/linux/2018/12/14/linux-high-4.html" />
+<meta property="og:site_name" content="一叶障目" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2018-12-14T16:39:26+08:00" />
+<script type="application/ld+json">
+{"@type":"BlogPosting","url":"/linux/2018/12/14/linux-high-4.html","headline":"linux 高性能学习笔记4","datePublished":"2018-12-14T16:39:26+08:00","dateModified":"2018-12-14T16:39:26+08:00","mainEntityOfPage":{"@type":"WebPage","@id":"/linux/2018/12/14/linux-high-4.html"},"description":"概述 对于cup异常使用，无法找到原因的情况分析思路","@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/assets/main.css"><link type="application/atom+xml" rel="alternate" href="/feed.xml" title="一叶障目" /></head>
+<body><header class="site-header" role="banner">
+
+  <div class="wrapper"><a class="site-title" rel="author" href="/">一叶障目</a><nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+        </label>
+
+        <div class="trigger"><a class="page-link" href="/about/">关于我</a><a class="page-link" href="/categories/">分类</a></div>
+      </nav></div>
+</header>
+<main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title p-name" itemprop="name headline">linux 高性能学习笔记4</h1>
+    <p class="post-meta">
+      <time class="dt-published" datetime="2018-12-14T16:39:26+08:00" itemprop="datePublished">Dec 14, 2018
+      </time></p>
+  </header>
+
+  <div class="post-content e-content" itemprop="articleBody">
+    <h3 id="概述">概述</h3>
+<p>对于cup异常使用，无法找到原因的情况分析思路</p>
+
+<h3 id="分析思路">分析思路</h3>
+<ul>
+  <li>使用top 观察cup使用情况，是否能一眼看出使用cup高的进程</li>
+  <li>发现整体非常高，但是每个进程用的却非常少时（多半是有一个瞬时进程不停的启动销毁）</li>
+  <li>使用pidstat 观察进程使用cup情况，也没有发现异常高的程序</li>
+</ul>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>//所有进程使用cpu情况
+pidstat 1 
+</code></pre></div></div>
+
+<ul>
+  <li>观察top 的task情况，检查各种状态下的任务情况如果R状态的任务过多时，要考虑是否有大量进程打开
+    <ul>
+      <li>top  b 命令打开高亮</li>
+      <li>shift+&lt; &gt; 切换到S列观察运行中的程序</li>
+      <li>R 改变排序状态</li>
+    </ul>
+  </li>
+  <li>发现异常运行的进程使用pidstat 查看cup使用情况</li>
+</ul>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>//每隔一秒打印指定进程cpu使用情况
+pidstat -p pid 1
+</code></pre></div></div>
+
+<ul>
+  <li>发现使用当前进程没有cpu使用信息，证明进程已经销毁了（如果怀疑有工具有问题，可以使用其他工具进行确认）</li>
+  <li>同时发现此进程又使用其他的进程id启动了，可能有如下两种原因
+    <ul>
+      <li>进程不断的崩溃重启</li>
+      <li>进程是短时进程，执行时间很短马上完成</li>
+    </ul>
+  </li>
+  <li>使用pstree观察调用链，找到上级调用</li>
+</ul>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>//查看指定进程调用链
+pstree | grep stress 
+</code></pre></div></div>
+
+<ul>
+  <li>分析上级调用代码，发现异常部分</li>
+  <li>最后可以用perf top 来记录系统cup 使用情况</li>
+</ul>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>//记录cup 使用情况
+perf record -g
+//查看报告
+perf report
+</code></pre></div></div>
+<ul>
+  <li>额外工具 execsnoop 工具可以查看短时进程情况  使用ftrace技术</li>
+</ul>
+
+  </div><a class="u-url" href="/linux/2018/12/14/linux-high-4.html" hidden></a>
+</article>
+
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/"></data>
+
+  <div class="wrapper">
+
+    <h2 class="footer-heading">一叶障目</h2>
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col footer-col-1">
+        <ul class="contact-list">
+          <li class="p-name">一叶障目</li><li><a class="u-email" href="mailto:xiangdong198719@gmail.com">xiangdong198719@gmail.com</a></li></ul>
+      </div>
+
+      <div class="footer-col footer-col-2"><ul class="social-media-list"><li><a href="https://github.com/xiangdong1987"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#github"></use></svg> <span class="username">xiangdong1987</span></a></li></ul>
+</div>
+
+      <div class="footer-col footer-col-3">
+        <p>学无止境</p>
+      </div>
+    </div>
+
+  </div>
+
+</footer>
+</body>
+
+</html>
