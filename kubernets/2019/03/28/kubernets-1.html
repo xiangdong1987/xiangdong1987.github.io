@@ -5,8 +5,8 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <title>linux 高性能学习笔记3</title>
-  <meta name="description" content="本节主要是对cpu使用率进行学习">
+  <title>kubernets理解总结</title>
+  <meta name="description" content="总体理解kubernets架构以及各个结构中的api使用">
 
   <!-- evil icon -->
 
@@ -16,7 +16,7 @@
     <!-- todo: include this into main.css -->
 
     <link rel="stylesheet" href="/css/main.css">
-    <link rel="canonical" href="/linux/2018/11/30/linux-high-3.html">
+    <link rel="canonical" href="/kubernets/2019/03/28/kubernets-1.html">
         <link rel="alternate" type="application/rss+xml" title="一叶障目" href="/feed.xml">
     </head>
 <body>
@@ -58,61 +58,130 @@
         <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
 
   <header class="post-header">
-    <h1 class="post-title p-name" itemprop="name headline">linux 高性能学习笔记3</h1>
+    <h1 class="post-title p-name" itemprop="name headline">kubernets理解总结</h1>
     <p class="post-meta">
-      <time class="dt-published" datetime="2018-11-30T16:39:26+08:00" itemprop="datePublished">Nov 30, 2018
+      <time class="dt-published" datetime="2019-03-28T00:00:00+08:00" itemprop="datePublished">Mar 28, 2019
       </time></p>
   </header>
 
   <div class="post-content e-content" itemprop="articleBody">
-    <p>本节主要是对cpu使用率进行学习</p>
+    <p>总体理解kubernets架构以及各个结构中的api使用</p>
 
-<h3 id="相关概念">相关概念</h3>
+<h2 id="node">Node</h2>
+
 <ul>
-  <li>cup使用率
+  <li>节点：可以使虚拟机，也可以是实体机</li>
+  <li>每个节点上都安装kubernets</li>
+  <li>有主节点和子节点的区分</li>
+</ul>
+
+<h2 id="pods">Pods</h2>
+<ul>
+  <li>是组成节点的最小单位，是任意独立的容器,pos都存储在Node中，每个pos有自己的功能</li>
+  <li>获取Pods</li>
+</ul>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    kubectl get pods
+</code></pre></div></div>
+
+<ul>
+  <li>查看Pods 描述</li>
+</ul>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    kubectl describe deployment
+</code></pre></div></div>
+
+<ul>
+  <li>进入pods中</li>
+</ul>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    kubectl exec -ti $POD_NAME
+</code></pre></div></div>
+
+<h2 id="service">Service</h2>
+<ul>
+  <li>通过service向外暴露pods</li>
+</ul>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    kubectl expose deployment/kubernetes-bootcamp --type="NodePort" --port 8080
+</code></pre></div></div>
+
+<ul>
+  <li>查看service</li>
+</ul>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    kubectl get services
+</code></pre></div></div>
+
+<ul>
+  <li>查看service描述</li>
+</ul>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    kubectl describe services/kubernetes-bootcamp
+</code></pre></div></div>
+
+<ul>
+  <li>根据标签删除services</li>
+</ul>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    kubectl delete service -l run=kubernetes-bootcamp
+</code></pre></div></div>
+
+<h2 id="label">Label</h2>
+<ul>
+  <li>每个部署的pods 都会自动创建标签</li>
+  <li>通过标签查询pods</li>
+</ul>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    kubectl get pods -l kubectl describe deployment
+</code></pre></div></div>
+
+<ul>
+  <li>重新设置标签</li>
+</ul>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    kubectl label pod $POD_NAME app=v1
+</code></pre></div></div>
+
+<h2 id="scale">Scale</h2>
+<ul>
+  <li>自动扩容缩容
     <ul>
-      <li>linux 是多任务操作系统，他会将cup时间切片，通过轮流调度分配给各个任务</li>
-      <li>节拍率，就是将cup时间分为多少分</li>
+      <li>各种状态
+        <ol>
+          <li>DESIRED 想要的容器数量</li>
+          <li>CURRENT 当前的数量</li>
+          <li>UP-TO-DATE ？？</li>
+          <li>AVAILABLE 有效的</li>
+        </ol>
+      </li>
     </ul>
   </li>
 </ul>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>grep 'CONFIG_HZ'= /boot/config-$(uname -r)
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    kubectl scale deployments/kubernetes-bootcamp --replicas=4
 </code></pre></div></div>
 
+<h2 id="rolling-update">Rolling Update</h2>
 <ul>
-  <li>系统分析工具都是计算的间隔时间的使用率</li>
-  <li>性能分析工具perf</li>
-</ul>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>//性能分析
-perf top 
-//记录性能日志 会生成 perf.data文件
-perf record     
-//查看日志
-perf report
-</code></pre></div></div>
-
-<ul>
-  <li>相关参数
+  <li>滚动更新
     <ul>
-      <li>overhead 所占比例</li>
-      <li>shared 进程名称</li>
-      <li>object 动态共享对象类型</li>
-      <li>symbol 符号名–函数名</li>
+      <li>通过镜像更新pods</li>
     </ul>
   </li>
 </ul>
 
-<h3 id="总结">总结</h3>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    kubectl set image deployments/kubernetes-bootcamp kubernetes-bootcamp=jocatalin/kubernetes-bootcamp:v2
+</code></pre></div></div>
+
 <ul>
-  <li>cup和nice占用过多说明，用户态进程占用过多的cpu需要着重排查</li>
-  <li>系统cup高，排查系统调用过多排查系统调用问题</li>
-  <li>io等待过高，排查系统存储是否出现问题</li>
-  <li>软中断和硬中断，排查内核中的中断服务是否出现问题</li>
+  <li>检查滚动更新状态</li>
 </ul>
 
-  </div><a class="u-url" href="/linux/2018/11/30/linux-high-3.html" hidden></a>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    kubectl rollout status deployments/kubernetes-bootcamp
+</code></pre></div></div>
+
+  </div><a class="u-url" href="/kubernets/2019/03/28/kubernets-1.html" hidden></a>
 </article>
 
       </div>

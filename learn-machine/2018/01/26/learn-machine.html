@@ -5,8 +5,8 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <title>linux 高性能学习笔记3</title>
-  <meta name="description" content="本节主要是对cpu使用率进行学习">
+  <title>Tensorflow实践</title>
+  <meta name="description" content="使用python库，实现图片识别。利用TensorFlow实现图片识别分类  安装TensorFlow  克隆google codelabgit clone https://github.com/googlecodelabs/tensorflow-for-poets-2">
 
   <!-- evil icon -->
 
@@ -16,7 +16,7 @@
     <!-- todo: include this into main.css -->
 
     <link rel="stylesheet" href="/css/main.css">
-    <link rel="canonical" href="/linux/2018/11/30/linux-high-3.html">
+    <link rel="canonical" href="/learn-machine/2018/01/26/learn-machine.html">
         <link rel="alternate" type="application/rss+xml" title="一叶障目" href="/feed.xml">
     </head>
 <body>
@@ -58,61 +58,54 @@
         <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
 
   <header class="post-header">
-    <h1 class="post-title p-name" itemprop="name headline">linux 高性能学习笔记3</h1>
+    <h1 class="post-title p-name" itemprop="name headline">Tensorflow实践</h1>
     <p class="post-meta">
-      <time class="dt-published" datetime="2018-11-30T16:39:26+08:00" itemprop="datePublished">Nov 30, 2018
+      <time class="dt-published" datetime="2018-01-26T00:00:00+08:00" itemprop="datePublished">Jan 26, 2018
       </time></p>
   </header>
 
   <div class="post-content e-content" itemprop="articleBody">
-    <p>本节主要是对cpu使用率进行学习</p>
-
-<h3 id="相关概念">相关概念</h3>
-<ul>
-  <li>cup使用率
-    <ul>
-      <li>linux 是多任务操作系统，他会将cup时间切片，通过轮流调度分配给各个任务</li>
-      <li>节拍率，就是将cup时间分为多少分</li>
-    </ul>
+    <p>使用python库，实现图片识别。
+利用TensorFlow实现图片识别分类</p>
+<ol>
+  <li>安装TensorFlow</li>
+  <li>
+    <p>克隆google codelab
+git clone https://github.com/googlecodelabs/tensorflow-for-poets-2</p>
   </li>
-</ul>
+  <li>
+    <p>获取识别图片</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>grep 'CONFIG_HZ'= /boot/config-$(uname -r)
-</code></pre></div></div>
-
-<ul>
-  <li>系统分析工具都是计算的间隔时间的使用率</li>
-  <li>性能分析工具perf</li>
-</ul>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>//性能分析
-perf top 
-//记录性能日志 会生成 perf.data文件
-perf record     
-//查看日志
-perf report
-</code></pre></div></div>
-
-<ul>
-  <li>相关参数
-    <ul>
-      <li>overhead 所占比例</li>
-      <li>shared 进程名称</li>
-      <li>object 动态共享对象类型</li>
-      <li>symbol 符号名–函数名</li>
-    </ul>
+    <pre><code class="language-$xslt"> curl http://download.tensorflow.org/example_images/flower_photos.tgz | tar xz -C tf_files
+</code></pre>
   </li>
-</ul>
+  <li>
+    <p>重新训练 how_many_training_steps 训练步数可不设 可以一直训练</p>
 
-<h3 id="总结">总结</h3>
-<ul>
-  <li>cup和nice占用过多说明，用户态进程占用过多的cpu需要着重排查</li>
-  <li>系统cup高，排查系统调用过多排查系统调用问题</li>
-  <li>io等待过高，排查系统存储是否出现问题</li>
-  <li>软中断和硬中断，排查内核中的中断服务是否出现问题</li>
-</ul>
+    <pre><code class="language-$xslt"> IMAGE_SIZE=224
+ ARCHITECTURE="mobilenet_0.50_${IMAGE_SIZE}"
+</code></pre>
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code> python3 -m scripts.retrain \
+   --bottleneck_dir=tf_files/bottlenecks \
+   --how_many_training_steps=500 \
+   --model_dir=tf_files/models/ \
+   --summaries_dir=tf_files/training_summaries/"${ARCHITECTURE}" \
+   --output_graph=tf_files/retrained_graph.pb \
+   --output_labels=tf_files/retrained_labels.txt \
+   --architecture="${ARCHITECTURE}" \
+   --image_dir=tf_files/flower_photos
+</code></pre></div>    </div>
+  </li>
+  <li>使用重新生成的模型
+    <pre><code class="language-$xslt"> python -m scripts.label_image \
+     --graph=tf_files/retrained_graph.pb  \
+     --image=tf_files/flower_photos/daisy/21652746_cc379e0eea_m.jpg
+</code></pre>
+  </li>
+</ol>
 
-  </div><a class="u-url" href="/linux/2018/11/30/linux-high-3.html" hidden></a>
+
+  </div><a class="u-url" href="/learn-machine/2018/01/26/learn-machine.html" hidden></a>
 </article>
 
       </div>

@@ -1,4 +1,118 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.8.5">Jekyll</generator><link href="/feed.xml" rel="self" type="application/atom+xml" /><link href="/" rel="alternate" type="text/html" /><updated>2019-03-28T15:47:18+08:00</updated><id>/feed.xml</id><title type="html">一叶障目</title><subtitle>学无止境</subtitle><entry><title type="html">Github免费博客空间</title><link href="/blog/2019/03/26/jekyll-blog.html" rel="alternate" type="text/html" title="Github免费博客空间" /><published>2019-03-26T16:39:26+08:00</published><updated>2019-03-26T16:39:26+08:00</updated><id>/blog/2019/03/26/jekyll-blog</id><content type="html" xml:base="/blog/2019/03/26/jekyll-blog.html">&lt;p&gt;本来想自己买服务器，搭建自己的博客，突然google到一种不用服务器也可以做自己博客的方式，利用github pages搭建自己的博客个人实践，完全可行。步骤如下：&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.8.5">Jekyll</generator><link href="/feed.xml" rel="self" type="application/atom+xml" /><link href="/" rel="alternate" type="text/html" /><updated>2019-03-28T17:15:51+08:00</updated><id>/feed.xml</id><title type="html">一叶障目</title><subtitle>学无止境</subtitle><entry><title type="html">kubernets理解总结</title><link href="/kubernets/2019/03/28/kubernets-1.html" rel="alternate" type="text/html" title="kubernets理解总结" /><published>2019-03-28T00:00:00+08:00</published><updated>2019-03-28T00:00:00+08:00</updated><id>/kubernets/2019/03/28/kubernets-1</id><content type="html" xml:base="/kubernets/2019/03/28/kubernets-1.html">&lt;p&gt;总体理解kubernets架构以及各个结构中的api使用&lt;/p&gt;
+
+&lt;h2 id=&quot;node&quot;&gt;Node&lt;/h2&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;节点：可以使虚拟机，也可以是实体机&lt;/li&gt;
+  &lt;li&gt;每个节点上都安装kubernets&lt;/li&gt;
+  &lt;li&gt;有主节点和子节点的区分&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;pods&quot;&gt;Pods&lt;/h2&gt;
+&lt;ul&gt;
+  &lt;li&gt;是组成节点的最小单位，是任意独立的容器,pos都存储在Node中，每个pos有自己的功能&lt;/li&gt;
+  &lt;li&gt;获取Pods&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;    kubectl get pods
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;查看Pods 描述&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;    kubectl describe deployment
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;进入pods中&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;    kubectl exec -ti $POD_NAME
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h2 id=&quot;service&quot;&gt;Service&lt;/h2&gt;
+&lt;ul&gt;
+  &lt;li&gt;通过service向外暴露pods&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;    kubectl expose deployment/kubernetes-bootcamp --type=&quot;NodePort&quot; --port 8080
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;查看service&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;    kubectl get services
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;查看service描述&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;    kubectl describe services/kubernetes-bootcamp
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;根据标签删除services&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;    kubectl delete service -l run=kubernetes-bootcamp
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h2 id=&quot;label&quot;&gt;Label&lt;/h2&gt;
+&lt;ul&gt;
+  &lt;li&gt;每个部署的pods 都会自动创建标签&lt;/li&gt;
+  &lt;li&gt;通过标签查询pods&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;    kubectl get pods -l kubectl describe deployment
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;重新设置标签&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;    kubectl label pod $POD_NAME app=v1
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h2 id=&quot;scale&quot;&gt;Scale&lt;/h2&gt;
+&lt;ul&gt;
+  &lt;li&gt;自动扩容缩容
+    &lt;ul&gt;
+      &lt;li&gt;各种状态
+        &lt;ol&gt;
+          &lt;li&gt;DESIRED 想要的容器数量&lt;/li&gt;
+          &lt;li&gt;CURRENT 当前的数量&lt;/li&gt;
+          &lt;li&gt;UP-TO-DATE ？？&lt;/li&gt;
+          &lt;li&gt;AVAILABLE 有效的&lt;/li&gt;
+        &lt;/ol&gt;
+      &lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;    kubectl scale deployments/kubernetes-bootcamp --replicas=4
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h2 id=&quot;rolling-update&quot;&gt;Rolling Update&lt;/h2&gt;
+&lt;ul&gt;
+  &lt;li&gt;滚动更新
+    &lt;ul&gt;
+      &lt;li&gt;通过镜像更新pods&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;    kubectl set image deployments/kubernetes-bootcamp kubernetes-bootcamp=jocatalin/kubernetes-bootcamp:v2
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;检查滚动更新状态&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;    kubectl rollout status deployments/kubernetes-bootcamp
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;</content><author><name></name></author><summary type="html">总体理解kubernets架构以及各个结构中的api使用</summary></entry><entry><title type="html">Github免费博客空间</title><link href="/blog/2019/03/26/jekyll-blog.html" rel="alternate" type="text/html" title="Github免费博客空间" /><published>2019-03-26T16:39:26+08:00</published><updated>2019-03-26T16:39:26+08:00</updated><id>/blog/2019/03/26/jekyll-blog</id><content type="html" xml:base="/blog/2019/03/26/jekyll-blog.html">&lt;p&gt;本来想自己买服务器，搭建自己的博客，突然google到一种不用服务器也可以做自己博客的方式，利用github pages搭建自己的博客个人实践，完全可行。步骤如下：&lt;/p&gt;
 
 &lt;h3 id=&quot;创建代码库&quot;&gt;创建代码库&lt;/h3&gt;
 
@@ -69,8 +183,7 @@ bundle exec jekyll serve
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
   &lt;/li&gt;
   &lt;li&gt;推送代码到远端&lt;/li&gt;
-&lt;/ul&gt;</content><author><name></name></author><summary type="html">本来想自己买服务器，搭建自己的博客，突然google到一种不用服务器也可以做自己博客的方式，利用github pages搭建自己的博客个人实践，完全可行。步骤如下：</summary></entry><entry><title type="html">linux 高性能学习笔记7</title><link href="/linux/2018/12/20/linux-high-7.html" rel="alternate" type="text/html" title="linux 高性能学习笔记7" /><published>2018-12-20T16:39:26+08:00</published><updated>2018-12-20T16:39:26+08:00</updated><id>/linux/2018/12/20/linux-high-7</id><content type="html" xml:base="/linux/2018/12/20/linux-high-7.html">&lt;h3 id=&quot;概述&quot;&gt;概述&lt;/h3&gt;
-&lt;p&gt;如何快速查找系统性能瓶颈&lt;/p&gt;
+&lt;/ul&gt;</content><author><name></name></author><summary type="html">本来想自己买服务器，搭建自己的博客，突然google到一种不用服务器也可以做自己博客的方式，利用github pages搭建自己的博客个人实践，完全可行。步骤如下：</summary></entry><entry><title type="html">linux 高性能学习笔记7</title><link href="/linux/2018/12/20/linux-high-7.html" rel="alternate" type="text/html" title="linux 高性能学习笔记7" /><published>2018-12-20T16:39:26+08:00</published><updated>2018-12-20T16:39:26+08:00</updated><id>/linux/2018/12/20/linux-high-7</id><content type="html" xml:base="/linux/2018/12/20/linux-high-7.html">&lt;p&gt;如何快速查找系统性能瓶颈，分析性能问题&lt;/p&gt;
 
 &lt;h3 id=&quot;概念&quot;&gt;概念&lt;/h3&gt;
 &lt;p&gt;如何快速查找系统性能瓶颈&lt;/p&gt;
@@ -92,16 +205,18 @@ bundle exec jekyll serve
       &lt;li&gt;无法获取自愿的自愿上下文切换&lt;/li&gt;
       &lt;li&gt;被系统强制调度的上下文切换
         &lt;ol&gt;
-          &lt;li&gt;cpu缓存命中率
-&lt;img src=&quot;/images/3.png&quot; alt=&quot;设置1&quot; /&gt;
-性能之间的关联
-&lt;img src=&quot;/images/4.png&quot; alt=&quot;设置1&quot; /&gt;&lt;/li&gt;
+          &lt;li&gt;cpu缓存命中率&lt;/li&gt;
         &lt;/ol&gt;
       &lt;/li&gt;
     &lt;/ul&gt;
   &lt;/li&gt;
-&lt;/ul&gt;</content><author><name></name></author><summary type="html">概述 如何快速查找系统性能瓶颈</summary></entry><entry><title type="html">linux 高性能学习笔记5</title><link href="/linux/2018/12/18/linux-high-5.html" rel="alternate" type="text/html" title="linux 高性能学习笔记5" /><published>2018-12-18T16:39:26+08:00</published><updated>2018-12-18T16:39:26+08:00</updated><id>/linux/2018/12/18/linux-high-5</id><content type="html" xml:base="/linux/2018/12/18/linux-high-5.html">&lt;h3 id=&quot;概述&quot;&gt;概述&lt;/h3&gt;
-&lt;p&gt;对于IO问的分析思路&lt;/p&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;img src=&quot;/images/3.png&quot; alt=&quot;设置1&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;性能之间的关联&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/images/4.png&quot; alt=&quot;设置1&quot; /&gt;&lt;/p&gt;</content><author><name></name></author><summary type="html">如何快速查找系统性能瓶颈，分析性能问题</summary></entry><entry><title type="html">linux 高性能学习笔记5</title><link href="/linux/2018/12/18/linux-high-5.html" rel="alternate" type="text/html" title="linux 高性能学习笔记5" /><published>2018-12-18T16:39:26+08:00</published><updated>2018-12-18T16:39:26+08:00</updated><id>/linux/2018/12/18/linux-high-5</id><content type="html" xml:base="/linux/2018/12/18/linux-high-5.html">&lt;p&gt;对于IO问的分析思路以及命令实践&lt;/p&gt;
 
 &lt;h3 id=&quot;概念&quot;&gt;概念&lt;/h3&gt;
 &lt;ul&gt;
@@ -161,8 +276,7 @@ pstree -aps pid
 
 &lt;ul&gt;
   &lt;li&gt;D状态是系统的一种保护机制，为了保护硬件间的交互不被打断。&lt;/li&gt;
-&lt;/ul&gt;</content><author><name></name></author><summary type="html">概述 对于IO问的分析思路</summary></entry><entry><title type="html">linux 高性能学习笔记6</title><link href="/linux/2018/12/18/linux-high-6.html" rel="alternate" type="text/html" title="linux 高性能学习笔记6" /><published>2018-12-18T16:39:26+08:00</published><updated>2018-12-18T16:39:26+08:00</updated><id>/linux/2018/12/18/linux-high-6</id><content type="html" xml:base="/linux/2018/12/18/linux-high-6.html">&lt;h3 id=&quot;概述&quot;&gt;概述&lt;/h3&gt;
-&lt;p&gt;对于中断问的理解与分析&lt;/p&gt;
+&lt;/ul&gt;</content><author><name></name></author><summary type="html">对于IO问的分析思路以及命令实践</summary></entry><entry><title type="html">linux 高性能学习笔记6</title><link href="/linux/2018/12/18/linux-high-6.html" rel="alternate" type="text/html" title="linux 高性能学习笔记6" /><published>2018-12-18T16:39:26+08:00</published><updated>2018-12-18T16:39:26+08:00</updated><id>/linux/2018/12/18/linux-high-6</id><content type="html" xml:base="/linux/2018/12/18/linux-high-6.html">&lt;p&gt;对于中断问的理解与分析&lt;/p&gt;
 
 &lt;h3 id=&quot;概念&quot;&gt;概念&lt;/h3&gt;
 &lt;ul&gt;
@@ -240,8 +354,7 @@ pstree -aps pid
       &lt;li&gt;RCU：read copy update锁&lt;/li&gt;
     &lt;/ul&gt;
   &lt;/li&gt;
-&lt;/ul&gt;</content><author><name></name></author><summary type="html">概述 对于中断问的理解与分析</summary></entry><entry><title type="html">linux 高性能学习笔记4</title><link href="/linux/2018/12/14/linux-high-4.html" rel="alternate" type="text/html" title="linux 高性能学习笔记4" /><published>2018-12-14T16:39:26+08:00</published><updated>2018-12-14T16:39:26+08:00</updated><id>/linux/2018/12/14/linux-high-4</id><content type="html" xml:base="/linux/2018/12/14/linux-high-4.html">&lt;h3 id=&quot;概述&quot;&gt;概述&lt;/h3&gt;
-&lt;p&gt;对于cup异常使用，无法找到原因的情况分析思路&lt;/p&gt;
+&lt;/ul&gt;</content><author><name></name></author><summary type="html">对于中断问的理解与分析</summary></entry><entry><title type="html">linux 高性能学习笔记4</title><link href="/linux/2018/12/14/linux-high-4.html" rel="alternate" type="text/html" title="linux 高性能学习笔记4" /><published>2018-12-14T16:39:26+08:00</published><updated>2018-12-14T16:39:26+08:00</updated><id>/linux/2018/12/14/linux-high-4</id><content type="html" xml:base="/linux/2018/12/14/linux-high-4.html">&lt;p&gt;对于cup异常使用，无法找到原因的情况分析思路&lt;/p&gt;
 
 &lt;h3 id=&quot;分析思路&quot;&gt;分析思路&lt;/h3&gt;
 &lt;ul&gt;
@@ -296,8 +409,7 @@ perf report
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 &lt;ul&gt;
   &lt;li&gt;额外工具 execsnoop 工具可以查看短时进程情况  使用ftrace技术&lt;/li&gt;
-&lt;/ul&gt;</content><author><name></name></author><summary type="html">概述 对于cup异常使用，无法找到原因的情况分析思路</summary></entry><entry><title type="html">linux 高性能学习笔记3</title><link href="/linux/2018/11/30/linux-high-3.html" rel="alternate" type="text/html" title="linux 高性能学习笔记3" /><published>2018-11-30T16:39:26+08:00</published><updated>2018-11-30T16:39:26+08:00</updated><id>/linux/2018/11/30/linux-high-3</id><content type="html" xml:base="/linux/2018/11/30/linux-high-3.html">&lt;h3 id=&quot;概述&quot;&gt;概述&lt;/h3&gt;
-&lt;p&gt;本节主要是对cpu使用率进行学习&lt;/p&gt;
+&lt;/ul&gt;</content><author><name></name></author><summary type="html">对于cup异常使用，无法找到原因的情况分析思路</summary></entry><entry><title type="html">linux 高性能学习笔记3</title><link href="/linux/2018/11/30/linux-high-3.html" rel="alternate" type="text/html" title="linux 高性能学习笔记3" /><published>2018-11-30T16:39:26+08:00</published><updated>2018-11-30T16:39:26+08:00</updated><id>/linux/2018/11/30/linux-high-3</id><content type="html" xml:base="/linux/2018/11/30/linux-high-3.html">&lt;p&gt;本节主要是对cpu使用率进行学习&lt;/p&gt;
 
 &lt;h3 id=&quot;相关概念&quot;&gt;相关概念&lt;/h3&gt;
 &lt;ul&gt;
@@ -342,8 +454,7 @@ perf report
   &lt;li&gt;系统cup高，排查系统调用过多排查系统调用问题&lt;/li&gt;
   &lt;li&gt;io等待过高，排查系统存储是否出现问题&lt;/li&gt;
   &lt;li&gt;软中断和硬中断，排查内核中的中断服务是否出现问题&lt;/li&gt;
-&lt;/ul&gt;</content><author><name></name></author><summary type="html">概述 本节主要是对cpu使用率进行学习</summary></entry><entry><title type="html">linux 高性能学习笔记2</title><link href="/linux/2018/11/29/linux-high-2.html" rel="alternate" type="text/html" title="linux 高性能学习笔记2" /><published>2018-11-29T16:39:26+08:00</published><updated>2018-11-29T16:39:26+08:00</updated><id>/linux/2018/11/29/linux-high-2</id><content type="html" xml:base="/linux/2018/11/29/linux-high-2.html">&lt;h3 id=&quot;概述&quot;&gt;概述&lt;/h3&gt;
-&lt;p&gt;cup上下文切换，是cup重要指标之一，它反映cup中进程竞争状态，如果频繁切换会大大的降低系统性能这节主要学习cup切换相关的内容&lt;/p&gt;
+&lt;/ul&gt;</content><author><name></name></author><summary type="html">本节主要是对cpu使用率进行学习</summary></entry><entry><title type="html">linux 高性能学习笔记2</title><link href="/linux/2018/11/29/linux-high-2.html" rel="alternate" type="text/html" title="linux 高性能学习笔记2" /><published>2018-11-29T16:39:26+08:00</published><updated>2018-11-29T16:39:26+08:00</updated><id>/linux/2018/11/29/linux-high-2</id><content type="html" xml:base="/linux/2018/11/29/linux-high-2.html">&lt;p&gt;cup上下文切换，是cup重要指标之一，它反映cup中进程竞争状态，如果频繁切换会大大的降低系统性能这节主要学习cup切换相关的内容&lt;/p&gt;
 
 &lt;h3 id=&quot;相关概念&quot;&gt;相关概念&lt;/h3&gt;
 &lt;ul&gt;
@@ -410,8 +521,7 @@ pidstat -w -u 1
 pidstat -wt 1
 //产看中断次数
 watch cat /proc/interrupts
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;</content><author><name></name></author><summary type="html">概述 cup上下文切换，是cup重要指标之一，它反映cup中进程竞争状态，如果频繁切换会大大的降低系统性能这节主要学习cup切换相关的内容</summary></entry><entry><title type="html">linux 高性能学习笔记1</title><link href="/linux/2018/11/28/linux-high-1.html" rel="alternate" type="text/html" title="linux 高性能学习笔记1" /><published>2018-11-28T16:39:26+08:00</published><updated>2018-11-28T16:39:26+08:00</updated><id>/linux/2018/11/28/linux-high-1</id><content type="html" xml:base="/linux/2018/11/28/linux-high-1.html">&lt;h3 id=&quot;概述&quot;&gt;概述&lt;/h3&gt;
-&lt;p&gt;为了学习线上问题处理，我们需要刻意练习线上各种问题的产生原因，从而从根本上解决问题。&lt;/p&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;</content><author><name></name></author><summary type="html">cup上下文切换，是cup重要指标之一，它反映cup中进程竞争状态，如果频繁切换会大大的降低系统性能这节主要学习cup切换相关的内容</summary></entry><entry><title type="html">linux 高性能学习笔记1</title><link href="/linux/2018/11/28/linux-high-1.html" rel="alternate" type="text/html" title="linux 高性能学习笔记1" /><published>2018-11-28T16:39:26+08:00</published><updated>2018-11-28T16:39:26+08:00</updated><id>/linux/2018/11/28/linux-high-1</id><content type="html" xml:base="/linux/2018/11/28/linux-high-1.html">&lt;p&gt;为了学习线上问题处理，我们需要刻意练习线上各种问题的产生原因，从而从根本上解决问题。&lt;/p&gt;
 
 &lt;h3 id=&quot;系统压测练习&quot;&gt;系统压测练习&lt;/h3&gt;
 &lt;ul&gt;
@@ -448,4 +558,41 @@ stress-ng -i 2 --hdd 1 --timeout 600
 &lt;/ul&gt;
 
 &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;stress -c 8 --timeout 600
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;</content><author><name></name></author><summary type="html">概述 为了学习线上问题处理，我们需要刻意练习线上各种问题的产生原因，从而从根本上解决问题。</summary></entry></feed>
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;</content><author><name></name></author><summary type="html">为了学习线上问题处理，我们需要刻意练习线上各种问题的产生原因，从而从根本上解决问题。</summary></entry><entry><title type="html">Tensorflow实践</title><link href="/learn-machine/2018/01/26/learn-machine.html" rel="alternate" type="text/html" title="Tensorflow实践" /><published>2018-01-26T00:00:00+08:00</published><updated>2018-01-26T00:00:00+08:00</updated><id>/learn-machine/2018/01/26/learn-machine</id><content type="html" xml:base="/learn-machine/2018/01/26/learn-machine.html">&lt;p&gt;使用python库，实现图片识别。
+利用TensorFlow实现图片识别分类&lt;/p&gt;
+&lt;ol&gt;
+  &lt;li&gt;安装TensorFlow&lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;克隆google codelab
+git clone https://github.com/googlecodelabs/tensorflow-for-poets-2&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;获取识别图片&lt;/p&gt;
+
+    &lt;pre&gt;&lt;code class=&quot;language-$xslt&quot;&gt; curl http://download.tensorflow.org/example_images/flower_photos.tgz | tar xz -C tf_files
+&lt;/code&gt;&lt;/pre&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;重新训练 how_many_training_steps 训练步数可不设 可以一直训练&lt;/p&gt;
+
+    &lt;pre&gt;&lt;code class=&quot;language-$xslt&quot;&gt; IMAGE_SIZE=224
+ ARCHITECTURE=&quot;mobilenet_0.50_${IMAGE_SIZE}&quot;
+&lt;/code&gt;&lt;/pre&gt;
+    &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt; python3 -m scripts.retrain \
+   --bottleneck_dir=tf_files/bottlenecks \
+   --how_many_training_steps=500 \
+   --model_dir=tf_files/models/ \
+   --summaries_dir=tf_files/training_summaries/&quot;${ARCHITECTURE}&quot; \
+   --output_graph=tf_files/retrained_graph.pb \
+   --output_labels=tf_files/retrained_labels.txt \
+   --architecture=&quot;${ARCHITECTURE}&quot; \
+   --image_dir=tf_files/flower_photos
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
+  &lt;/li&gt;
+  &lt;li&gt;使用重新生成的模型
+    &lt;pre&gt;&lt;code class=&quot;language-$xslt&quot;&gt; python -m scripts.label_image \
+     --graph=tf_files/retrained_graph.pb  \
+     --image=tf_files/flower_photos/daisy/21652746_cc379e0eea_m.jpg
+&lt;/code&gt;&lt;/pre&gt;
+  &lt;/li&gt;
+&lt;/ol&gt;</content><author><name></name></author><summary type="html">使用python库，实现图片识别。 利用TensorFlow实现图片识别分类 安装TensorFlow 克隆google codelab git clone https://github.com/googlecodelabs/tensorflow-for-poets-2</summary></entry></feed>
