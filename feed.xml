@@ -1,4 +1,91 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.8.5">Jekyll</generator><link href="/feed.xml" rel="self" type="application/atom+xml" /><link href="/" rel="alternate" type="text/html" /><updated>2019-03-28T17:17:15+08:00</updated><id>/feed.xml</id><title type="html">一叶障目</title><subtitle>学无止境</subtitle><entry><title type="html">kubernets理解总结</title><link href="/kubernets/2019/03/28/kubernets-1.html" rel="alternate" type="text/html" title="kubernets理解总结" /><published>2019-03-28T00:00:00+08:00</published><updated>2019-03-28T00:00:00+08:00</updated><id>/kubernets/2019/03/28/kubernets-1</id><content type="html" xml:base="/kubernets/2019/03/28/kubernets-1.html">&lt;p&gt;总体理解kubernets架构以及各个结构中的api使用&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.8.5">Jekyll</generator><link href="/feed.xml" rel="self" type="application/atom+xml" /><link href="/" rel="alternate" type="text/html" /><updated>2019-03-29T18:25:06+08:00</updated><id>/feed.xml</id><title type="html">一叶障目</title><subtitle>学无止境</subtitle><entry><title type="html">linux 高性能学习笔记8</title><link href="/linux/2019/03/29/linux-high-8.html" rel="alternate" type="text/html" title="linux 高性能学习笔记8" /><published>2019-03-29T16:39:26+08:00</published><updated>2019-03-29T16:39:26+08:00</updated><id>/linux/2019/03/29/linux-high-8</id><content type="html" xml:base="/linux/2019/03/29/linux-high-8.html">&lt;p&gt;针对cup瓶颈的问题分析了很多，相应的分析工具也介绍了不少，但理解了各种指标的含义后，会发现他们之间是有一定关联性的。顺着关联是可以很快找到瓶颈所在。找到瓶颈下一步就是进行优化。&lt;/p&gt;
+&lt;h2 id=&quot;方法论&quot;&gt;方法论&lt;/h2&gt;
+&lt;p&gt;可以从下面三个问题出发来判断性能优化是否有效&lt;/p&gt;
+&lt;ol&gt;
+  &lt;li&gt;如何判断性能优化的有效性？&lt;/li&gt;
+  &lt;li&gt;性能问题通常不是独立问的，如果同时发生先优化哪一个？&lt;/li&gt;
+  &lt;li&gt;提升性能的方法并不唯一的，当有多钟选择时，改选哪一种？&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;如果你能轻松的回答这三个问题就可以开始优化了&lt;/p&gt;
+&lt;h3 id=&quot;细化三个问题&quot;&gt;细化三个问题&lt;/h3&gt;
+&lt;ol&gt;
+  &lt;li&gt;如何评估性能效果
+    &lt;ol&gt;
+      &lt;li&gt;确定性能的量化指标
+        &lt;ul&gt;
+          &lt;li&gt;cpu使用率&lt;/li&gt;
+          &lt;li&gt;应用程序吞吐量&lt;/li&gt;
+          &lt;li&gt;客户端请求的延迟
+            &lt;blockquote&gt;
+              &lt;p&gt;建议不要局限在单一纬度上来定指标
+应用程序纬度：吞吐量和请求延迟
+系统资源纬度：cpu使用率&lt;/p&gt;
+            &lt;/blockquote&gt;
+          &lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/li&gt;
+      &lt;li&gt;测试优化前的性能指标
+        &lt;blockquote&gt;
+          &lt;p&gt;注意：&lt;/p&gt;
+          &lt;ol&gt;
+            &lt;li&gt;尽量避免性能测试工具干扰应用程序的性能，防止交叉污染&lt;/li&gt;
+            &lt;li&gt;避免外部环境的变化影响性能指标的评估&lt;/li&gt;
+          &lt;/ol&gt;
+        &lt;/blockquote&gt;
+      &lt;/li&gt;
+      &lt;li&gt;测试优化后的性能指标&lt;/li&gt;
+    &lt;/ol&gt;
+  &lt;/li&gt;
+  &lt;li&gt;多个性能问题同时存在，要怎么选？
+    &lt;ul&gt;
+      &lt;li&gt;二八原则：80%的问题都是由20%的代码导致的，只要找到20%就可以了，&lt;em&gt;并不是所有的性能问题都值得优化&lt;/em&gt;
+        &lt;ol&gt;
+          &lt;li&gt;如果资源达到瓶颈，比如cpu使用率到了100%，那么首先优化一定是系统资源使用问题。优化后再考虑其他问题。&lt;/li&gt;
+          &lt;li&gt;针对不同类型的指标，首先优化那些由瓶颈导致的，性能指标变化幅度最大的问题，比如产生瓶颈后，用户cpu使用率升高了10%，而系统cpu使用率却升高了50%，这个时候首先应该优化cpu使用率。&lt;/li&gt;
+        &lt;/ol&gt;
+      &lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;多种优化方法时，如何选择？
+    &lt;ul&gt;
+      &lt;li&gt;&lt;em&gt;性能优化并非没有成本&lt;/em&gt; 当你优化一个指标，有可能另一个指标却上升了。&lt;/li&gt;
+      &lt;li&gt;比如网络优化中的DPDK（Data Plane Development Kit）提升网络的处理能力。它需要独占一个cpu以及一定数量的内存大页，CPU核数较少是并不适合用这种优化。
+        &lt;h3 id=&quot;几大优化方向&quot;&gt;几大优化方向&lt;/h3&gt;
+        &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;* CPU优化
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;        &lt;/div&gt;
+      &lt;/li&gt;
+      &lt;li&gt;应用程序优化：排除所有不必要的工作，只保留核心的逻辑。比如减少循环层次，减少递归，减少动态内存分配等等
+        &lt;ul&gt;
+          &lt;li&gt;编译器优化：gcc&lt;/li&gt;
+          &lt;li&gt;算法优化：减少算法复杂度&lt;/li&gt;
+          &lt;li&gt;异步处理：轮训改为事件通知&lt;/li&gt;
+          &lt;li&gt;多线程代替多进程：减少上下文切换&lt;/li&gt;
+          &lt;li&gt;善用缓存：减少磁盘操作，直接使用缓存&lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/li&gt;
+      &lt;li&gt;系统优化：
+        &lt;ul&gt;
+          &lt;li&gt;cpu绑定：把进程绑定到一个或者多个cpu上，可以提高cpu缓存命中率，减少跨cpu调度带来的上下文切换&lt;/li&gt;
+          &lt;li&gt;cpu独占：类似绑定，独占cpu&lt;/li&gt;
+          &lt;li&gt;优先级调整：减低非核心业务的应用优先级&lt;/li&gt;
+          &lt;li&gt;为进程设置资源限制：使用linux cgroups 来设置进程的cpu使用上线。&lt;/li&gt;
+          &lt;li&gt;NUMA(Non-Uniform Memory Access)优化：支持NUMA的cup，会被划分为多个node,每个都有自己的本地内存地址。&lt;/li&gt;
+          &lt;li&gt;中断负载均衡：开启irqbalance服务或者配置smp_affinity,把中断处理自动负载均衡到多个cpu
+            &lt;blockquote&gt;
+              &lt;p&gt;注意:
+&lt;em&gt;避免过早优化&lt;/em&gt;：&lt;/p&gt;
+              &lt;ol&gt;
+                &lt;li&gt;优化带来复杂性的提升，降低可维护性。&lt;/li&gt;
+                &lt;li&gt;需求是动态变化的，要针对当前情况进行优化，是个动态的过程。&lt;/li&gt;
+              &lt;/ol&gt;
+            &lt;/blockquote&gt;
+          &lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ol&gt;</content><author><name></name></author><summary type="html">针对cup瓶颈的问题分析了很多，相应的分析工具也介绍了不少，但理解了各种指标的含义后，会发现他们之间是有一定关联性的。顺着关联是可以很快找到瓶颈所在。找到瓶颈下一步就是进行优化。 方法论 可以从下面三个问题出发来判断性能优化是否有效 如何判断性能优化的有效性？ 性能问题通常不是独立问的，如果同时发生先优化哪一个？ 提升性能的方法并不唯一的，当有多钟选择时，改选哪一种？</summary></entry><entry><title type="html">kubernets理解总结</title><link href="/kubernets/2019/03/28/kubernets-1.html" rel="alternate" type="text/html" title="kubernets理解总结" /><published>2019-03-28T00:00:00+08:00</published><updated>2019-03-28T00:00:00+08:00</updated><id>/kubernets/2019/03/28/kubernets-1</id><content type="html" xml:base="/kubernets/2019/03/28/kubernets-1.html">&lt;p&gt;总体理解kubernets架构以及各个结构中的api使用&lt;/p&gt;
 
 &lt;h2 id=&quot;node&quot;&gt;Node&lt;/h2&gt;
 
@@ -211,6 +298,8 @@ bundle exec jekyll serve
     &lt;/ul&gt;
   &lt;/li&gt;
 &lt;/ul&gt;
+
+&lt;p&gt;&lt;img src=&quot;/images/5.png&quot; alt=&quot;设置1&quot; /&gt;&lt;/p&gt;
 
 &lt;p&gt;&lt;img src=&quot;/images/3.png&quot; alt=&quot;设置1&quot; /&gt;&lt;/p&gt;
 
@@ -558,41 +647,4 @@ stress-ng -i 2 --hdd 1 --timeout 600
 &lt;/ul&gt;
 
 &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;stress -c 8 --timeout 600
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;</content><author><name></name></author><summary type="html">为了学习线上问题处理，我们需要刻意练习线上各种问题的产生原因，从而从根本上解决问题。</summary></entry><entry><title type="html">Tensorflow实践</title><link href="/learn-machine/2018/01/26/learn-machine.html" rel="alternate" type="text/html" title="Tensorflow实践" /><published>2018-01-26T00:00:00+08:00</published><updated>2018-01-26T00:00:00+08:00</updated><id>/learn-machine/2018/01/26/learn-machine</id><content type="html" xml:base="/learn-machine/2018/01/26/learn-machine.html">&lt;p&gt;使用python库，实现图片识别。
-利用TensorFlow实现图片识别分类&lt;/p&gt;
-&lt;ol&gt;
-  &lt;li&gt;安装TensorFlow&lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;克隆google codelab
-git clone https://github.com/googlecodelabs/tensorflow-for-poets-2&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;获取识别图片&lt;/p&gt;
-
-    &lt;pre&gt;&lt;code class=&quot;language-$xslt&quot;&gt; curl http://download.tensorflow.org/example_images/flower_photos.tgz | tar xz -C tf_files
-&lt;/code&gt;&lt;/pre&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;重新训练 how_many_training_steps 训练步数可不设 可以一直训练&lt;/p&gt;
-
-    &lt;pre&gt;&lt;code class=&quot;language-$xslt&quot;&gt; IMAGE_SIZE=224
- ARCHITECTURE=&quot;mobilenet_0.50_${IMAGE_SIZE}&quot;
-&lt;/code&gt;&lt;/pre&gt;
-    &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt; python3 -m scripts.retrain \
-   --bottleneck_dir=tf_files/bottlenecks \
-   --how_many_training_steps=500 \
-   --model_dir=tf_files/models/ \
-   --summaries_dir=tf_files/training_summaries/&quot;${ARCHITECTURE}&quot; \
-   --output_graph=tf_files/retrained_graph.pb \
-   --output_labels=tf_files/retrained_labels.txt \
-   --architecture=&quot;${ARCHITECTURE}&quot; \
-   --image_dir=tf_files/flower_photos
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
-  &lt;/li&gt;
-  &lt;li&gt;使用重新生成的模型
-    &lt;pre&gt;&lt;code class=&quot;language-$xslt&quot;&gt; python -m scripts.label_image \
-     --graph=tf_files/retrained_graph.pb  \
-     --image=tf_files/flower_photos/daisy/21652746_cc379e0eea_m.jpg
-&lt;/code&gt;&lt;/pre&gt;
-  &lt;/li&gt;
-&lt;/ol&gt;</content><author><name></name></author><summary type="html">使用python库，实现图片识别。 利用TensorFlow实现图片识别分类 安装TensorFlow 克隆google codelab git clone https://github.com/googlecodelabs/tensorflow-for-poets-2</summary></entry></feed>
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;</content><author><name></name></author><summary type="html">为了学习线上问题处理，我们需要刻意练习线上各种问题的产生原因，从而从根本上解决问题。</summary></entry></feed>
