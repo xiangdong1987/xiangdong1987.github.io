@@ -1,4 +1,113 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.8.5">Jekyll</generator><link href="/feed.xml" rel="self" type="application/atom+xml" /><link href="/" rel="alternate" type="text/html" /><updated>2019-03-29T18:25:06+08:00</updated><id>/feed.xml</id><title type="html">一叶障目</title><subtitle>学无止境</subtitle><entry><title type="html">linux 高性能学习笔记8</title><link href="/linux/2019/03/29/linux-high-8.html" rel="alternate" type="text/html" title="linux 高性能学习笔记8" /><published>2019-03-29T16:39:26+08:00</published><updated>2019-03-29T16:39:26+08:00</updated><id>/linux/2019/03/29/linux-high-8</id><content type="html" xml:base="/linux/2019/03/29/linux-high-8.html">&lt;p&gt;针对cup瓶颈的问题分析了很多，相应的分析工具也介绍了不少，但理解了各种指标的含义后，会发现他们之间是有一定关联性的。顺着关联是可以很快找到瓶颈所在。找到瓶颈下一步就是进行优化。&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.8.5">Jekyll</generator><link href="/feed.xml" rel="self" type="application/atom+xml" /><link href="/" rel="alternate" type="text/html" /><updated>2019-04-02T10:43:18+08:00</updated><id>/feed.xml</id><title type="html">一叶障目</title><subtitle>学无止境</subtitle><entry><title type="html">linux 高性能学习笔记9</title><link href="/linux/2019/04/02/linux-high-9.html" rel="alternate" type="text/html" title="linux 高性能学习笔记9" /><published>2019-04-02T00:00:00+08:00</published><updated>2019-04-02T00:00:00+08:00</updated><id>/linux/2019/04/02/linux-high-9</id><content type="html" xml:base="/linux/2019/04/02/linux-high-9.html">&lt;p&gt;同CUP管理一样，内存管理也是操作系统最核心的功能之。内存主要用来存储系统和应用程序的指令，数据，缓存等。&lt;/p&gt;
+
+&lt;h2 id=&quot;内存映射&quot;&gt;内存映射&lt;/h2&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;通常说的8G内存指的是物理内存也成主存&lt;/li&gt;
+  &lt;li&gt;进程是不可以直接访问物理内存，只有cpu可以直接访问物理内存&lt;/li&gt;
+  &lt;li&gt;大多数的主存都是动态随机访问内存（DRAM）&lt;/li&gt;
+  &lt;li&gt;linux 为每个进程分配一个独立的虚拟地址空间，并且是连续的。&lt;/li&gt;
+  &lt;li&gt;虚拟内存空间也被分为内核空间和用户空间。&lt;/li&gt;
+  &lt;li&gt;根据cpu指令可以处理数据的最大长度32位和64位&lt;/li&gt;
+  &lt;li&gt;32位cpu 最长寻址空间是4G  1G 系统空间 3G 用户空间&lt;/li&gt;
+  &lt;li&gt;64位cpu 最长寻址空间是17179869184G
+    &lt;ul&gt;
+      &lt;li&gt;头128T 系统空间&lt;/li&gt;
+      &lt;li&gt;位128T 用户空间&lt;/li&gt;
+      &lt;li&gt;其他 其他空间&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;每个进程都有用户态和内核态，所有的虚拟内存加起来一定大于物理内存，所以并不是所有虚拟内存都分配物理内存，只有那些实际使用的虚拟内存才分配物理内存，并且分配后的物理内存，是通过 &lt;strong&gt;内存映射&lt;/strong&gt; 来管理的。&lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;&lt;img src=&quot;/images/6.png&quot; alt=&quot;设置1&quot; /&gt;&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;MMU(Memory Management Unit)内存管理单元，用于存储页表&lt;/li&gt;
+  &lt;li&gt;每个进程都有一个对应的页表来做内存映射&lt;/li&gt;
+  &lt;li&gt;当虚拟地址在页表种查找不到地址时 &lt;strong&gt;缺页异常&lt;/strong&gt; 进入内核空间分配物理内存，更新进程页表，最后返回用户空间，恢复进程运行。&lt;/li&gt;
+  &lt;li&gt;MMU的最小单位是4KB称作&lt;strong&gt;页&lt;/strong&gt;&lt;/li&gt;
+  &lt;li&gt;由于页大小只有4KB，加入在32位系统中，就会有100多万的页表才能实现整个地址空间的映射。为了解决页表项过多的问题，linux提供两种机制
+    &lt;ul&gt;
+      &lt;li&gt;多级页表：吧内存分成区块来管理，讲原来的映射关系改成区块索引和区块内的偏移。由于虚拟内存空间通常只用很少一部分，那么多级页表就只保存这些使用中的区块，这样就可以大大地减少页表的项数&lt;/li&gt;
+      &lt;li&gt;&lt;img src=&quot;/images/7.png&quot; alt=&quot;设置1&quot; /&gt;&lt;/li&gt;
+      &lt;li&gt;大页：不明思议就是更大的内存块，常见2MB和1GB，多用于使用大量内存的进程上，比如Oracle,DPDK等&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;虚拟内存空间的分布&quot;&gt;虚拟内存空间的分布&lt;/h2&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;img src=&quot;/images/8.png&quot; alt=&quot;设置1&quot; /&gt;&lt;/li&gt;
+  &lt;li&gt;从低到高分五种不同的内存段：
+    &lt;ol&gt;
+      &lt;li&gt;只读段，包括代码和常量等&lt;/li&gt;
+      &lt;li&gt;数据段，包括全局变量等&lt;/li&gt;
+      &lt;li&gt;堆，包括动态分配的内存，从低地址开始向上增长&lt;/li&gt;
+      &lt;li&gt;文件映射段，包括动态库，共享内存等，从高地址开始向下增长&lt;/li&gt;
+      &lt;li&gt;栈，包括局部变量和函数调用的上下文等。栈的大小是固定的，一般是8MB&lt;/li&gt;
+    &lt;/ol&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;内存分配与回收&quot;&gt;内存分配与回收&lt;/h2&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;c语言使用malloc()方法分配内存
+    &lt;ul&gt;
+      &lt;li&gt;brk() 在c 标准库中当分配的内存小于128K默认使用brk()，当使用完成后并不会直接释放，而是缓存起来继续使用
+        &lt;ul&gt;
+          &lt;li&gt;缺点：在系统繁忙时容易产生内存碎片&lt;/li&gt;
+          &lt;li&gt;优点：可以减少缺页异常的发生&lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/li&gt;
+      &lt;li&gt;mmap() 在大于128K使用mmap()分配内存
+        &lt;ul&gt;
+          &lt;li&gt;缺点：频繁的分配内存，容易产生缺页异常&lt;/li&gt;
+          &lt;li&gt;优点：直接释放内存&lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;对于内存来说，如果只分配而不释放，就会造成内存泄漏，甚至会耗尽内存。所有应用程序使用完内存后，还需要调用free()或unmap(),来释放这些不用的内存。&lt;/li&gt;
+  &lt;li&gt;系统自身也不会任由应用程序的进程用完所有内存的，在发现内存紧张时，系统就会通过一系列机制来回收内存，比如下面这三种方式：
+    &lt;ul&gt;
+      &lt;li&gt;回收缓存，比如使用LRU算法，回收最近使用最少的内存页&lt;/li&gt;
+      &lt;li&gt;回收不常访问的内存，把不常用的内存通过交换分区直接写到磁盘中（会使用交换分区Swap）&lt;/li&gt;
+      &lt;li&gt;杀死进程，内存紧张时系统还会通过OOM(Out of Memory),直接杀掉占用大量内存的进程。
+        &lt;ul&gt;
+          &lt;li&gt;是一种内核保护机制&lt;/li&gt;
+          &lt;li&gt;使用oom_score记录每个进程的使用内存评分&lt;/li&gt;
+          &lt;li&gt;一个进程消耗的内存越大，oom_score就越大&lt;/li&gt;
+          &lt;li&gt;一个进程运行占用的CPU越多，oom_score就越小&lt;/li&gt;
+          &lt;li&gt;管理员可以手动设置oom_adj,oom_adj的范围[-17,15] 数值越大，表示进程越容易被OOM杀死，-17表示禁止OOM&lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;如何查看内存使用情况&quot;&gt;如何查看内存使用情况&lt;/h2&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;free 查看内存使用情况
+    &lt;ul&gt;
+      &lt;li&gt;total 是内存总大小&lt;/li&gt;
+      &lt;li&gt;used 已使用的内存的大小，包好了共享内存&lt;/li&gt;
+      &lt;li&gt;free 是未使用内存的大小&lt;/li&gt;
+      &lt;li&gt;shared 是共享内存的大小&lt;/li&gt;
+      &lt;li&gt;buff/cache 是缓存和缓冲区的大小&lt;/li&gt;
+      &lt;li&gt;available 是进程可用内存的大小&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;top查看每个进程使用内存情况
+    &lt;ul&gt;
+      &lt;li&gt;VIRT 是进程虚拟内存的大小&lt;/li&gt;
+      &lt;li&gt;RES 是常住内存的大小，进程实际使用物理内存的大小，不包含Swap和共享内存。&lt;/li&gt;
+      &lt;li&gt;SHR 是共享内存的大小，比如与其他进程共同使用的共享内存、加载的动态链接库以及程序的代码段等。&lt;/li&gt;
+      &lt;li&gt;%MEM 是进程使用物理内存占系统内存的百分比&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;</content><author><name></name></author><summary type="html">同CUP管理一样，内存管理也是操作系统最核心的功能之。内存主要用来存储系统和应用程序的指令，数据，缓存等。</summary></entry><entry><title type="html">linux 高性能学习笔记8</title><link href="/linux/2019/03/29/linux-high-8.html" rel="alternate" type="text/html" title="linux 高性能学习笔记8" /><published>2019-03-29T16:39:26+08:00</published><updated>2019-03-29T16:39:26+08:00</updated><id>/linux/2019/03/29/linux-high-8</id><content type="html" xml:base="/linux/2019/03/29/linux-high-8.html">&lt;p&gt;针对cup瓶颈的问题分析了很多，相应的分析工具也介绍了不少，但理解了各种指标的含义后，会发现他们之间是有一定关联性的。顺着关联是可以很快找到瓶颈所在。找到瓶颈下一步就是进行优化。&lt;/p&gt;
 &lt;h2 id=&quot;方法论&quot;&gt;方法论&lt;/h2&gt;
 &lt;p&gt;可以从下面三个问题出发来判断性能优化是否有效&lt;/p&gt;
 &lt;ol&gt;
@@ -610,41 +719,4 @@ pidstat -w -u 1
 pidstat -wt 1
 //产看中断次数
 watch cat /proc/interrupts
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;</content><author><name></name></author><summary type="html">cup上下文切换，是cup重要指标之一，它反映cup中进程竞争状态，如果频繁切换会大大的降低系统性能这节主要学习cup切换相关的内容</summary></entry><entry><title type="html">linux 高性能学习笔记1</title><link href="/linux/2018/11/28/linux-high-1.html" rel="alternate" type="text/html" title="linux 高性能学习笔记1" /><published>2018-11-28T16:39:26+08:00</published><updated>2018-11-28T16:39:26+08:00</updated><id>/linux/2018/11/28/linux-high-1</id><content type="html" xml:base="/linux/2018/11/28/linux-high-1.html">&lt;p&gt;为了学习线上问题处理，我们需要刻意练习线上各种问题的产生原因，从而从根本上解决问题。&lt;/p&gt;
-
-&lt;h3 id=&quot;系统压测练习&quot;&gt;系统压测练习&lt;/h3&gt;
-&lt;ul&gt;
-  &lt;li&gt;安装系统压测工具stress和sysstat&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;sudo apt-get install stress sysstat
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h3 id=&quot;场景练习&quot;&gt;场景练习&lt;/h3&gt;
-&lt;ul&gt;
-  &lt;li&gt;cpu密集型:模拟两个cpu100%情况&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;stress --cpu 2 --timeout 600
-//每隔5秒监控cupload
-watch -d uptime 5
-//每个cup的使用情况
-mpstat -P ALL 5
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;io密集型&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;//stress 无法模拟
-stress -i 2 --timeout 600
-//stress-ng 来模拟
-stress-ng -i 2 --hdd 1 --timeout 600
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;大量进程&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;stress -c 8 --timeout 600
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;</content><author><name></name></author><summary type="html">为了学习线上问题处理，我们需要刻意练习线上各种问题的产生原因，从而从根本上解决问题。</summary></entry></feed>
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;</content><author><name></name></author><summary type="html">cup上下文切换，是cup重要指标之一，它反映cup中进程竞争状态，如果频繁切换会大大的降低系统性能这节主要学习cup切换相关的内容</summary></entry></feed>
