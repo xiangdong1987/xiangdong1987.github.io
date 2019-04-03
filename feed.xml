@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.8.5">Jekyll</generator><link href="/feed.xml" rel="self" type="application/atom+xml" /><link href="/" rel="alternate" type="text/html" /><updated>2019-04-02T10:43:18+08:00</updated><id>/feed.xml</id><title type="html">一叶障目</title><subtitle>学无止境</subtitle><entry><title type="html">linux 高性能学习笔记9</title><link href="/linux/2019/04/02/linux-high-9.html" rel="alternate" type="text/html" title="linux 高性能学习笔记9" /><published>2019-04-02T00:00:00+08:00</published><updated>2019-04-02T00:00:00+08:00</updated><id>/linux/2019/04/02/linux-high-9</id><content type="html" xml:base="/linux/2019/04/02/linux-high-9.html">&lt;p&gt;同CUP管理一样，内存管理也是操作系统最核心的功能之。内存主要用来存储系统和应用程序的指令，数据，缓存等。&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.8.5">Jekyll</generator><link href="/feed.xml" rel="self" type="application/atom+xml" /><link href="/" rel="alternate" type="text/html" /><updated>2019-04-03T09:24:59+08:00</updated><id>/feed.xml</id><title type="html">一叶障目</title><subtitle>学无止境</subtitle><entry><title type="html">linux 高性能学习笔记9</title><link href="/linux/2019/04/02/linux-high-9.html" rel="alternate" type="text/html" title="linux 高性能学习笔记9" /><published>2019-04-02T00:00:00+08:00</published><updated>2019-04-02T00:00:00+08:00</updated><id>/linux/2019/04/02/linux-high-9</id><content type="html" xml:base="/linux/2019/04/02/linux-high-9.html">&lt;p&gt;同CUP管理一样，内存管理也是操作系统最核心的功能之。内存主要用来存储系统和应用程序的指令，数据，缓存等。&lt;/p&gt;
 
 &lt;h2 id=&quot;内存映射&quot;&gt;内存映射&lt;/h2&gt;
 
@@ -107,6 +107,43 @@
       &lt;li&gt;%MEM 是进程使用物理内存占系统内存的百分比&lt;/li&gt;
     &lt;/ul&gt;
   &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;buffer-和-cache&quot;&gt;Buffer 和 Cache&lt;/h2&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;通常理解buffer是写入时合并写入，加快写入速度的&lt;/li&gt;
+  &lt;li&gt;通常理解cache是读取磁盘文件的页缓存，加快速度读取的&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;linux-文件系统&quot;&gt;linux 文件系统&lt;/h3&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;在linux内所有一切皆文件&lt;/li&gt;
+  &lt;li&gt;文件分为好多类型（ls -l /dev）：
+    &lt;ul&gt;
+      &lt;li&gt;-：普通文件&lt;/li&gt;
+      &lt;li&gt;d: 目录&lt;/li&gt;
+      &lt;li&gt;l：链接&lt;/li&gt;
+      &lt;li&gt;d: 块文件&lt;/li&gt;
+      &lt;li&gt;c: 字符串文件&lt;/li&gt;
+      &lt;li&gt;s: socket文件&lt;/li&gt;
+      &lt;li&gt;p: 管道文件&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;磁盘会分区块，系统在每个区块上建立文件系统，在文件系统下创建目录，在目录中创建文件。
+    &lt;ul&gt;
+      &lt;li&gt;普通文件就是目录中的文件，他的读写基于文件系统&lt;/li&gt;
+      &lt;li&gt;块文件，就是磁盘空间，他的读写会跳过文件系统&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;对于以上的两种文件的读写，系统用了不同的优化方式
+    &lt;ul&gt;
+      &lt;li&gt;普通文件：cache&lt;/li&gt;
+      &lt;li&gt;块文件：buffer&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;以上就是cache和buffer的本质区别。&lt;/li&gt;
 &lt;/ul&gt;</content><author><name></name></author><summary type="html">同CUP管理一样，内存管理也是操作系统最核心的功能之。内存主要用来存储系统和应用程序的指令，数据，缓存等。</summary></entry><entry><title type="html">linux 高性能学习笔记8</title><link href="/linux/2019/03/29/linux-high-8.html" rel="alternate" type="text/html" title="linux 高性能学习笔记8" /><published>2019-03-29T16:39:26+08:00</published><updated>2019-03-29T16:39:26+08:00</updated><id>/linux/2019/03/29/linux-high-8</id><content type="html" xml:base="/linux/2019/03/29/linux-high-8.html">&lt;p&gt;针对cup瓶颈的问题分析了很多，相应的分析工具也介绍了不少，但理解了各种指标的含义后，会发现他们之间是有一定关联性的。顺着关联是可以很快找到瓶颈所在。找到瓶颈下一步就是进行优化。&lt;/p&gt;
 &lt;h2 id=&quot;方法论&quot;&gt;方法论&lt;/h2&gt;
 &lt;p&gt;可以从下面三个问题出发来判断性能优化是否有效&lt;/p&gt;
