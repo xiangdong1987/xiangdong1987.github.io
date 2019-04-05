@@ -5,8 +5,8 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <title>分类</title>
-  <meta name="description" content="学无止境">
+  <title>如何搭建本地docker registry</title>
+  <meta name="description" content="学习k8s制作镜像就是毕竟之路，而如果想要一个快速的仓库，本地仓库就是首选，所以学习单间本地dock registry很重要。">
 
   <!-- evil icon -->
 
@@ -16,7 +16,7 @@
     <!-- todo: include this into main.css -->
 
     <link rel="stylesheet" href="/css/main.css">
-    <link rel="canonical" href="/categories/">
+    <link rel="canonical" href="/docker/2019/04/03/docker-local-registry.html">
         <link rel="alternate" type="application/rss+xml" title="一叶障目" href="/feed.xml">
     </head>
 <body>
@@ -67,120 +67,90 @@ if(!(window.doNotTrack === "1" || navigator.doNotTrack === "1" || navigator.doNo
 
     <div class="nine columns" style="z-index:100;">
       <div class="wrapper">
-        <article class="post">
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
 
   <header class="post-header">
-    <h2 class="post-title">分类</h2>
+    <h1 class="post-title p-name" itemprop="name headline">如何搭建本地docker registry</h1>
+    <p class="post-meta">
+      <time class="dt-published" datetime="2019-04-03T00:00:00+08:00" itemprop="datePublished">Apr 3, 2019
+      </time></p>
   </header>
 
-  <div class="post-content">
-    <div id="archives">
-    
-    <div class="archive-group">
-        
-        <div id="#learn-machine"></div>
-        <p></p>
+  <div class="post-content e-content" itemprop="articleBody">
+    <p>学习k8s制作镜像就是毕竟之路，而如果想要一个快速的仓库，本地仓库就是首选，所以学习单间本地dock registry很重要。</p>
 
-        <h3 class="category-head">learn-machine</h3>
-        <a name="learn-machine"></a>
-        
-        <article class="archive-item">
-            <h4><a href="/learn-machine/2018/01/26/learn-machine.html">Tensorflow实践</a></h4>
-        </article>
-        
-    </div>
-    
-    <div class="archive-group">
-        
-        <div id="#linux"></div>
-        <p></p>
+<h2 id="获取镜像">获取镜像</h2>
 
-        <h3 class="category-head">linux</h3>
-        <a name="linux"></a>
-        
-        <article class="archive-item">
-            <h4><a href="/linux/2019/04/02/linux-high-9.html">linux 高性能学习笔记9</a></h4>
-        </article>
-        
-        <article class="archive-item">
-            <h4><a href="/linux/2019/03/29/linux-high-8.html">linux 高性能学习笔记8</a></h4>
-        </article>
-        
-        <article class="archive-item">
-            <h4><a href="/linux/2018/12/20/linux-high-7.html">linux 高性能学习笔记7</a></h4>
-        </article>
-        
-        <article class="archive-item">
-            <h4><a href="/linux/2018/12/18/linux-high-6.html">linux 高性能学习笔记6</a></h4>
-        </article>
-        
-        <article class="archive-item">
-            <h4><a href="/linux/2018/12/18/linux-high-5.html">linux 高性能学习笔记5</a></h4>
-        </article>
-        
-        <article class="archive-item">
-            <h4><a href="/linux/2018/12/14/linux-high-4.html">linux 高性能学习笔记4</a></h4>
-        </article>
-        
-        <article class="archive-item">
-            <h4><a href="/linux/2018/11/30/linux-high-3.html">linux 高性能学习笔记3</a></h4>
-        </article>
-        
-        <article class="archive-item">
-            <h4><a href="/linux/2018/11/29/linux-high-2.html">linux 高性能学习笔记2</a></h4>
-        </article>
-        
-        <article class="archive-item">
-            <h4><a href="/linux/2018/11/28/linux-high-1.html">linux 高性能学习笔记1</a></h4>
-        </article>
-        
-    </div>
-    
-    <div class="archive-group">
-        
-        <div id="#blog"></div>
-        <p></p>
+<p>拉取远程镜像用于制作本地镜像</p>
+<pre><code class="language-angular2html">docker pull nginx:alpine
+</code></pre>
+<h2 id="本地docker-registry">本地docker registry</h2>
+<p>拉取docker registry</p>
 
-        <h3 class="category-head">blog</h3>
-        <a name="blog"></a>
-        
-        <article class="archive-item">
-            <h4><a href="/blog/2019/03/26/jekyll-blog.html">Github免费博客空间</a></h4>
-        </article>
-        
-    </div>
-    
-    <div class="archive-group">
-        
-        <div id="#Kubernets"></div>
-        <p></p>
+<pre><code class="language-angular2html">docker pull registry:latest
+</code></pre>
 
-        <h3 class="category-head">Kubernets</h3>
-        <a name="Kubernets"></a>
-        
-        <article class="archive-item">
-            <h4><a href="/kubernets/2019/03/28/kubernets-1.html">kubernets理解总结</a></h4>
-        </article>
-        
-    </div>
-    
-    <div class="archive-group">
-        
-        <div id="#docker"></div>
-        <p></p>
+<p>运行docker registry</p>
 
-        <h3 class="category-head">docker</h3>
-        <a name="docker"></a>
-        
-        <article class="archive-item">
-            <h4><a href="/docker/2019/04/03/docker-local-registry.html">如何搭建本地docker registry</a></h4>
-        </article>
-        
-    </div>
-    
-</div>
-  </div>
+<pre><code class="language-angular2html">docker run \
+  --detach \
+  --name registry \
+  --hostname registry \
+  --volume $(pwd)/registry:/var/lib/registry/docker/registry \
+  --publish 5000:5000 \
+  --restart unless-stopped \
+  registry:latest
+</code></pre>
 
+<h2 id="制作镜像">制作镜像</h2>
+
+<ul>
+  <li>利用DockerFile制作镜像</li>
+  <li>先将环境拉取到本地</li>
+</ul>
+
+<pre><code class="language-angular2html">//拉取官方php
+docker pull php:7.1-cli-jessie
+</code></pre>
+<ul>
+  <li>进入docker进行环境配置记录配置命令制作DockerFile</li>
+</ul>
+
+<pre><code class="language-angular2html">docker run -it php:7.1-cli-jessie /bin/bash
+</code></pre>
+
+<ul>
+  <li>
+    <p><a href="https://github.com/xiangdong1987/local-env/tree/master">根据官方PHP镜像修改后的Dockerfile</a></p>
+  </li>
+  <li>
+    <p>容器相关命令</p>
+  </li>
+</ul>
+
+<pre><code class="language-angular2html">//容器属性
+sudo docker inspect 6d4a2498c108 (容器id)
+//容器ip
+docker inspect [container_name] | grep IPAddress
+//端口转发
+iiptables -t nat -A DOCKER -p tcp -dport 8001 -j DNAT --to-destination 192.169.1.1:8080
+//容器查看
+sudo docker ps  /-a 
+//删除容器
+sudo docker rm 容器id
+//容器镜像查看
+sudo docker images 
+//删除镜像
+sudo docker image rm 镜像id
+//运行docker -p 映射端口  -v 挂在目录  -it 进入容器
+sudo docker run -p 8810:8810 -it chelun-test:v1 -v /data:/data /bin/bash
+
+</code></pre>
+<h2 id="总结">总结</h2>
+
+<p>镜像的制作就是一个环境搭建的流程，需要细心的记录没一部操作，也要合理话层级。尽量用少的层级来实现环境的待见。后面的路还很长需要继续学习。</p>
+
+  </div><a class="u-url" href="/docker/2019/04/03/docker-local-registry.html" hidden></a>
 </article>
 
       </div>

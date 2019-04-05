@@ -1,4 +1,75 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.8.5">Jekyll</generator><link href="/feed.xml" rel="self" type="application/atom+xml" /><link href="/" rel="alternate" type="text/html" /><updated>2019-04-03T09:24:59+08:00</updated><id>/feed.xml</id><title type="html">一叶障目</title><subtitle>学无止境</subtitle><entry><title type="html">linux 高性能学习笔记9</title><link href="/linux/2019/04/02/linux-high-9.html" rel="alternate" type="text/html" title="linux 高性能学习笔记9" /><published>2019-04-02T00:00:00+08:00</published><updated>2019-04-02T00:00:00+08:00</updated><id>/linux/2019/04/02/linux-high-9</id><content type="html" xml:base="/linux/2019/04/02/linux-high-9.html">&lt;p&gt;同CUP管理一样，内存管理也是操作系统最核心的功能之。内存主要用来存储系统和应用程序的指令，数据，缓存等。&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.8.5">Jekyll</generator><link href="/feed.xml" rel="self" type="application/atom+xml" /><link href="/" rel="alternate" type="text/html" /><updated>2019-04-05T15:11:17+08:00</updated><id>/feed.xml</id><title type="html">一叶障目</title><subtitle>学无止境</subtitle><entry><title type="html">如何搭建本地docker registry</title><link href="/docker/2019/04/03/docker-local-registry.html" rel="alternate" type="text/html" title="如何搭建本地docker registry" /><published>2019-04-03T00:00:00+08:00</published><updated>2019-04-03T00:00:00+08:00</updated><id>/docker/2019/04/03/docker-local-registry</id><content type="html" xml:base="/docker/2019/04/03/docker-local-registry.html">&lt;p&gt;学习k8s制作镜像就是毕竟之路，而如果想要一个快速的仓库，本地仓库就是首选，所以学习单间本地dock registry很重要。&lt;/p&gt;
+
+&lt;h2 id=&quot;获取镜像&quot;&gt;获取镜像&lt;/h2&gt;
+
+&lt;p&gt;拉取远程镜像用于制作本地镜像&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&quot;language-angular2html&quot;&gt;docker pull nginx:alpine
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h2 id=&quot;本地docker-registry&quot;&gt;本地docker registry&lt;/h2&gt;
+&lt;p&gt;拉取docker registry&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-angular2html&quot;&gt;docker pull registry:latest
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;运行docker registry&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-angular2html&quot;&gt;docker run \
+  --detach \
+  --name registry \
+  --hostname registry \
+  --volume $(pwd)/registry:/var/lib/registry/docker/registry \
+  --publish 5000:5000 \
+  --restart unless-stopped \
+  registry:latest
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&quot;制作镜像&quot;&gt;制作镜像&lt;/h2&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;利用DockerFile制作镜像&lt;/li&gt;
+  &lt;li&gt;先将环境拉取到本地&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-angular2html&quot;&gt;//拉取官方php
+docker pull php:7.1-cli-jessie
+&lt;/code&gt;&lt;/pre&gt;
+&lt;ul&gt;
+  &lt;li&gt;进入docker进行环境配置记录配置命令制作DockerFile&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-angular2html&quot;&gt;docker run -it php:7.1-cli-jessie /bin/bash
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;
+    &lt;p&gt;&lt;a href=&quot;https://github.com/xiangdong1987/local-env/tree/master&quot;&gt;根据官方PHP镜像修改后的Dockerfile&lt;/a&gt;&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;容器相关命令&lt;/p&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-angular2html&quot;&gt;//容器属性
+sudo docker inspect 6d4a2498c108 (容器id)
+//容器ip
+docker inspect [container_name] | grep IPAddress
+//端口转发
+iiptables -t nat -A DOCKER -p tcp -dport 8001 -j DNAT --to-destination 192.169.1.1:8080
+//容器查看
+sudo docker ps  /-a 
+//删除容器
+sudo docker rm 容器id
+//容器镜像查看
+sudo docker images 
+//删除镜像
+sudo docker image rm 镜像id
+//运行docker -p 映射端口  -v 挂在目录  -it 进入容器
+sudo docker run -p 8810:8810 -it chelun-test:v1 -v /data:/data /bin/bash
+
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h2 id=&quot;总结&quot;&gt;总结&lt;/h2&gt;
+
+&lt;p&gt;镜像的制作就是一个环境搭建的流程，需要细心的记录没一部操作，也要合理话层级。尽量用少的层级来实现环境的待见。后面的路还很长需要继续学习。&lt;/p&gt;</content><author><name></name></author><summary type="html">学习k8s制作镜像就是毕竟之路，而如果想要一个快速的仓库，本地仓库就是首选，所以学习单间本地dock registry很重要。</summary></entry><entry><title type="html">linux 高性能学习笔记9</title><link href="/linux/2019/04/02/linux-high-9.html" rel="alternate" type="text/html" title="linux 高性能学习笔记9" /><published>2019-04-02T00:00:00+08:00</published><updated>2019-04-02T00:00:00+08:00</updated><id>/linux/2019/04/02/linux-high-9</id><content type="html" xml:base="/linux/2019/04/02/linux-high-9.html">&lt;p&gt;同CUP管理一样，内存管理也是操作系统最核心的功能之。内存主要用来存储系统和应用程序的指令，数据，缓存等。&lt;/p&gt;
 
 &lt;h2 id=&quot;内存映射&quot;&gt;内存映射&lt;/h2&gt;
 
@@ -689,71 +760,4 @@ perf report
   &lt;li&gt;系统cup高，排查系统调用过多排查系统调用问题&lt;/li&gt;
   &lt;li&gt;io等待过高，排查系统存储是否出现问题&lt;/li&gt;
   &lt;li&gt;软中断和硬中断，排查内核中的中断服务是否出现问题&lt;/li&gt;
-&lt;/ul&gt;</content><author><name></name></author><summary type="html">本节主要是对cpu使用率进行学习</summary></entry><entry><title type="html">linux 高性能学习笔记2</title><link href="/linux/2018/11/29/linux-high-2.html" rel="alternate" type="text/html" title="linux 高性能学习笔记2" /><published>2018-11-29T16:39:26+08:00</published><updated>2018-11-29T16:39:26+08:00</updated><id>/linux/2018/11/29/linux-high-2</id><content type="html" xml:base="/linux/2018/11/29/linux-high-2.html">&lt;p&gt;cup上下文切换，是cup重要指标之一，它反映cup中进程竞争状态，如果频繁切换会大大的降低系统性能这节主要学习cup切换相关的内容&lt;/p&gt;
-
-&lt;h3 id=&quot;相关概念&quot;&gt;相关概念&lt;/h3&gt;
-&lt;ul&gt;
-  &lt;li&gt;cup寄存器和程序计数器
-    &lt;ul&gt;
-      &lt;li&gt;cup寄存器：内置在cup内部的很小的极快内存&lt;/li&gt;
-      &lt;li&gt;程序计数器：用来存储cup正在执行指令的位置，或者下一个要执行的指令的位置&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;它们两个结合就是cup上下文&lt;/li&gt;
-  &lt;li&gt;上下文切换：就是保存当前上下文，执行其他上下文 消耗cpu 10-100 纳秒或者微妙
-    &lt;ul&gt;
-      &lt;li&gt;进程上下文切换&lt;/li&gt;
-      &lt;li&gt;线程上下文切换&lt;/li&gt;
-      &lt;li&gt;中断上下文切换&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;进程状态
-    &lt;ul&gt;
-      &lt;li&gt;用户态&lt;/li&gt;
-      &lt;li&gt;内核态&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;系统调用。open,read,write  一次系统调用要两次的上下文切换&lt;/li&gt;
-  &lt;li&gt;进程切换：只从一个进程切换到另一个进程。比系统调用多一步：要保存虚拟内存和栈空间&lt;/li&gt;
-  &lt;li&gt;何时触发进程切换
-    &lt;ul&gt;
-      &lt;li&gt;为了公平调度，cpu被平均的分成了时间段，当时间段内程序没有执行完，需要切换到其他程序执行&lt;/li&gt;
-      &lt;li&gt;系统资源不足，比如内存不足，程序会被挂起&lt;/li&gt;
-      &lt;li&gt;进程主动挂起，如运行了sleep&lt;/li&gt;
-      &lt;li&gt;当有优先级高的进程进入cpu等待队列中是&lt;/li&gt;
-      &lt;li&gt;发生硬件中断，会执行中断任务，挂起当前进程&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;线程和进程的区别：线程是调度的基本单位，进程是拥有资源的基本单位&lt;/li&gt;
-  &lt;li&gt;对于同一cpu来讲，中断比进程有更高的优先级
-    &lt;h3 id=&quot;场景练习&quot;&gt;场景练习&lt;/h3&gt;
-  &lt;/li&gt;
-  &lt;li&gt;查看上下文切换情况命令&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;vmstat  5
-//查看对应进程的上下文切换状态
-pidstat -w 5
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;切换类型
-    &lt;ul&gt;
-      &lt;li&gt;自愿上下文切换：无法获取资源，如内存满了，IO等待&lt;/li&gt;
-      &lt;li&gt;非自愿上下文切换：有大量进程争抢cup产生&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;模拟多进程争抢cpu资源的情况&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;//模拟1000个线程争抢cpu
-sysbench --threads=1000 --max-time=300 threads run 
-//查看系统cpu切换情况
-vmstat 1 1
-//产看进程cpu使用情况
-pidstat -w -u 1
-//产看线程的cpu切换情况
-pidstat -wt 1
-//产看中断次数
-watch cat /proc/interrupts
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;</content><author><name></name></author><summary type="html">cup上下文切换，是cup重要指标之一，它反映cup中进程竞争状态，如果频繁切换会大大的降低系统性能这节主要学习cup切换相关的内容</summary></entry></feed>
+&lt;/ul&gt;</content><author><name></name></author><summary type="html">本节主要是对cpu使用率进行学习</summary></entry></feed>
