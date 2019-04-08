@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.8.5">Jekyll</generator><link href="/feed.xml" rel="self" type="application/atom+xml" /><link href="/" rel="alternate" type="text/html" /><updated>2019-04-05T15:11:17+08:00</updated><id>/feed.xml</id><title type="html">一叶障目</title><subtitle>学无止境</subtitle><entry><title type="html">如何搭建本地docker registry</title><link href="/docker/2019/04/03/docker-local-registry.html" rel="alternate" type="text/html" title="如何搭建本地docker registry" /><published>2019-04-03T00:00:00+08:00</published><updated>2019-04-03T00:00:00+08:00</updated><id>/docker/2019/04/03/docker-local-registry</id><content type="html" xml:base="/docker/2019/04/03/docker-local-registry.html">&lt;p&gt;学习k8s制作镜像就是毕竟之路，而如果想要一个快速的仓库，本地仓库就是首选，所以学习单间本地dock registry很重要。&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.8.5">Jekyll</generator><link href="/feed.xml" rel="self" type="application/atom+xml" /><link href="/" rel="alternate" type="text/html" /><updated>2019-04-08T10:52:05+08:00</updated><id>/feed.xml</id><title type="html">一叶障目</title><subtitle>学无止境</subtitle><entry><title type="html">如何搭建本地docker registry</title><link href="/docker/2019/04/03/docker-local-registry.html" rel="alternate" type="text/html" title="如何搭建本地docker registry" /><published>2019-04-03T00:00:00+08:00</published><updated>2019-04-03T00:00:00+08:00</updated><id>/docker/2019/04/03/docker-local-registry</id><content type="html" xml:base="/docker/2019/04/03/docker-local-registry.html">&lt;p&gt;学习k8s制作镜像就是毕竟之路，而如果想要一个快速的仓库，本地仓库就是首选，所以学习单间本地dock registry很重要。&lt;/p&gt;
 
 &lt;h2 id=&quot;获取镜像&quot;&gt;获取镜像&lt;/h2&gt;
 
@@ -69,7 +69,111 @@ sudo docker run -p 8810:8810 -it chelun-test:v1 -v /data:/data /bin/bash
 &lt;/code&gt;&lt;/pre&gt;
 &lt;h2 id=&quot;总结&quot;&gt;总结&lt;/h2&gt;
 
-&lt;p&gt;镜像的制作就是一个环境搭建的流程，需要细心的记录没一部操作，也要合理话层级。尽量用少的层级来实现环境的待见。后面的路还很长需要继续学习。&lt;/p&gt;</content><author><name></name></author><summary type="html">学习k8s制作镜像就是毕竟之路，而如果想要一个快速的仓库，本地仓库就是首选，所以学习单间本地dock registry很重要。</summary></entry><entry><title type="html">linux 高性能学习笔记9</title><link href="/linux/2019/04/02/linux-high-9.html" rel="alternate" type="text/html" title="linux 高性能学习笔记9" /><published>2019-04-02T00:00:00+08:00</published><updated>2019-04-02T00:00:00+08:00</updated><id>/linux/2019/04/02/linux-high-9</id><content type="html" xml:base="/linux/2019/04/02/linux-high-9.html">&lt;p&gt;同CUP管理一样，内存管理也是操作系统最核心的功能之。内存主要用来存储系统和应用程序的指令，数据，缓存等。&lt;/p&gt;
+&lt;p&gt;镜像的制作就是一个环境搭建的流程，需要细心的记录没一部操作，也要合理话层级。尽量用少的层级来实现环境的待见。后面的路还很长需要继续学习。&lt;/p&gt;</content><author><name></name></author><summary type="html">学习k8s制作镜像就是毕竟之路，而如果想要一个快速的仓库，本地仓库就是首选，所以学习单间本地dock registry很重要。</summary></entry><entry><title type="html">整体理解kubenets各种组件</title><link href="/kubernets/2019/04/03/kubernets-2.html" rel="alternate" type="text/html" title="整体理解kubenets各种组件" /><published>2019-04-03T00:00:00+08:00</published><updated>2019-04-03T00:00:00+08:00</updated><id>/kubernets/2019/04/03/kubernets-2</id><content type="html" xml:base="/kubernets/2019/04/03/kubernets-2.html">&lt;p&gt;在学习编排之前，认识kubernets的各种组件是很重要的。他们之间的关系是怎么样的？如果构建一个合理的服务？都是要在开始之前需要学习的。&lt;/p&gt;
+
+&lt;h2 id=&quot;containers-容器&quot;&gt;Containers (容器)&lt;/h2&gt;
+
+&lt;p&gt;容器就是我们之前将的docker，或其他虚拟化容器。不过docker应该是主流。一般人认为容器应该是kubernets的最小单位，其实并不是它是组成最小的单位的主要成分。接下来要讲的Pod才是最小的kubernets组成单位。&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://xiangdong1987.github.io/docker/2019/04/03/docker-local-registry.html&quot;&gt;如何搭建本地docker registry&lt;/a&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;pod-豆荚&quot;&gt;Pod (豆荚)&lt;/h2&gt;
+
+&lt;p&gt;pod是组成kebernet的最小单位，每个pod中会包含一个或多个docker容器，为了管理pod的就引入了Replication controller.&lt;/p&gt;
+
+&lt;h2 id=&quot;replication-controller-rc&quot;&gt;Replication Controller (RC)&lt;/h2&gt;
+
+&lt;p&gt;副本控制器不明思议，就是管理副本的，副本的单位就是pod，随着程序的发展，RC已经被正在被Replication Set所替换，他们之间的区别RS堆label有更多的功能，可以利用表达式去匹配label标签。&lt;/p&gt;
+
+&lt;h2 id=&quot;replication-set-rs&quot;&gt;Replication Set (RS)&lt;/h2&gt;
+
+&lt;p&gt;跟RC相比它多了一些功能，对于selector 有更多的功能，可以使整个RS的意义更清晰，更能让维护人员理解。比如如下配置&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-angular2html&quot;&gt;apiVersion: extensions/v1beta1
+ kind: ReplicaSet
+ metadata:
+   name: soaktestrs
+ spec:
+   replicas: 3
+   selector:
+     matchLabels:
+       app: soaktestrs
+   template:
+     metadata:
+       labels:
+         app: soaktestrs
+         environment: dev
+     spec:
+       containers:
+       - name: soaktestrs
+         image: nickchase/soaktest
+         ports:
+         - containerPort: 80
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;管是这样无法表这个服务到底是做什么用的&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-angular2html&quot;&gt;...
+spec:
+   replicas: 3
+   selector:
+     matchExpressions:
+      - {key: app, operator: In, values: [soaktestrs, soaktestrs, soaktest]}
+      - {key: teir, operator: NotIn, values: [production]}
+  template:
+     metadata:
+...
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;我们可以通过描述得到如下：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-angular2html&quot;&gt;
+# kubectl create -f replicaset.yaml
+replicaset &quot;soaktestrs&quot; created
+
+# kubectl describe rs soaktestrs
+Name:           soaktestrs
+Namespace:      default
+Image(s):       nickchase/soaktest
+Selector:       app in (soaktest,soaktestrs),teir notin (production)
+Labels:         app=soaktestrs
+Replicas:       3 current / 3 desired
+Pods Status:    3 Running / 0 Waiting / 0 Succeeded / 0 Failed
+No volumes.
+Events:
+  FirstSeen     LastSeen        Count   From                            SubobjectPath   Type    Reason                   Message
+  ---------     --------        -----   ----                            -------------   --------------                   -------
+  1m            1m              1       {replicaset-controller }                        Normal  SuccessfulCreate Created pod: soaktestrs-it2hf
+  1m            1m              1       {replicaset-controller }                       Normal  SuccessfulCreate Created pod: soaktestrs-kimmm
+  1m            1m              1       {replicaset-controller }                        Normal  SuccessfulCreate Created pod: soaktestrs-8i4ra
+
+# kubectl get pods
+NAME               READY     STATUS    RESTARTS   AGE
+soaktestrs-8i4ra   1/1       Running   0          1m
+soaktestrs-it2hf   1/1       Running   0          1m
+soaktestrs-kimmm   1/1       Running   0          1m
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&quot;deployment&quot;&gt;Deployment&lt;/h2&gt;
+
+&lt;p&gt;Deployment以RC做为管理单元实现Roll updating 和 Roll Back,实现动态更新和回滚的功能。&lt;/p&gt;
+
+&lt;h2 id=&quot;service&quot;&gt;Service&lt;/h2&gt;
+
+&lt;p&gt;service 主要是在deployment的基础上，管理ip Port Dns ,并且自动实现负载均衡和调度。&lt;/p&gt;
+
+&lt;h2 id=&quot;yaml的种类&quot;&gt;Yaml的种类&lt;/h2&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Replication Controller&lt;/li&gt;
+  &lt;li&gt;Replication Set&lt;/li&gt;
+  &lt;li&gt;Deployment&lt;/li&gt;
+  &lt;li&gt;Service&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;四中yaml是逐层递增的向上的上层依赖下层，实现一个层级。&lt;/p&gt;
+
+&lt;h2 id=&quot;总结&quot;&gt;总结&lt;/h2&gt;
+&lt;p&gt;kubernets 的整理部署由上面的几个部分组成，副本的是为了实现系统稳定性，副本管理是为了实现环境的滚动更新和回滚，service是为了实现统一的网关入口和负载均衡。整体的架构就是如此，细节就是要在实践中不断的学习和积累了。&lt;/p&gt;</content><author><name></name></author><summary type="html">在学习编排之前，认识kubernets的各种组件是很重要的。他们之间的关系是怎么样的？如果构建一个合理的服务？都是要在开始之前需要学习的。</summary></entry><entry><title type="html">linux 高性能学习笔记9</title><link href="/linux/2019/04/02/linux-high-9.html" rel="alternate" type="text/html" title="linux 高性能学习笔记9" /><published>2019-04-02T00:00:00+08:00</published><updated>2019-04-02T00:00:00+08:00</updated><id>/linux/2019/04/02/linux-high-9</id><content type="html" xml:base="/linux/2019/04/02/linux-high-9.html">&lt;p&gt;同CUP管理一样，内存管理也是操作系统最核心的功能之。内存主要用来存储系统和应用程序的指令，数据，缓存等。&lt;/p&gt;
 
 &lt;h2 id=&quot;内存映射&quot;&gt;内存映射&lt;/h2&gt;
 
@@ -715,49 +819,4 @@ perf report
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 &lt;ul&gt;
   &lt;li&gt;额外工具 execsnoop 工具可以查看短时进程情况  使用ftrace技术&lt;/li&gt;
-&lt;/ul&gt;</content><author><name></name></author><summary type="html">对于cup异常使用，无法找到原因的情况分析思路</summary></entry><entry><title type="html">linux 高性能学习笔记3</title><link href="/linux/2018/11/30/linux-high-3.html" rel="alternate" type="text/html" title="linux 高性能学习笔记3" /><published>2018-11-30T16:39:26+08:00</published><updated>2018-11-30T16:39:26+08:00</updated><id>/linux/2018/11/30/linux-high-3</id><content type="html" xml:base="/linux/2018/11/30/linux-high-3.html">&lt;p&gt;本节主要是对cpu使用率进行学习&lt;/p&gt;
-
-&lt;h3 id=&quot;相关概念&quot;&gt;相关概念&lt;/h3&gt;
-&lt;ul&gt;
-  &lt;li&gt;cup使用率
-    &lt;ul&gt;
-      &lt;li&gt;linux 是多任务操作系统，他会将cup时间切片，通过轮流调度分配给各个任务&lt;/li&gt;
-      &lt;li&gt;节拍率，就是将cup时间分为多少分&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;grep 'CONFIG_HZ'= /boot/config-$(uname -r)
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;系统分析工具都是计算的间隔时间的使用率&lt;/li&gt;
-  &lt;li&gt;性能分析工具perf&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;//性能分析
-perf top 
-//记录性能日志 会生成 perf.data文件
-perf record     
-//查看日志
-perf report
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;相关参数
-    &lt;ul&gt;
-      &lt;li&gt;overhead 所占比例&lt;/li&gt;
-      &lt;li&gt;shared 进程名称&lt;/li&gt;
-      &lt;li&gt;object 动态共享对象类型&lt;/li&gt;
-      &lt;li&gt;symbol 符号名–函数名&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h3 id=&quot;总结&quot;&gt;总结&lt;/h3&gt;
-&lt;ul&gt;
-  &lt;li&gt;cup和nice占用过多说明，用户态进程占用过多的cpu需要着重排查&lt;/li&gt;
-  &lt;li&gt;系统cup高，排查系统调用过多排查系统调用问题&lt;/li&gt;
-  &lt;li&gt;io等待过高，排查系统存储是否出现问题&lt;/li&gt;
-  &lt;li&gt;软中断和硬中断，排查内核中的中断服务是否出现问题&lt;/li&gt;
-&lt;/ul&gt;</content><author><name></name></author><summary type="html">本节主要是对cpu使用率进行学习</summary></entry></feed>
+&lt;/ul&gt;</content><author><name></name></author><summary type="html">对于cup异常使用，无法找到原因的情况分析思路</summary></entry></feed>
