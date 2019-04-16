@@ -5,8 +5,8 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <title>Home</title>
-  <meta name="description" content="学无止境">
+  <title>Go直播实践</title>
+  <meta name="description" content="视频直播是近些年特别火的技术栈，一直想学习如何实现视频直播。初期也了解了一些协议相关的知识，苦于都是c++相关学习起来比较难以理解，学习了Go语言之后突然想找一找是否有Go语言实现的直播服务，惊奇的发现，Livego这个开源直播服务端，自此展开了Go直播实践之路，由于工作繁重，只能抽时间搞，耽误了好几天的更新，话...">
 
   <!-- evil icon -->
 
@@ -16,7 +16,7 @@
     <!-- todo: include this into main.css -->
 
     <link rel="stylesheet" href="/css/main.css">
-    <link rel="canonical" href="/">
+    <link rel="canonical" href="/go/live/2019/04/16/Go_live-1.html">
         <link rel="alternate" type="application/rss+xml" title="一叶障目" href="/feed.xml">
     </head>
 <body>
@@ -67,20 +67,17 @@ if(!(window.doNotTrack === "1" || navigator.doNotTrack === "1" || navigator.doNo
 
     <div class="nine columns" style="z-index:100;">
       <div class="wrapper">
-        <div class="home">
-  <div class="post-list">
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
 
-    
+  <header class="post-header">
+    <h1 class="post-title p-name" itemprop="name headline">Go直播实践</h1>
+    <p class="post-meta">
+      <time class="dt-published" datetime="2019-04-16T00:00:00+08:00" itemprop="datePublished">Apr 16, 2019
+      </time></p>
+  </header>
 
-    <article class="post_card post">
-      <header class="post_header">
-        <h2 class="post_title"><a href="/go/live/2019/04/16/Go_live-1.html">Go直播实践</a></h2>
-        <time class="post_date">16 April 2019, Tuesday</time>
-      </header>
-      <div class="post_excerpt">
-        <p>
-          
-          <p>视频直播是近些年特别火的技术栈，一直想学习如何实现视频直播。初期也了解了一些协议相关的知识，苦于都是c++相关学习起来比较难以理解，学习了Go语言之后突然想找一找是否有Go语言实现的直播服务，惊奇的发现，Livego这个开源直播服务端，自此展开了Go直播实践之路，由于工作繁重，只能抽时间搞，耽误了好几天的更新，话不多说直入正题。</p>
+  <div class="post-content e-content" itemprop="articleBody">
+    <p>视频直播是近些年特别火的技术栈，一直想学习如何实现视频直播。初期也了解了一些协议相关的知识，苦于都是c++相关学习起来比较难以理解，学习了Go语言之后突然想找一找是否有Go语言实现的直播服务，惊奇的发现，Livego这个开源直播服务端，自此展开了Go直播实践之路，由于工作繁重，只能抽时间搞，耽误了好几天的更新，话不多说直入正题。</p>
 <h2 id="服务端">服务端</h2>
 <ul>
   <li><a href="https://github.com/gwuhaolin/livego">livego</a> 精挑细选 简单可靠 便于二次开发</li>
@@ -144,198 +141,10 @@ rtmp://192.168.112.20:1935/live/movie
   </li>
 </ul>
 
+<p>等等视频直播是一个大的技术栈不是像我这种简单的玩一下的，如果想深入做还是需要一定的功力和精力。只是供大家学习和体验。</p>
 
-           
-          <a class="read-more" href="/go/live/2019/04/16/Go_live-1.html"> »  </a>
-        </p> 
-      </div>
-      <footer class="post_meta">
-
-
-        
-        <!--
-        
-        <a href="/category/Go">
-          <data data-icon="ei-archive"></data>
-          Go</a>
-        
-        <a href="/category/Live">
-          <data data-icon="ei-archive"></data>
-          Live</a>
-        
-        -->
-
-        <!--
-        
-        -->
-
-        <!--p class="readmore">
-          <a href=""><data data-icon="ei-arrow-right"></data>Read this article  </a>
-        </p-->
-      </footer>
-      <hr/>
-    </article>
-    
-
-    <article class="post_card post">
-      <header class="post_header">
-        <h2 class="post_title"><a href="/go/2019/04/11/Go-1.html">Go学习笔记</a></h2>
-        <time class="post_date">11 April 2019, Thursday</time>
-      </header>
-      <div class="post_excerpt">
-        <p>
-          
-          <p>最近写了很多了Go代码，但是对于Go的深入内容知之甚少，为了达到知其然，并知其所以然的想法。开始了学习之旅，首选学习素材<a href="https://books.studygolang.com/gopl-zh/index.html">GO圣经</a>。把自己觉得有用的都记下来，以便以后拿来温习。</p>
-
-
-           
-          <a class="read-more" href="/go/2019/04/11/Go-1.html"> »  </a>
-        </p> 
-      </div>
-      <footer class="post_meta">
-
-
-        
-        <!--
-        
-        <a href="/category/Go">
-          <data data-icon="ei-archive"></data>
-          Go</a>
-        
-        -->
-
-        <!--
-        
-        -->
-
-        <!--p class="readmore">
-          <a href=""><data data-icon="ei-arrow-right"></data>Read this article  </a>
-        </p-->
-      </footer>
-      <hr/>
-    </article>
-    
-
-    <article class="post_card post">
-      <header class="post_header">
-        <h2 class="post_title"><a href="/kubernets/2019/04/03/kubernets-2.html">整体理解kubenets各种组件</a></h2>
-        <time class="post_date">03 April 2019, Wednesday</time>
-      </header>
-      <div class="post_excerpt">
-        <p>
-          
-          <p>在学习编排之前，认识kubernets的各种组件是很重要的。他们之间的关系是怎么样的？如果构建一个合理的服务？都是要在开始之前需要学习的。</p>
-
-
-           
-          <a class="read-more" href="/kubernets/2019/04/03/kubernets-2.html"> »  </a>
-        </p> 
-      </div>
-      <footer class="post_meta">
-
-
-        
-        <!--
-        
-        <a href="/category/kubernets">
-          <data data-icon="ei-archive"></data>
-          kubernets</a>
-        
-        -->
-
-        <!--
-        
-        -->
-
-        <!--p class="readmore">
-          <a href=""><data data-icon="ei-arrow-right"></data>Read this article  </a>
-        </p-->
-      </footer>
-      <hr/>
-    </article>
-    
-
-    <article class="post_card post">
-      <header class="post_header">
-        <h2 class="post_title"><a href="/docker/2019/04/03/docker-local-registry.html">如何搭建本地docker registry</a></h2>
-        <time class="post_date">03 April 2019, Wednesday</time>
-      </header>
-      <div class="post_excerpt">
-        <p>
-          
-          <p>学习k8s制作镜像就是毕竟之路，而如果想要一个快速的仓库，本地仓库就是首选，所以学习单间本地dock registry很重要。</p>
-
-
-           
-          <a class="read-more" href="/docker/2019/04/03/docker-local-registry.html"> »  </a>
-        </p> 
-      </div>
-      <footer class="post_meta">
-
-
-        
-        <!--
-        
-        <a href="/category/docker">
-          <data data-icon="ei-archive"></data>
-          docker</a>
-        
-        -->
-
-        <!--
-        
-        -->
-
-        <!--p class="readmore">
-          <a href=""><data data-icon="ei-arrow-right"></data>Read this article  </a>
-        </p-->
-      </footer>
-      <hr/>
-    </article>
-    
-
-    <article class="post_card post">
-      <header class="post_header">
-        <h2 class="post_title"><a href="/linux/2019/04/02/linux-high-9.html">linux 高性能学习笔记9</a></h2>
-        <time class="post_date">02 April 2019, Tuesday</time>
-      </header>
-      <div class="post_excerpt">
-        <p>
-          
-          <p>同CUP管理一样，内存管理也是操作系统最核心的功能之。内存主要用来存储系统和应用程序的指令，数据，缓存等。</p>
-
-
-           
-          <a class="read-more" href="/linux/2019/04/02/linux-high-9.html"> »  </a>
-        </p> 
-      </div>
-      <footer class="post_meta">
-
-
-        
-        <!--
-        
-        <a href="/category/linux">
-          <data data-icon="ei-archive"></data>
-          linux</a>
-        
-        -->
-
-        <!--
-        
-        -->
-
-        <!--p class="readmore">
-          <a href=""><data data-icon="ei-arrow-right"></data>Read this article  </a>
-        </p-->
-      </footer>
-      <hr/>
-    </article>
-    
-
-    <div class="pagination older-post"><a href="./archive"><data data-icon="ei-arrow-right"></data> Archive  </a></div>
-  </div>
-</div>
+  </div><a class="u-url" href="/go/live/2019/04/16/Go_live-1.html" hidden></a>
+</article>
 
       </div>
     </div>
