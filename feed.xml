@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.8.5">Jekyll</generator><link href="/feed.xml" rel="self" type="application/atom+xml" /><link href="/" rel="alternate" type="text/html" /><updated>2019-04-17T15:15:52+08:00</updated><id>/feed.xml</id><title type="html">一叶障目</title><subtitle>学无止境</subtitle><entry><title type="html">Go学习笔记2</title><link href="/go/2019/04/17/Go-2.html" rel="alternate" type="text/html" title="Go学习笔记2" /><published>2019-04-17T00:00:00+08:00</published><updated>2019-04-17T00:00:00+08:00</updated><id>/go/2019/04/17/Go-2</id><content type="html" xml:base="/go/2019/04/17/Go-2.html">&lt;p&gt;Go数据类型有如下类型。&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.8.5">Jekyll</generator><link href="/feed.xml" rel="self" type="application/atom+xml" /><link href="/" rel="alternate" type="text/html" /><updated>2019-04-17T15:32:09+08:00</updated><id>/feed.xml</id><title type="html">一叶障目</title><subtitle>学无止境</subtitle><entry><title type="html">Go学习笔记2</title><link href="/go/2019/04/17/Go-2.html" rel="alternate" type="text/html" title="Go学习笔记2" /><published>2019-04-17T00:00:00+08:00</published><updated>2019-04-17T00:00:00+08:00</updated><id>/go/2019/04/17/Go-2</id><content type="html" xml:base="/go/2019/04/17/Go-2.html">&lt;p&gt;Go数据类型有如下类型。&lt;/p&gt;
 &lt;ul&gt;
   &lt;li&gt;基础类型&lt;/li&gt;
   &lt;li&gt;符合类型&lt;/li&gt;
@@ -117,13 +117,13 @@
  )
  ```&lt;/p&gt;
     &lt;ul&gt;
-      &lt;li&gt;无类型常量：我个人理解无类型常量有点像php不定义变量类型，系统自动识别，后面学习到接口时有重要的作用。
-        &lt;h2 id=&quot;总结&quot;&gt;总结&lt;/h2&gt;
-        &lt;p&gt;虽然每种语言都有这些类型，但是每种语言在细节处理上有相似也有不同，这些相似和不同就体现出了不同人的思考方式，总之代码是死的，思维是活的。多思考多实践，形成自己的思维体系更重要。&lt;/p&gt;
-      &lt;/li&gt;
+      &lt;li&gt;无类型常量：我个人理解无类型常量有点像php不定义变量类型，系统自动识别，后面学习到接口时有重要的作用。&lt;/li&gt;
     &lt;/ul&gt;
   &lt;/li&gt;
-&lt;/ul&gt;</content><author><name></name></author><summary type="html">Go数据类型有如下类型。 基础类型 符合类型 引用类型 接口类型 类型内容很多只能慢慢学习，今天学习基础类型。</summary></entry><entry><title type="html">Go直播实践</title><link href="/go/live/2019/04/16/Go_live-1.html" rel="alternate" type="text/html" title="Go直播实践" /><published>2019-04-16T00:00:00+08:00</published><updated>2019-04-16T00:00:00+08:00</updated><id>/go/live/2019/04/16/Go_live-1</id><content type="html" xml:base="/go/live/2019/04/16/Go_live-1.html">&lt;p&gt;视频直播是近些年特别火的技术栈，一直想学习如何实现视频直播。初期也了解了一些协议相关的知识，苦于都是c++相关学习起来比较难以理解，学习了Go语言之后突然想找一找是否有Go语言实现的直播服务，惊奇的发现，Livego这个开源直播服务端，自此展开了Go直播实践之路，由于工作繁重，只能抽时间搞，耽误了好几天的更新，话不多说直入正题。&lt;/p&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;总结&quot;&gt;总结&lt;/h2&gt;
+&lt;p&gt;虽然每种语言都有这些类型，但是每种语言在细节处理上有相似也有不同，这些相似和不同就体现出了不同人的思考方式，总之代码是死的，思维是活的。多思考多实践，形成自己的思维体系更重要。&lt;/p&gt;</content><author><name></name></author><summary type="html">Go数据类型有如下类型。 基础类型 符合类型 引用类型 接口类型 类型内容很多只能慢慢学习，今天学习基础类型。</summary></entry><entry><title type="html">Go直播实践</title><link href="/go/live/2019/04/16/Go_live-1.html" rel="alternate" type="text/html" title="Go直播实践" /><published>2019-04-16T00:00:00+08:00</published><updated>2019-04-16T00:00:00+08:00</updated><id>/go/live/2019/04/16/Go_live-1</id><content type="html" xml:base="/go/live/2019/04/16/Go_live-1.html">&lt;p&gt;视频直播是近些年特别火的技术栈，一直想学习如何实现视频直播。初期也了解了一些协议相关的知识，苦于都是c++相关学习起来比较难以理解，学习了Go语言之后突然想找一找是否有Go语言实现的直播服务，惊奇的发现，Livego这个开源直播服务端，自此展开了Go直播实践之路，由于工作繁重，只能抽时间搞，耽误了好几天的更新，话不多说直入正题。&lt;/p&gt;
 
 &lt;h2 id=&quot;服务端&quot;&gt;服务端&lt;/h2&gt;
 &lt;ul&gt;

@@ -1,6 +1,1 @@
-JEKYLL_ENV=production jekyll build;
-cd /data/www/wwwroot/ytiamo.github.io/;
-echo $1;
-git add -A;
-git commit -m "{$1}";
-git push;
+JEKYLL_ENV=production jekyll build
