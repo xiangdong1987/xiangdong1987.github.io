@@ -1,4 +1,129 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.8.5">Jekyll</generator><link href="/feed.xml" rel="self" type="application/atom+xml" /><link href="/" rel="alternate" type="text/html" /><updated>2019-04-16T18:20:48+08:00</updated><id>/feed.xml</id><title type="html">一叶障目</title><subtitle>学无止境</subtitle><entry><title type="html">Go直播实践</title><link href="/go/live/2019/04/16/Go_live-1.html" rel="alternate" type="text/html" title="Go直播实践" /><published>2019-04-16T00:00:00+08:00</published><updated>2019-04-16T00:00:00+08:00</updated><id>/go/live/2019/04/16/Go_live-1</id><content type="html" xml:base="/go/live/2019/04/16/Go_live-1.html">&lt;p&gt;视频直播是近些年特别火的技术栈，一直想学习如何实现视频直播。初期也了解了一些协议相关的知识，苦于都是c++相关学习起来比较难以理解，学习了Go语言之后突然想找一找是否有Go语言实现的直播服务，惊奇的发现，Livego这个开源直播服务端，自此展开了Go直播实践之路，由于工作繁重，只能抽时间搞，耽误了好几天的更新，话不多说直入正题。&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.8.5">Jekyll</generator><link href="/feed.xml" rel="self" type="application/atom+xml" /><link href="/" rel="alternate" type="text/html" /><updated>2019-04-17T15:15:52+08:00</updated><id>/feed.xml</id><title type="html">一叶障目</title><subtitle>学无止境</subtitle><entry><title type="html">Go学习笔记2</title><link href="/go/2019/04/17/Go-2.html" rel="alternate" type="text/html" title="Go学习笔记2" /><published>2019-04-17T00:00:00+08:00</published><updated>2019-04-17T00:00:00+08:00</updated><id>/go/2019/04/17/Go-2</id><content type="html" xml:base="/go/2019/04/17/Go-2.html">&lt;p&gt;Go数据类型有如下类型。&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;基础类型&lt;/li&gt;
+  &lt;li&gt;符合类型&lt;/li&gt;
+  &lt;li&gt;引用类型&lt;/li&gt;
+  &lt;li&gt;接口类型
+类型内容很多只能慢慢学习，今天学习基础类型。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;基础类型&quot;&gt;基础类型&lt;/h2&gt;
+&lt;ul&gt;
+  &lt;li&gt;数字
+    &lt;ul&gt;
+      &lt;li&gt;有符号无符号&lt;/li&gt;
+      &lt;li&gt;Unicode字符rune类型是和int32等价的类型&lt;/li&gt;
+      &lt;li&gt;byte也是uint8类型的等价类型&lt;/li&gt;
+      &lt;li&gt;计算溢出 高位截断
+        &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt; var u uint8 = 255
+ fmt.Println(u, u+1, u*u) // &quot;255 0 1&quot;
+ var i int8 = 127
+ fmt.Println(i, i+1, i*i) // &quot;127 -128 1&quot;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;        &lt;/div&gt;
+      &lt;/li&gt;
+      &lt;li&gt;位运算
+  ```
+ var x uint8 = 1«1 | 1«5var y uint8 = 1«1 | 1«2&lt;/li&gt;
+    &lt;/ul&gt;
+
+    &lt;p&gt;fmt.Printf(“%08b\n”, x) // “00100010”, the set {1, 5}
+ fmt.Printf(“%08b\n”, y) // “00000110”, the set {1, 2}&lt;/p&gt;
+
+    &lt;p&gt;fmt.Printf(“%08b\n”, x&amp;amp;y)  // “00000010”, the intersection {1}
+ fmt.Printf(“%08b\n”, x|y)  // “00100110”, the union {1, 2, 5}
+ fmt.Printf(“%08b\n”, x^y)  // “00100100”, the symmetric difference {2, 5}
+ fmt.Printf(“%08b\n”, x&amp;amp;^y) // “00100000”, the difference {5}&lt;/p&gt;
+
+    &lt;p&gt;for i := uint(0); i &amp;lt; 8; i++ {
+     if x&amp;amp;(1«i) != 0 { // membership test
+         fmt.Println(i) // “1”, “5”
+     }
+ }&lt;/p&gt;
+
+    &lt;p&gt;fmt.Printf(“%08b\n”, x«1) // “01000100”, the set {2, 6}
+ fmt.Printf(“%08b\n”, x»1) // “00010001”, the set {0, 4}
+  ```&lt;/p&gt;
+    &lt;ul&gt;
+      &lt;li&gt;浮点型
+        &lt;blockquote&gt;
+          &lt;p&gt;一个float32类型的浮点数可以提供大约6个十进制数的精度，而float64则可以提供约15个十进制数的精度；通常应该优先使用float64类型，因为float32类型的累计计算误差很容易扩散，并且float32能精确表示的正整数并不是很大（译注：因为float32的有效bit位只有23个，其它的bit位用于指数和符号；当整数大于23bit能表达的范围时，float32的表示将出现误差）&lt;/p&gt;
+        &lt;/blockquote&gt;
+      &lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;字符串:一个字符串是一个不可改变的字节序列
+    &lt;ul&gt;
+      &lt;li&gt;不变性意味如果两个字符串共享相同的底层数据的话也是安全的，这使得复制任何长度的字符串代价是低廉的&lt;/li&gt;
+      &lt;li&gt;编码：编码是一个基础，但是很复杂的东西，很多原理都跟编码有关。
+        &lt;ul&gt;
+          &lt;li&gt;ASC II：是最初的编码定义，用一个字节来表示 0-127 表示英文和符号&lt;/li&gt;
+          &lt;li&gt;Unicode：随着计算机的广泛使用，其他国家的语言和文字需要展示，一个字节不够用了所以用4个字节来保存，诞生了unicode编码，至今unicode已经120000的字符了&lt;/li&gt;
+          &lt;li&gt;&lt;a href=&quot;http://unicode.org &quot;&gt;Unicode官方&lt;/a&gt;&lt;/li&gt;
+          &lt;li&gt;UTF-8:由于unicode 需要4个字节，有字符实际用不到这么多存储为，但是占用了这么的空间很浪费，所以UTF-8可变长字编码格式产生了，它位不同的长度的Uicode编码使用不用的表示方式。如下
+            &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt; 0xxxxxxx                                                   runes 0-127    (ASCII)
+ 110xxxxx 10xxxxxx                                  128-2047       (values &amp;lt;128 unused)
+ 1110xxxx 10xxxxxx 10xxxxxx                   2048-65535     (values &amp;lt;2048 unused)
+ 11110xxx 10xxxxxx 10xxxxxx 10xxxxxx   65536-0x10ffff (other values unused)
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;            &lt;/div&gt;
+          &lt;/li&gt;
+          &lt;li&gt;Go语言的range循环在处理字符串的时候，会自动隐式解码UTF8字符串&lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/li&gt;
+      &lt;li&gt;标准库中四个重要的库
+        &lt;ul&gt;
+          &lt;li&gt;btyes:btye的查找，替换，比较，截取，拆分，合并等功能
+            &lt;ul&gt;
+              &lt;li&gt;因为字符串是只读的，因此逐步构建字符串会导致很多分配和复制&lt;/li&gt;
+            &lt;/ul&gt;
+          &lt;/li&gt;
+          &lt;li&gt;strings：字符串btye的查找，替换，比较，截取，拆分，合并等功能&lt;/li&gt;
+          &lt;li&gt;strconv：字符串转化&lt;/li&gt;
+          &lt;li&gt;unicode：给字符分类&lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;布尔：没有什么特别注意的，就是要讲数字当bool值需要做一个函数转换
+    &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt; func itob(i int) bool { return i != 0 }
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
+  &lt;/li&gt;
+  &lt;li&gt;常量：常量表达式的值在编译期计算，而不是在运行期。
+    &lt;ul&gt;
+      &lt;li&gt;iota 可以批量生成常量
+ ```angular2html
+ type Weekday int&lt;/li&gt;
+    &lt;/ul&gt;
+
+    &lt;p&gt;const (
+     Sunday Weekday = iota
+     Monday
+     Tuesday
+     Wednesday
+     Thursday
+     Friday
+     Saturday
+ )
+ //复杂例子
+ const (
+     _ = 1 « (10 * iota)
+     KiB // 1024
+     MiB // 1048576
+     GiB // 1073741824
+     TiB // 1099511627776             (exceeds 1 « 32)
+     PiB // 1125899906842624
+     EiB // 1152921504606846976
+     ZiB // 1180591620717411303424    (exceeds 1 « 64)
+     YiB // 1208925819614629174706176
+ )
+ ```&lt;/p&gt;
+    &lt;ul&gt;
+      &lt;li&gt;无类型常量：我个人理解无类型常量有点像php不定义变量类型，系统自动识别，后面学习到接口时有重要的作用。
+        &lt;h2 id=&quot;总结&quot;&gt;总结&lt;/h2&gt;
+        &lt;p&gt;虽然每种语言都有这些类型，但是每种语言在细节处理上有相似也有不同，这些相似和不同就体现出了不同人的思考方式，总之代码是死的，思维是活的。多思考多实践，形成自己的思维体系更重要。&lt;/p&gt;
+      &lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;</content><author><name></name></author><summary type="html">Go数据类型有如下类型。 基础类型 符合类型 引用类型 接口类型 类型内容很多只能慢慢学习，今天学习基础类型。</summary></entry><entry><title type="html">Go直播实践</title><link href="/go/live/2019/04/16/Go_live-1.html" rel="alternate" type="text/html" title="Go直播实践" /><published>2019-04-16T00:00:00+08:00</published><updated>2019-04-16T00:00:00+08:00</updated><id>/go/live/2019/04/16/Go_live-1</id><content type="html" xml:base="/go/live/2019/04/16/Go_live-1.html">&lt;p&gt;视频直播是近些年特别火的技术栈，一直想学习如何实现视频直播。初期也了解了一些协议相关的知识，苦于都是c++相关学习起来比较难以理解，学习了Go语言之后突然想找一找是否有Go语言实现的直播服务，惊奇的发现，Livego这个开源直播服务端，自此展开了Go直播实践之路，由于工作繁重，只能抽时间搞，耽误了好几天的更新，话不多说直入正题。&lt;/p&gt;
 
 &lt;h2 id=&quot;服务端&quot;&gt;服务端&lt;/h2&gt;
 &lt;ul&gt;
@@ -63,7 +188,7 @@ rtmp://192.168.112.20:1935/live/movie
   &lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;p&gt;等等视频直播是一个大的技术栈不是像我这种简单的玩一下的，如果想深入做还是需要一定的功力和精力。只是供大家学习和体验。&lt;/p&gt;</content><author><name></name></author><summary type="html">视频直播是近些年特别火的技术栈，一直想学习如何实现视频直播。初期也了解了一些协议相关的知识，苦于都是c++相关学习起来比较难以理解，学习了Go语言之后突然想找一找是否有Go语言实现的直播服务，惊奇的发现，Livego这个开源直播服务端，自此展开了Go直播实践之路，由于工作繁重，只能抽时间搞，耽误了好几天的更新，话不多说直入正题。</summary></entry><entry><title type="html">Go学习笔记</title><link href="/go/2019/04/11/Go-1.html" rel="alternate" type="text/html" title="Go学习笔记" /><published>2019-04-11T00:00:00+08:00</published><updated>2019-04-11T00:00:00+08:00</updated><id>/go/2019/04/11/Go-1</id><content type="html" xml:base="/go/2019/04/11/Go-1.html">&lt;p&gt;最近写了很多了Go代码，但是对于Go的深入内容知之甚少，为了达到知其然，并知其所以然的想法。开始了学习之旅，首选学习素材&lt;a href=&quot;https://books.studygolang.com/gopl-zh/index.html&quot;&gt;GO圣经&lt;/a&gt;。把自己觉得有用的都记下来，以便以后拿来温习。&lt;/p&gt;
+&lt;p&gt;等等视频直播是一个大的技术栈不是像我这种简单的玩一下的，如果想深入做还是需要一定的功力和精力。只是供大家学习和体验。&lt;/p&gt;</content><author><name></name></author><summary type="html">视频直播是近些年特别火的技术栈，一直想学习如何实现视频直播。初期也了解了一些协议相关的知识，苦于都是c++相关学习起来比较难以理解，学习了Go语言之后突然想找一找是否有Go语言实现的直播服务，惊奇的发现，Livego这个开源直播服务端，自此展开了Go直播实践之路，由于工作繁重，只能抽时间搞，耽误了好几天的更新，话不多说直入正题。</summary></entry><entry><title type="html">Go学习笔记1</title><link href="/go/2019/04/11/Go-1.html" rel="alternate" type="text/html" title="Go学习笔记1" /><published>2019-04-11T00:00:00+08:00</published><updated>2019-04-11T00:00:00+08:00</updated><id>/go/2019/04/11/Go-1</id><content type="html" xml:base="/go/2019/04/11/Go-1.html">&lt;p&gt;最近写了很多了Go代码，但是对于Go的深入内容知之甚少，为了达到知其然，并知其所以然的想法。开始了学习之旅，首选学习素材&lt;a href=&quot;https://books.studygolang.com/gopl-zh/index.html&quot;&gt;GO圣经&lt;/a&gt;。把自己觉得有用的都记下来，以便以后拿来温习。&lt;/p&gt;
 
 &lt;ul&gt;
   &lt;li&gt;Go 没有的特性
@@ -771,64 +896,4 @@ bundle exec jekyll serve
 
 &lt;p&gt;性能之间的关联&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&quot;/images/4.png&quot; alt=&quot;设置1&quot; /&gt;&lt;/p&gt;</content><author><name></name></author><summary type="html">如何快速查找系统性能瓶颈，分析性能问题</summary></entry><entry><title type="html">linux 高性能学习笔记5</title><link href="/linux/2018/12/18/linux-high-5.html" rel="alternate" type="text/html" title="linux 高性能学习笔记5" /><published>2018-12-18T16:39:26+08:00</published><updated>2018-12-18T16:39:26+08:00</updated><id>/linux/2018/12/18/linux-high-5</id><content type="html" xml:base="/linux/2018/12/18/linux-high-5.html">&lt;p&gt;对于IO问的分析思路以及命令实践&lt;/p&gt;
-
-&lt;h3 id=&quot;概念&quot;&gt;概念&lt;/h3&gt;
-&lt;ul&gt;
-  &lt;li&gt;进程状态
-    &lt;ul&gt;
-      &lt;li&gt;R是running 或 runable 的缩写，表示进程在CPU的就绪队列中，正在运行或者正在等待运行&lt;/li&gt;
-      &lt;li&gt;D是Disk sleep的缩写，也就是不可中断状态睡眠，一般表示进程正在跟硬件交互，并且交互过程不允许其他进程或中断打断&lt;/li&gt;
-      &lt;li&gt;Z是Zombie的缩写，它表示进程实际上已经结束了，但父进程还没回收它的资源&lt;/li&gt;
-      &lt;li&gt;S是interruptible sleep 也就是可中断状态睡眠，它正在等待事件的唤醒转变为R状态&lt;/li&gt;
-      &lt;li&gt;l是Idle的缩写，也就是空闲状态，用在不可中断睡眠的内核线程上。D是硬件交互，I是内核空闲，D占用CPU，I不占用&lt;/li&gt;
-      &lt;li&gt;丅暂停&lt;/li&gt;
-      &lt;li&gt;X DEAD 死亡进程&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;信号：SIGSTOP 暂停 SIGCONT 继续&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;新工具dstat ：可以同时观察 cpu  磁盘  网络以及内存使用情况&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;//每秒输出10组数据
-dstat 10 1 
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;pidstat 参数作用&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;//每秒输出20组数据 -d 磁盘操作
-pid -d -p 1 20
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;strace 进程追踪:变为了僵尸进程的进程是无法为追踪的&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;//追踪进程id
-strace -p pid
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;不能追踪只能使用其他工具&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;//记录代码段日志 回车进入调用关系
-perf record -g
-perf report
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;使用pstree查看调用级别&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;//查看某个进程占用pid
-pstree -aps pid
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;D状态是系统的一种保护机制，为了保护硬件间的交互不被打断。&lt;/li&gt;
-&lt;/ul&gt;</content><author><name></name></author><summary type="html">对于IO问的分析思路以及命令实践</summary></entry></feed>
+&lt;p&gt;&lt;img src=&quot;/images/4.png&quot; alt=&quot;设置1&quot; /&gt;&lt;/p&gt;</content><author><name></name></author><summary type="html">如何快速查找系统性能瓶颈，分析性能问题</summary></entry></feed>
