@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.8.5">Jekyll</generator><link href="/feed.xml" rel="self" type="application/atom+xml" /><link href="/" rel="alternate" type="text/html" /><updated>2019-04-17T15:32:09+08:00</updated><id>/feed.xml</id><title type="html">一叶障目</title><subtitle>学无止境</subtitle><entry><title type="html">Go学习笔记2</title><link href="/go/2019/04/17/Go-2.html" rel="alternate" type="text/html" title="Go学习笔记2" /><published>2019-04-17T00:00:00+08:00</published><updated>2019-04-17T00:00:00+08:00</updated><id>/go/2019/04/17/Go-2</id><content type="html" xml:base="/go/2019/04/17/Go-2.html">&lt;p&gt;Go数据类型有如下类型。&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.8.5">Jekyll</generator><link href="/feed.xml" rel="self" type="application/atom+xml" /><link href="/" rel="alternate" type="text/html" /><updated>2019-04-22T10:43:56+08:00</updated><id>/feed.xml</id><title type="html">一叶障目</title><subtitle>学无止境</subtitle><entry><title type="html">Go学习笔记2</title><link href="/go/2019/04/17/Go-2.html" rel="alternate" type="text/html" title="Go学习笔记2" /><published>2019-04-17T00:00:00+08:00</published><updated>2019-04-17T00:00:00+08:00</updated><id>/go/2019/04/17/Go-2</id><content type="html" xml:base="/go/2019/04/17/Go-2.html">&lt;p&gt;Go数据类型有如下类型。&lt;/p&gt;
 &lt;ul&gt;
   &lt;li&gt;基础类型&lt;/li&gt;
   &lt;li&gt;符合类型&lt;/li&gt;
@@ -123,7 +123,152 @@
 &lt;/ul&gt;
 
 &lt;h2 id=&quot;总结&quot;&gt;总结&lt;/h2&gt;
-&lt;p&gt;虽然每种语言都有这些类型，但是每种语言在细节处理上有相似也有不同，这些相似和不同就体现出了不同人的思考方式，总之代码是死的，思维是活的。多思考多实践，形成自己的思维体系更重要。&lt;/p&gt;</content><author><name></name></author><summary type="html">Go数据类型有如下类型。 基础类型 符合类型 引用类型 接口类型 类型内容很多只能慢慢学习，今天学习基础类型。</summary></entry><entry><title type="html">Go直播实践</title><link href="/go/live/2019/04/16/Go_live-1.html" rel="alternate" type="text/html" title="Go直播实践" /><published>2019-04-16T00:00:00+08:00</published><updated>2019-04-16T00:00:00+08:00</updated><id>/go/live/2019/04/16/Go_live-1</id><content type="html" xml:base="/go/live/2019/04/16/Go_live-1.html">&lt;p&gt;视频直播是近些年特别火的技术栈，一直想学习如何实现视频直播。初期也了解了一些协议相关的知识，苦于都是c++相关学习起来比较难以理解，学习了Go语言之后突然想找一找是否有Go语言实现的直播服务，惊奇的发现，Livego这个开源直播服务端，自此展开了Go直播实践之路，由于工作繁重，只能抽时间搞，耽误了好几天的更新，话不多说直入正题。&lt;/p&gt;
+&lt;p&gt;虽然每种语言都有这些类型，但是每种语言在细节处理上有相似也有不同，这些相似和不同就体现出了不同人的思考方式，总之代码是死的，思维是活的。多思考多实践，形成自己的思维体系更重要。&lt;/p&gt;</content><author><name></name></author><summary type="html">Go数据类型有如下类型。 基础类型 符合类型 引用类型 接口类型 类型内容很多只能慢慢学习，今天学习基础类型。</summary></entry><entry><title type="html">Go学习笔记2</title><link href="/go/2019/04/17/Go-3.html" rel="alternate" type="text/html" title="Go学习笔记2" /><published>2019-04-17T00:00:00+08:00</published><updated>2019-04-17T00:00:00+08:00</updated><id>/go/2019/04/17/Go-3</id><content type="html" xml:base="/go/2019/04/17/Go-3.html">&lt;p&gt;Go数据类型有如下类型。&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;基础类型&lt;/li&gt;
+  &lt;li&gt;复合类型&lt;/li&gt;
+  &lt;li&gt;引用类型&lt;/li&gt;
+  &lt;li&gt;接口类型
+类型内容很多只能慢慢学习，今天学习复合类型。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;复合类型&quot;&gt;复合类型&lt;/h2&gt;
+&lt;h3 id=&quot;符合类型分类&quot;&gt;符合类型分类&lt;/h3&gt;
+&lt;ul&gt;
+  &lt;li&gt;固定长度
+    &lt;ul&gt;
+      &lt;li&gt;数组&lt;/li&gt;
+      &lt;li&gt;结构体&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;动态长度
+    &lt;ul&gt;
+      &lt;li&gt;slice&lt;/li&gt;
+      &lt;li&gt;map
+        &lt;h3 id=&quot;类型详解&quot;&gt;类型详解&lt;/h3&gt;
+      &lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;数组：数组是一个由固定长度的特定类型元素组成的序列，一个数组可以由零个或多个元素组成
+    &lt;ul&gt;
+      &lt;li&gt;我们将会发现，数组、slice、map和结构体字面值的写法都很相似。是直接提供顺序初始化值序列，但是也可以指定一个索引和对应值列表的方式初始化，就像下面这样：
+  ```
+  type Currency int&lt;/li&gt;
+    &lt;/ul&gt;
+
+    &lt;p&gt;const (
+      USD Currency = iota // 美元
+      EUR                 // 欧元
+      GBP                 // 英镑
+      RMB                 // 人民币
+  )&lt;/p&gt;
+
+    &lt;p&gt;symbol := […]string{USD: “$”, EUR: “€”, GBP: “￡”, RMB: “￥”}&lt;/p&gt;
+
+    &lt;p&gt;fmt.Println(RMB, symbol[RMB]) // “3 ￥”&lt;/p&gt;
+    &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;  * 数组是可以直接比较的
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
+    &lt;p&gt;import “crypto/sha256”&lt;/p&gt;
+
+    &lt;p&gt;func main() {
+      c1 := sha256.Sum256([]byte(“x”))
+      c2 := sha256.Sum256([]byte(“X”))
+      fmt.Printf(“%x\n%x\n%t\n%T\n”, c1, c2, c1 == c2, c1)
+      // Output:                  &lt;br /&gt;
+      //2d711642b726b04401627ca9fbac32f5c8530fb1903cc4db02258717921a4881
+      // 4b68ab3847feda7d6c62c1fbcbeebfa35eab7351ed5e78f4ddadea5df64b8015
+      // false
+      // [32]uint8
+  }
+  ```&lt;/p&gt;
+    &lt;ul&gt;
+      &lt;li&gt;Go语言对待数组的方式和其它很多编程语言不同，其它编程语言可能会隐式地将数组作为引用或指针对象传入被调用的函数。
+        &lt;blockquote&gt;
+          &lt;p&gt;因为函数对待参数是值传递，需要复制参数变量，有些变成语言回见数据组隐式的转换为引用，以减少复制大型参数造成的额外开销。&lt;/p&gt;
+        &lt;/blockquote&gt;
+      &lt;/li&gt;
+      &lt;li&gt;虽然通过指针来传递数组参数是高效的，而且也允许在函数内部修改数组的值，但是数组依然是僵化的类型，因为数组的类型包含了僵化的长度信息。由于这些原因，除了像SHA256这类需要处理特定大小数组的特例外，数组依然很少用作函数参数；相反，我们一般使用slice来替代数组。&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;slice：底层是用数组实现的，支持动态的扩容
+    &lt;ul&gt;
+      &lt;li&gt;组成
+        &lt;ul&gt;
+          &lt;li&gt;指针：指针指向第一个slice元素对应的底层数组元素的地址，要注意的是slice的第一个元素并不一定就是数组的第一个元素&lt;/li&gt;
+          &lt;li&gt;长度：长度对应slice中元素的数目，长度不能超过容量&lt;/li&gt;
+          &lt;li&gt;容量：容量一般是从slice的开始位置到底层数据的结尾位置。内置的len和cap函数分别返回slice的长度和容量。&lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/li&gt;
+      &lt;li&gt;多个slice之间可以共享底层的数据，并且引用的数组部分区间可能重叠。图4.1显示了表示一年中每个月份名字的字符串数组，还有重叠引用了该数组的两个slice。
+ &lt;img src=&quot;/images/10.png&quot; alt=&quot;9ca9eaf81a29acc6f76294e5cf97a179.png&quot; /&gt;&lt;/li&gt;
+      &lt;li&gt;因为slice值包含指向第一个slice元素的指针，因此向函数传递slice将允许在函数内部修改底层数组的元素。换句话说，复制一个slice只是对底层的数组创建了一个新的slice别名。下面的reverse函数在原内存空间将[]int类型的slice反转，而且它可以用于任意长度的slice。
+ ```
+ func reverse(s []int) {
+  for i, j := 0, len(s)-1; i &amp;lt; j; i, j = i+1, j-1 {
+      s[i], s[j] = s[j], s[i]
+  }
+ }&lt;/li&gt;
+    &lt;/ul&gt;
+
+    &lt;p&gt;a := […]int{0, 1, 2, 3, 4, 5}
+ reverse(a[:])
+ fmt.Println(a) // “[5 4 3 2 1 0]”
+ ```&lt;/p&gt;
+    &lt;ul&gt;
+      &lt;li&gt;slice底层是数组但并不能像数组一样比较。
+        &lt;ul&gt;
+          &lt;li&gt;一个原因slice的元素是间接引用的，一个slice甚至可以包含自身&lt;/li&gt;
+          &lt;li&gt;第二个原因，因为slice的元素是间接引用的，一个固定的slice值(译注：指slice本身的值，不是元素的值)在不同的时刻可能包含不同的元素，因为底层数组的元素可能会被修改。slice扩容是地址也会发生改变。鉴于安全考虑直接禁止slice之间的比较操作，简化复杂度。&lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/li&gt;
+      &lt;li&gt;判断空slice
+        &lt;ul&gt;
+          &lt;li&gt;如果你需要测试一个slice是否是空的，使用len(s) == 0来判断，而不应该用s == nil来判断。&lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;结构体：相当于类
+    &lt;ul&gt;
+      &lt;li&gt;一个命名为S的结构体类型将不能再包含S类型的成员：因为一个聚合的值不能包含它自身。（该限制同样适应于数组。）但是S类型的结构体可以包含*S指针类型的成员，这可以让我们创建递归的数据结构，比如链表和树结构等。&lt;/li&gt;
+      &lt;li&gt;Go语言有一个特性让我们只声明一个成员对应的数据类型而不指名成员的名字；这类成员就叫匿名成员。匿名成员的数据类型必须是命名的类型或指向一个命名的类型的指针。下面的代码中，Circle和Wheel各自都有一个匿名成员。我们可以说Point类型被嵌入到了Circle结构体，同时Circle类型被嵌入到了Wheel结构体。
+  ```
+  type Point struct {
+  X, Y int
+  }&lt;/li&gt;
+    &lt;/ul&gt;
+
+    &lt;p&gt;type Circle struct {
+      Center Point
+      Radius int
+  }&lt;/p&gt;
+
+    &lt;p&gt;type Wheel struct {
+      Circle Circle
+      Spokes int
+  }&lt;/p&gt;
+
+    &lt;p&gt;var w Wheel
+  w.X = 8            // equivalent to w.Circle.Point.X = 8
+  w.Y = 8            // equivalent to w.Circle.Point.Y = 8
+  w.Radius = 5       // equivalent to w.Circle.Radius = 5
+  w.Spokes = 20
+  ```&lt;/p&gt;
+    &lt;ul&gt;
+      &lt;li&gt;在右边的注释中给出的显式形式访问这些叶子成员的语法依然有效，因此匿名成员并不是真的无法访问了。其中匿名成员Circle和Point都有自己的名字——就是命名的类型名字——但是这些名字在点操作符中是可选的。我们在访问子成员的时候可以忽略任何匿名成员部分。&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;map
+    &lt;ul&gt;
+      &lt;li&gt;map 底层也是固定数组，通过哈希表映射&lt;/li&gt;
+      &lt;li&gt;map中的元素并不是一个变量，因此我们不能对map的元素进行取址操作，禁止对map元素取址的原因是map可能随着元素数量的增长而重新分配更大的内存空间，从而可能导致之前的地址无效。&lt;/li&gt;
+      &lt;li&gt;Map的迭代顺序是不确定的，并且不同的哈希函数实现可能导致不同的遍历顺序。在实践中，遍历的顺序是随机的，每一次遍历的顺序都不相同。这是故意的，每次都使用随机的遍历顺序可以强制要求程序不会依赖具体的哈希函数实现。&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;总结&quot;&gt;总结&lt;/h2&gt;
+&lt;p&gt;类型就是数据结构，写代码先定义数据结构，数据结构决定了代码的走向决定了用什么算法。学海无涯苦作舟，千帆过尽还复来。继续努力吧。&lt;/p&gt;</content><author><name></name></author><summary type="html">Go数据类型有如下类型。 基础类型 复合类型 引用类型 接口类型 类型内容很多只能慢慢学习，今天学习复合类型。</summary></entry><entry><title type="html">Go直播实践</title><link href="/go/live/2019/04/16/Go_live-1.html" rel="alternate" type="text/html" title="Go直播实践" /><published>2019-04-16T00:00:00+08:00</published><updated>2019-04-16T00:00:00+08:00</updated><id>/go/live/2019/04/16/Go_live-1</id><content type="html" xml:base="/go/live/2019/04/16/Go_live-1.html">&lt;p&gt;视频直播是近些年特别火的技术栈，一直想学习如何实现视频直播。初期也了解了一些协议相关的知识，苦于都是c++相关学习起来比较难以理解，学习了Go语言之后突然想找一找是否有Go语言实现的直播服务，惊奇的发现，Livego这个开源直播服务端，自此展开了Go直播实践之路，由于工作繁重，只能抽时间搞，耽误了好几天的更新，话不多说直入正题。&lt;/p&gt;
 
 &lt;h2 id=&quot;服务端&quot;&gt;服务端&lt;/h2&gt;
 &lt;ul&gt;
@@ -861,39 +1006,4 @@ bundle exec jekyll serve
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
   &lt;/li&gt;
   &lt;li&gt;推送代码到远端&lt;/li&gt;
-&lt;/ul&gt;</content><author><name></name></author><summary type="html">本来想自己买服务器，搭建自己的博客，突然google到一种不用服务器也可以做自己博客的方式，利用github pages搭建自己的博客个人实践，完全可行。步骤如下：</summary></entry><entry><title type="html">linux 高性能学习笔记7</title><link href="/linux/2018/12/20/linux-high-7.html" rel="alternate" type="text/html" title="linux 高性能学习笔记7" /><published>2018-12-20T16:39:26+08:00</published><updated>2018-12-20T16:39:26+08:00</updated><id>/linux/2018/12/20/linux-high-7</id><content type="html" xml:base="/linux/2018/12/20/linux-high-7.html">&lt;p&gt;如何快速查找系统性能瓶颈，分析性能问题&lt;/p&gt;
-
-&lt;h3 id=&quot;概念&quot;&gt;概念&lt;/h3&gt;
-&lt;p&gt;如何快速查找系统性能瓶颈&lt;/p&gt;
-&lt;ol&gt;
-  &lt;li&gt;cup指标&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;用户态cpu使用量，如果高说明应用处理压力大&lt;/li&gt;
-  &lt;li&gt;内核态高，系统处理压力大&lt;/li&gt;
-  &lt;li&gt;IO，iowait比较高，说明系统io上有瓶颈&lt;/li&gt;
-  &lt;li&gt;中断比较高，说明系统有大量中断&lt;/li&gt;
-  &lt;li&gt;出以上情况外还有steal 虚拟机使用情况
-    &lt;ol&gt;
-      &lt;li&gt;系统平均负载&lt;/li&gt;
-      &lt;li&gt;进程切换&lt;/li&gt;
-    &lt;/ol&gt;
-    &lt;ul&gt;
-      &lt;li&gt;无法获取自愿的自愿上下文切换&lt;/li&gt;
-      &lt;li&gt;被系统强制调度的上下文切换
-        &lt;ol&gt;
-          &lt;li&gt;cpu缓存命中率&lt;/li&gt;
-        &lt;/ol&gt;
-      &lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;&lt;img src=&quot;/images/5.png&quot; alt=&quot;设置1&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/images/3.png&quot; alt=&quot;设置1&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;性能之间的关联&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/images/4.png&quot; alt=&quot;设置1&quot; /&gt;&lt;/p&gt;</content><author><name></name></author><summary type="html">如何快速查找系统性能瓶颈，分析性能问题</summary></entry></feed>
+&lt;/ul&gt;</content><author><name></name></author><summary type="html">本来想自己买服务器，搭建自己的博客，突然google到一种不用服务器也可以做自己博客的方式，利用github pages搭建自己的博客个人实践，完全可行。步骤如下：</summary></entry></feed>
