@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Go学习笔记5</title>
+  <meta name="description" content="从90年代早期开始，面向对象编程(OOP)就成为了称霸工程界和教育界的编程范式，所以之后几乎所有大规模被应用的语言都包含了对OOP的支持，go语言也不例外。OOP编程的第一方面，我们会向你展示如何有效地定义和使用方法。我们会覆盖到OOP编程的两个关键点，封装和组合。">
+
+  <!-- evil icon -->
+
+  <link rel="stylesheet" href="/assets/evil-icons.min.css">
+  <script src="/assets/evil-icons.min.js"></script>
+
+    <!-- todo: include this into main.css -->
+
+    <link rel="stylesheet" href="/css/main.css">
+    <link rel="canonical" href="/go/2019/04/28/Go-5.html">
+        <link rel="alternate" type="application/rss+xml" title="一叶障目" href="/feed.xml">
+    </head>
+<body>
+<div class="page-content">
+  <div class="container">
+    <div class="three columns">
+      <header class="site-header">
+  <h2 class="logo"><a href="/">一叶障目</a></h2>
+
+  <div class="nav">
+
+    <label for="menu-toggle" class="menu-icon">
+      <!--div data-icon="ei-navicon"></div-->
+      <svg viewBox="0 0 18 15">
+        <path fill="#424242" d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.031C17.335,0,18,0.665,18,1.484L18,1.484z"/>
+        <path fill="#424242" d="M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0c0-0.82,0.665-1.484,1.484-1.484 h15.031C17.335,6.031,18,6.696,18,7.516L18,7.516z"/>
+        <path fill="#424242" d="M18,13.516C18,14.335,17.335,15,16.516,15H1.484C0.665,15,0,14.335,0,13.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.031C17.335,12.031,18,12.696,18,13.516L18,13.516z"/>
+      </svg>
+    </label>
+    <input type="checkbox" id="menu-toggle">
+
+    <div class="site-nav">
+      <nav>
+        <ul class="page-link">
+          <li><a href="/">主页</a></li>
+          <li><a href="/archive">存档</a></li>
+          <li><a href="/about">关于我</a></li>
+          <li><a href="/feed.xml">RSS</a></li>
+        </ul>
+      </nav>
+    </div>
+
+  </div><script>
+if(!(window.doNotTrack === "1" || navigator.doNotTrack === "1" || navigator.doNotTrack === "yes" || navigator.msDoNotTrack === "1")) {
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-137167814-1', 'auto');
+  ga('send', 'pageview');
+}
+</script>
+  
+</header>
+
+    </div>
+
+    <div class="nine columns" style="z-index:100;">
+      <div class="wrapper">
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title p-name" itemprop="name headline">Go学习笔记5</h1>
+    <p class="post-meta">
+      <time class="dt-published" datetime="2019-04-28T00:00:00+08:00" itemprop="datePublished">Apr 28, 2019
+      </time></p>
+  </header>
+
+  <div class="post-content e-content" itemprop="articleBody">
+    <p>从90年代早期开始，面向对象编程(OOP)就成为了称霸工程界和教育界的编程范式，所以之后几乎所有大规模被应用的语言都包含了对OOP的支持，go语言也不例外。OOP编程的第一方面，我们会向你展示如何有效地定义和使用方法。我们会覆盖到OOP编程的两个关键点，封装和组合。</p>
+
+<h2 id="方法声明">方法声明</h2>
+<ul>
+  <li>在函数声明时，在其名字之前放上一个变量，即是一个方法。这个附加的参数会将该函数附加到这种类型上，即相当于为这种类型定义了一个独占的方法。
+```
+package geometry</li>
+</ul>
+
+<p>import “math”</p>
+
+<p>type Point struct{ X, Y float64 }</p>
+
+<p>// traditional functionfunc Distance(p, q Point) float64 {
+    return math.Hypot(q.X-p.X, q.Y-p.Y)
+}</p>
+
+<p>// same thing, but as a method of the Point typefunc (p Point) Distance(q Point) float64 {
+    return math.Hypot(q.X-p.X, q.Y-p.Y)
+}</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>* 上面的代码里那个附加的参数p，叫做方法的接收器(receiver)，早期的面向对象语言留下的遗产将调用一个方法称为“向一个对象发送消息”。
+* 在go语言中不适用this self做方法接收器，它建议适用类型的首字母作为接收器简短一致。
+* 包级的方法不会跟类型的方法产生混乱
+</code></pre></div></div>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>// A Path is a journey connecting the points with straight lines.type Path []Point
+// Distance returns the distance traveled along the path.func (path Path) Distance() float64 {
+    sum := 0.0
+    for i := range path {
+        if i &gt; 0 {
+            sum += path[i-1].Distance(path[i])
+        }
+    }
+    return sum
+}
+
+perim := Path{
+    {1, 1},
+    {5, 1},
+    {5, 4},
+    {1, 1}
+}
+fmt.Println(perim.Distance()) // "12" ``` * 在上面两个对Distance名字的方法的调用中，编译器会根据方法的名字以及接收器来决定具体调用的是哪一个函数。第一个例子中path[i-1]数组中的类型是Point，因此Point.Distance这个方法被调用；在第二个例子中perim的类型是Path，因此Distance调用的是Path.Distance。 * 对于一个给定的类型，其内部的方法都必须有唯一的方法名，但是不同的类型却可以有同样的方法名，比如我们这里Point和Path就都有Distance这个名字的方法；所以我们没有必要非在方法名之前加类型名来消除歧义，比如PathDistance。
+</code></pre></div></div>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code> import "gopl.io/ch6/geometry"
+ perim := geometry.Path{
+    {1, 1}, 
+    {5, 1}, 
+    {5, 4}, 
+    {1, 1}
+ }
+ fmt.Println(geometry.PathDistance(perim)) // "12", standalone function
+ fmt.Println(perim.Distance())             // "12", method of geometry.Path
+</code></pre></div></div>
+
+<ul>
+  <li>如果我们要用方法去计算perim的distance，还需要去写全geometry的包名，和其函数名，但是因为Path这个变量定义了一个可以直接用的Distance方法，所以我们可以直接写perim.Distance()。相当于可以少打很多字，作者应该是这个意思。因为在Go里包外调用函数需要带上包名，还是挺麻烦的。
+    <h2 id="基于指针的对象方法">基于指针的对象方法</h2>
+  </li>
+  <li>不管你的method的receiver是指针类型还是非指针类型，都是可以通过指针/非指针类型进行调用的，编译器会帮你做类型转换。在声明一个method的receiver该是指针还是非指针类型时，你需要考虑两方面的内部，
+    <ul>
+      <li>第一方面是这个对象本身是不是特别大，如果声明为非指针变量时，调用会产生一次拷贝；</li>
+      <li>第二方面是如果你用指针类型作为receiver，那么你一定要注意，这种指针类型指向的始终是一块内存地址，就算你对其进行了拷贝。熟悉C或者C艹的人这里应该很快能明白。
+        <h2 id="通过嵌入结构体来扩展类型">通过嵌入结构体来扩展类型</h2>
+      </li>
+    </ul>
+  </li>
+  <li>嵌入式写法，简化写代码时类型适用声明
+```</li>
+</ul>
+
+<p>import “image/color”</p>
+
+<p>type Point struct{ X, Y float64 }</p>
+
+<p>type ColoredPoint struct {
+    Point
+    Color color.RGBA
+}</p>
+
+<p>var cp ColoredPoint
+cp.X = 1
+fmt.Println(cp.Point.X) // “1”
+cp.Point.Y = 2
+fmt.Println(cp.Y) // “2”</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>* 对于Point中的方法我们也有类似的用法，我们可以把ColoredPoint类型当作接收器来调用Point里的方法，即使ColoredPoint里没有声明这些方法：
+</code></pre></div></div>
+<p>red := color.RGBA{255, 0, 0, 255}
+blue := color.RGBA{0, 0, 255, 255}
+var p = ColoredPoint{Point{1, 1}, red}
+var q = ColoredPoint{Point{5, 4}, blue}
+fmt.Println(p.Distance(q.Point)) // “5”
+p.ScaleBy(2)
+q.ScaleBy(2)
+fmt.Println(p.Distance(q.Point)) // “10”</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>* Point类的方法也被引入了ColoredPoint。用这种方式，内嵌可以使我们定义字段特别多的复杂类型，我们可以将字段先按小类型分组，然后定义小类型的方法，之后再把它们组合起来。
+&gt; 嵌入并不是代表继承的意思，更像是组合。并不是嵌入了某种类型这个类型类型就是某种类型的子类型，应该说是组合起来适用的更为合适。
+&gt; 如果想继承方法可以用匿名字段或者引用字段来做继承
+</code></pre></div></div>
+<p>type ColoredPoint struct {
+    *Point
+    Color color.RGBA
+}</p>
+
+<p>p := ColoredPoint{&amp;Point{1, 1}, red}
+q := ColoredPoint{&amp;Point{5, 4}, blue}
+fmt.Println(p.Distance(<em>q.Point)) // “5”
+q.Point = p.Point                 // p and q now share the same Point
+p.ScaleBy(2)
+fmt.Println(</em>p.Point, *q.Point) // “{2 2} {2 2}”</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>* 就是因为有了内嵌才有下面的小技巧：
+</code></pre></div></div>
+<p>var (
+    mu sync.Mutex // guards mapping
+    mapping = make(map[string]string)
+)</p>
+
+<p>func Lookup(key string) string {
+    mu.Lock()
+    v := mapping[key]
+    mu.Unlock()
+    return v
+}</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>* 可以改写成如下：
+</code></pre></div></div>
+<p>var cache = struct {
+    sync.Mutex
+    mapping map[string]string
+}{
+    mapping: make(map[string]string),
+}</p>
+
+<p>func Lookup(key string) string {
+    cache.Lock()
+    v := cache.mapping[key]
+    cache.Unlock()
+    return v
+}</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>* 使代码更简洁更优雅
+## 方法值和方法表达式
+* 类型中的函数调用分两步
+    * 用选择器选择方法，指定接收器
+    * 根据接收器和参数返回方法值
+* 我们可以根据不同的类型来决定用类型下的什么方法，通过指定不同接收器的方法，如下例子：
+</code></pre></div></div>
+<p>type Point struct{ X, Y float64 }</p>
+
+<p>func (p Point) Add(q Point) Point { return Point{p.X + q.X, p.Y + q.Y} }
+func (p Point) Sub(q Point) Point { return Point{p.X - q.X, p.Y - q.Y} }</p>
+
+<p>type Path []Point</p>
+
+<p>func (path Path) TranslateBy(offset Point, add bool) {
+    var op func(p, q Point) Point
+    if add {
+        op = Point.Add
+    } else {
+        op = Point.Sub
+    }
+    for i := range path {
+        // Call either path[i].Add(offset) or path[i].Sub(offset).
+        path[i] = op(path[i], offset)
+    }
+}
+```</p>
+<h2 id="封装">封装</h2>
+<ul>
+  <li>一个对象的变量或者方法如果对调用方是不可见的话，一般就被定义为“封装”。封装有时候也被叫做信息隐藏，同时也是面向对象编程最关键的一个方面。</li>
+  <li>封装的优点
+    <ul>
+      <li>首先，因为调用方不能直接修改对象的变量值，其只需要关注少量的语句并且只要弄懂少量变量的可能的值即可。</li>
+      <li>第二，隐藏实现的细节，可以防止调用方依赖那些可能变化的具体实现，这样使设计包的程序员在不破坏对外的api情况下能得到更大的自由。</li>
+      <li>第三个优点也是最重要的优点，是阻止了外部调用方对对象内部的值任意地进行修改。
+        <h2 id="总结">总结</h2>
+        <p>我们学到了如何将方法与命名类型进行组合，并且知道了如何调用这些方法。尽管方法对于OOP编程来说至关重要，但他们只是OOP编程里的半边天。为了完成OOP，我们还需要接口。Go里的接口会在接下来的学习中学习到。</p>
+      </li>
+    </ul>
+  </li>
+</ul>
+
+
+  </div><a class="u-url" href="/go/2019/04/28/Go-5.html" hidden></a>
+</article>
+
+      </div>
+    </div>
+  </div>
+  <footer class="site-footer">
+  <div class="container">
+    <div class="footer left column one-half">
+      <section class="small-font">
+        Theme <a href="https://github.com/wild-flame/jekyll-simple"> Simple </a> by <a href="http://wildflame.me">wildflame</a>
+        © 2016
+        Powered by <a href="https://github.com/jekyll/jekyll">jekyll</a>
+      </section>
+    </div>
+
+    <div class="footer right column one-half">
+      <section class="small-font">
+        
+        <a href="https://github.com/xiangdong1987"><span class="icon icon--github"><svg viewBox="0 0 16 16"><path fill="#828282" d="M7.999,0.431c-4.285,0-7.76,3.474-7.76,7.761 c0,3.428,2.223,6.337,5.307,7.363c0.388,0.071,0.53-0.168,0.53-0.374c0-0.184-0.007-0.672-0.01-1.32 c-2.159,0.469-2.614-1.04-2.614-1.04c-0.353-0.896-0.862-1.135-0.862-1.135c-0.705-0.481,0.053-0.472,0.053-0.472 c0.779,0.055,1.189,0.8,1.189,0.8c0.692,1.186,1.816,0.843,2.258,0.645c0.071-0.502,0.271-0.843,0.493-1.037 C4.86,11.425,3.049,10.76,3.049,7.786c0-0.847,0.302-1.54,0.799-2.082C3.768,5.507,3.501,4.718,3.924,3.65 c0,0,0.652-0.209,2.134,0.796C6.677,4.273,7.34,4.187,8,4.184c0.659,0.003,1.323,0.089,1.943,0.261 c1.482-1.004,2.132-0.796,2.132-0.796c0.423,1.068,0.157,1.857,0.077,2.054c0.497,0.542,0.798,1.235,0.798,2.082 c0,2.981-1.814,3.637-3.543,3.829c0.279,0.24,0.527,0.713,0.527,1.437c0,1.037-0.01,1.874-0.01,2.129 c0,0.208,0.14,0.449,0.534,0.373c3.081-1.028,5.302-3.935,5.302-7.362C15.76,3.906,12.285,0.431,7.999,0.431z"/></svg>
+</span></a>
+
+        
+        
+      </section>
+    </div>
+  </div>
+</footer>
+
+</div>
+</body>
+</html>

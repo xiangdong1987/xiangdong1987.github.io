@@ -1,4 +1,183 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.8.5">Jekyll</generator><link href="/feed.xml" rel="self" type="application/atom+xml" /><link href="/" rel="alternate" type="text/html" /><updated>2019-04-26T19:37:50+08:00</updated><id>/feed.xml</id><title type="html">一叶障目</title><subtitle>学无止境</subtitle><entry><title type="html">Go学习笔记4</title><link href="/go/2019/04/26/Go-4.html" rel="alternate" type="text/html" title="Go学习笔记4" /><published>2019-04-26T00:00:00+08:00</published><updated>2019-04-26T00:00:00+08:00</updated><id>/go/2019/04/26/Go-4</id><content type="html" xml:base="/go/2019/04/26/Go-4.html">&lt;p&gt;函数是一组逻辑的集合，能把大的任务拆成一个一个小的任务，供软件的各个位置去调用。&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.8.5">Jekyll</generator><link href="/feed.xml" rel="self" type="application/atom+xml" /><link href="/" rel="alternate" type="text/html" /><updated>2019-04-28T17:53:43+08:00</updated><id>/feed.xml</id><title type="html">一叶障目</title><subtitle>学无止境</subtitle><entry><title type="html">Go学习笔记5</title><link href="/go/2019/04/28/Go-5.html" rel="alternate" type="text/html" title="Go学习笔记5" /><published>2019-04-28T00:00:00+08:00</published><updated>2019-04-28T00:00:00+08:00</updated><id>/go/2019/04/28/Go-5</id><content type="html" xml:base="/go/2019/04/28/Go-5.html">&lt;p&gt;从90年代早期开始，面向对象编程(OOP)就成为了称霸工程界和教育界的编程范式，所以之后几乎所有大规模被应用的语言都包含了对OOP的支持，go语言也不例外。OOP编程的第一方面，我们会向你展示如何有效地定义和使用方法。我们会覆盖到OOP编程的两个关键点，封装和组合。&lt;/p&gt;
+
+&lt;h2 id=&quot;方法声明&quot;&gt;方法声明&lt;/h2&gt;
+&lt;ul&gt;
+  &lt;li&gt;在函数声明时，在其名字之前放上一个变量，即是一个方法。这个附加的参数会将该函数附加到这种类型上，即相当于为这种类型定义了一个独占的方法。
+```
+package geometry&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;import “math”&lt;/p&gt;
+
+&lt;p&gt;type Point struct{ X, Y float64 }&lt;/p&gt;
+
+&lt;p&gt;// traditional functionfunc Distance(p, q Point) float64 {
+    return math.Hypot(q.X-p.X, q.Y-p.Y)
+}&lt;/p&gt;
+
+&lt;p&gt;// same thing, but as a method of the Point typefunc (p Point) Distance(q Point) float64 {
+    return math.Hypot(q.X-p.X, q.Y-p.Y)
+}&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;* 上面的代码里那个附加的参数p，叫做方法的接收器(receiver)，早期的面向对象语言留下的遗产将调用一个方法称为“向一个对象发送消息”。
+* 在go语言中不适用this self做方法接收器，它建议适用类型的首字母作为接收器简短一致。
+* 包级的方法不会跟类型的方法产生混乱
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;// A Path is a journey connecting the points with straight lines.type Path []Point
+// Distance returns the distance traveled along the path.func (path Path) Distance() float64 {
+    sum := 0.0
+    for i := range path {
+        if i &amp;gt; 0 {
+            sum += path[i-1].Distance(path[i])
+        }
+    }
+    return sum
+}
+
+perim := Path{
+    {1, 1},
+    {5, 1},
+    {5, 4},
+    {1, 1}
+}
+fmt.Println(perim.Distance()) // &quot;12&quot; ``` * 在上面两个对Distance名字的方法的调用中，编译器会根据方法的名字以及接收器来决定具体调用的是哪一个函数。第一个例子中path[i-1]数组中的类型是Point，因此Point.Distance这个方法被调用；在第二个例子中perim的类型是Path，因此Distance调用的是Path.Distance。 * 对于一个给定的类型，其内部的方法都必须有唯一的方法名，但是不同的类型却可以有同样的方法名，比如我们这里Point和Path就都有Distance这个名字的方法；所以我们没有必要非在方法名之前加类型名来消除歧义，比如PathDistance。
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt; import &quot;gopl.io/ch6/geometry&quot;
+ perim := geometry.Path{
+    {1, 1}, 
+    {5, 1}, 
+    {5, 4}, 
+    {1, 1}
+ }
+ fmt.Println(geometry.PathDistance(perim)) // &quot;12&quot;, standalone function
+ fmt.Println(perim.Distance())             // &quot;12&quot;, method of geometry.Path
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;如果我们要用方法去计算perim的distance，还需要去写全geometry的包名，和其函数名，但是因为Path这个变量定义了一个可以直接用的Distance方法，所以我们可以直接写perim.Distance()。相当于可以少打很多字，作者应该是这个意思。因为在Go里包外调用函数需要带上包名，还是挺麻烦的。
+    &lt;h2 id=&quot;基于指针的对象方法&quot;&gt;基于指针的对象方法&lt;/h2&gt;
+  &lt;/li&gt;
+  &lt;li&gt;不管你的method的receiver是指针类型还是非指针类型，都是可以通过指针/非指针类型进行调用的，编译器会帮你做类型转换。在声明一个method的receiver该是指针还是非指针类型时，你需要考虑两方面的内部，
+    &lt;ul&gt;
+      &lt;li&gt;第一方面是这个对象本身是不是特别大，如果声明为非指针变量时，调用会产生一次拷贝；&lt;/li&gt;
+      &lt;li&gt;第二方面是如果你用指针类型作为receiver，那么你一定要注意，这种指针类型指向的始终是一块内存地址，就算你对其进行了拷贝。熟悉C或者C艹的人这里应该很快能明白。
+        &lt;h2 id=&quot;通过嵌入结构体来扩展类型&quot;&gt;通过嵌入结构体来扩展类型&lt;/h2&gt;
+      &lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;嵌入式写法，简化写代码时类型适用声明
+```&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;import “image/color”&lt;/p&gt;
+
+&lt;p&gt;type Point struct{ X, Y float64 }&lt;/p&gt;
+
+&lt;p&gt;type ColoredPoint struct {
+    Point
+    Color color.RGBA
+}&lt;/p&gt;
+
+&lt;p&gt;var cp ColoredPoint
+cp.X = 1
+fmt.Println(cp.Point.X) // “1”
+cp.Point.Y = 2
+fmt.Println(cp.Y) // “2”&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;* 对于Point中的方法我们也有类似的用法，我们可以把ColoredPoint类型当作接收器来调用Point里的方法，即使ColoredPoint里没有声明这些方法：
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;red := color.RGBA{255, 0, 0, 255}
+blue := color.RGBA{0, 0, 255, 255}
+var p = ColoredPoint{Point{1, 1}, red}
+var q = ColoredPoint{Point{5, 4}, blue}
+fmt.Println(p.Distance(q.Point)) // “5”
+p.ScaleBy(2)
+q.ScaleBy(2)
+fmt.Println(p.Distance(q.Point)) // “10”&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;* Point类的方法也被引入了ColoredPoint。用这种方式，内嵌可以使我们定义字段特别多的复杂类型，我们可以将字段先按小类型分组，然后定义小类型的方法，之后再把它们组合起来。
+&amp;gt; 嵌入并不是代表继承的意思，更像是组合。并不是嵌入了某种类型这个类型类型就是某种类型的子类型，应该说是组合起来适用的更为合适。
+&amp;gt; 如果想继承方法可以用匿名字段或者引用字段来做继承
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;type ColoredPoint struct {
+    *Point
+    Color color.RGBA
+}&lt;/p&gt;
+
+&lt;p&gt;p := ColoredPoint{&amp;amp;Point{1, 1}, red}
+q := ColoredPoint{&amp;amp;Point{5, 4}, blue}
+fmt.Println(p.Distance(&lt;em&gt;q.Point)) // “5”
+q.Point = p.Point                 // p and q now share the same Point
+p.ScaleBy(2)
+fmt.Println(&lt;/em&gt;p.Point, *q.Point) // “{2 2} {2 2}”&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;* 就是因为有了内嵌才有下面的小技巧：
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;var (
+    mu sync.Mutex // guards mapping
+    mapping = make(map[string]string)
+)&lt;/p&gt;
+
+&lt;p&gt;func Lookup(key string) string {
+    mu.Lock()
+    v := mapping[key]
+    mu.Unlock()
+    return v
+}&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;* 可以改写成如下：
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;var cache = struct {
+    sync.Mutex
+    mapping map[string]string
+}{
+    mapping: make(map[string]string),
+}&lt;/p&gt;
+
+&lt;p&gt;func Lookup(key string) string {
+    cache.Lock()
+    v := cache.mapping[key]
+    cache.Unlock()
+    return v
+}&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;* 使代码更简洁更优雅
+## 方法值和方法表达式
+* 类型中的函数调用分两步
+    * 用选择器选择方法，指定接收器
+    * 根据接收器和参数返回方法值
+* 我们可以根据不同的类型来决定用类型下的什么方法，通过指定不同接收器的方法，如下例子：
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;type Point struct{ X, Y float64 }&lt;/p&gt;
+
+&lt;p&gt;func (p Point) Add(q Point) Point { return Point{p.X + q.X, p.Y + q.Y} }
+func (p Point) Sub(q Point) Point { return Point{p.X - q.X, p.Y - q.Y} }&lt;/p&gt;
+
+&lt;p&gt;type Path []Point&lt;/p&gt;
+
+&lt;p&gt;func (path Path) TranslateBy(offset Point, add bool) {
+    var op func(p, q Point) Point
+    if add {
+        op = Point.Add
+    } else {
+        op = Point.Sub
+    }
+    for i := range path {
+        // Call either path[i].Add(offset) or path[i].Sub(offset).
+        path[i] = op(path[i], offset)
+    }
+}
+```&lt;/p&gt;
+&lt;h2 id=&quot;封装&quot;&gt;封装&lt;/h2&gt;
+&lt;ul&gt;
+  &lt;li&gt;一个对象的变量或者方法如果对调用方是不可见的话，一般就被定义为“封装”。封装有时候也被叫做信息隐藏，同时也是面向对象编程最关键的一个方面。&lt;/li&gt;
+  &lt;li&gt;封装的优点
+    &lt;ul&gt;
+      &lt;li&gt;首先，因为调用方不能直接修改对象的变量值，其只需要关注少量的语句并且只要弄懂少量变量的可能的值即可。&lt;/li&gt;
+      &lt;li&gt;第二，隐藏实现的细节，可以防止调用方依赖那些可能变化的具体实现，这样使设计包的程序员在不破坏对外的api情况下能得到更大的自由。&lt;/li&gt;
+      &lt;li&gt;第三个优点也是最重要的优点，是阻止了外部调用方对对象内部的值任意地进行修改。
+        &lt;h2 id=&quot;总结&quot;&gt;总结&lt;/h2&gt;
+        &lt;p&gt;我们学到了如何将方法与命名类型进行组合，并且知道了如何调用这些方法。尽管方法对于OOP编程来说至关重要，但他们只是OOP编程里的半边天。为了完成OOP，我们还需要接口。Go里的接口会在接下来的学习中学习到。&lt;/p&gt;
+      &lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;</content><author><name></name></author><summary type="html">从90年代早期开始，面向对象编程(OOP)就成为了称霸工程界和教育界的编程范式，所以之后几乎所有大规模被应用的语言都包含了对OOP的支持，go语言也不例外。OOP编程的第一方面，我们会向你展示如何有效地定义和使用方法。我们会覆盖到OOP编程的两个关键点，封装和组合。</summary></entry><entry><title type="html">Go学习笔记4</title><link href="/go/2019/04/26/Go-4.html" rel="alternate" type="text/html" title="Go学习笔记4" /><published>2019-04-26T00:00:00+08:00</published><updated>2019-04-26T00:00:00+08:00</updated><id>/go/2019/04/26/Go-4</id><content type="html" xml:base="/go/2019/04/26/Go-4.html">&lt;p&gt;函数是一组逻辑的集合，能把大的任务拆成一个一个小的任务，供软件的各个位置去调用。&lt;/p&gt;
 
 &lt;h3 id=&quot;函数声明&quot;&gt;函数声明&lt;/h3&gt;
 &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;func name(parameter-list) (result-list) {
@@ -1054,118 +1233,4 @@ soaktestrs-kimmm   1/1       Running   0          1m
       &lt;/li&gt;
     &lt;/ul&gt;
   &lt;/li&gt;
-&lt;/ol&gt;</content><author><name></name></author><summary type="html">针对cup瓶颈的问题分析了很多，相应的分析工具也介绍了不少，但理解了各种指标的含义后，会发现他们之间是有一定关联性的。顺着关联是可以很快找到瓶颈所在。找到瓶颈下一步就是进行优化。 方法论 可以从下面三个问题出发来判断性能优化是否有效 如何判断性能优化的有效性？ 性能问题通常不是独立问的，如果同时发生先优化哪一个？ 提升性能的方法并不唯一的，当有多钟选择时，改选哪一种？</summary></entry><entry><title type="html">kubernets理解总结</title><link href="/kubernets/2019/03/28/kubernets-1.html" rel="alternate" type="text/html" title="kubernets理解总结" /><published>2019-03-28T00:00:00+08:00</published><updated>2019-03-28T00:00:00+08:00</updated><id>/kubernets/2019/03/28/kubernets-1</id><content type="html" xml:base="/kubernets/2019/03/28/kubernets-1.html">&lt;p&gt;总体理解kubernets架构以及各个结构中的api使用&lt;/p&gt;
-
-&lt;h2 id=&quot;node&quot;&gt;Node&lt;/h2&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;节点：可以使虚拟机，也可以是实体机&lt;/li&gt;
-  &lt;li&gt;每个节点上都安装kubernets&lt;/li&gt;
-  &lt;li&gt;有主节点和子节点的区分&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h2 id=&quot;pods&quot;&gt;Pods&lt;/h2&gt;
-&lt;ul&gt;
-  &lt;li&gt;是组成节点的最小单位，是任意独立的容器,pos都存储在Node中，每个pos有自己的功能&lt;/li&gt;
-  &lt;li&gt;获取Pods&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;    kubectl get pods
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;查看Pods 描述&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;    kubectl describe deployment
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;进入pods中&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;    kubectl exec -ti $POD_NAME
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h2 id=&quot;service&quot;&gt;Service&lt;/h2&gt;
-&lt;ul&gt;
-  &lt;li&gt;通过service向外暴露pods&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;    kubectl expose deployment/kubernetes-bootcamp --type=&quot;NodePort&quot; --port 8080
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;查看service&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;    kubectl get services
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;查看service描述&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;    kubectl describe services/kubernetes-bootcamp
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;根据标签删除services&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;    kubectl delete service -l run=kubernetes-bootcamp
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h2 id=&quot;label&quot;&gt;Label&lt;/h2&gt;
-&lt;ul&gt;
-  &lt;li&gt;每个部署的pods 都会自动创建标签&lt;/li&gt;
-  &lt;li&gt;通过标签查询pods&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;    kubectl get pods -l kubectl describe deployment
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;重新设置标签&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;    kubectl label pod $POD_NAME app=v1
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h2 id=&quot;scale&quot;&gt;Scale&lt;/h2&gt;
-&lt;ul&gt;
-  &lt;li&gt;自动扩容缩容
-    &lt;ul&gt;
-      &lt;li&gt;各种状态
-        &lt;ol&gt;
-          &lt;li&gt;DESIRED 想要的容器数量&lt;/li&gt;
-          &lt;li&gt;CURRENT 当前的数量&lt;/li&gt;
-          &lt;li&gt;UP-TO-DATE ？？&lt;/li&gt;
-          &lt;li&gt;AVAILABLE 有效的&lt;/li&gt;
-        &lt;/ol&gt;
-      &lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;    kubectl scale deployments/kubernetes-bootcamp --replicas=4
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h2 id=&quot;rolling-update&quot;&gt;Rolling Update&lt;/h2&gt;
-&lt;ul&gt;
-  &lt;li&gt;滚动更新
-    &lt;ul&gt;
-      &lt;li&gt;通过镜像更新pods&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;    kubectl set image deployments/kubernetes-bootcamp kubernetes-bootcamp=jocatalin/kubernetes-bootcamp:v2
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;检查滚动更新状态&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;    kubectl rollout status deployments/kubernetes-bootcamp
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;</content><author><name></name></author><summary type="html">总体理解kubernets架构以及各个结构中的api使用</summary></entry></feed>
+&lt;/ol&gt;</content><author><name></name></author><summary type="html">针对cup瓶颈的问题分析了很多，相应的分析工具也介绍了不少，但理解了各种指标的含义后，会发现他们之间是有一定关联性的。顺着关联是可以很快找到瓶颈所在。找到瓶颈下一步就是进行优化。 方法论 可以从下面三个问题出发来判断性能优化是否有效 如何判断性能优化的有效性？ 性能问题通常不是独立问的，如果同时发生先优化哪一个？ 提升性能的方法并不唯一的，当有多钟选择时，改选哪一种？</summary></entry></feed>
