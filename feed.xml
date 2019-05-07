@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.8.5">Jekyll</generator><link href="/feed.xml" rel="self" type="application/atom+xml" /><link href="/" rel="alternate" type="text/html" /><updated>2019-05-07T18:08:17+08:00</updated><id>/feed.xml</id><title type="html">一叶障目</title><subtitle>学无止境</subtitle><entry><title type="html">Go学习笔记6</title><link href="/go/2019/05/07/Go-6.html" rel="alternate" type="text/html" title="Go学习笔记6" /><published>2019-05-07T00:00:00+08:00</published><updated>2019-05-07T00:00:00+08:00</updated><id>/go/2019/05/07/Go-6</id><content type="html" xml:base="/go/2019/05/07/Go-6.html">&lt;p&gt;接口是对其他类型性的的抽象和概括，它没有具体的实现细节可以让我们的函数更加灵活和更具有适应能力。Go语言的接口独特之处是实现了隐式实现。只需要简单地拥有一些必须的方法就足够了。&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.8.5">Jekyll</generator><link href="/feed.xml" rel="self" type="application/atom+xml" /><link href="/" rel="alternate" type="text/html" /><updated>2019-05-07T18:12:28+08:00</updated><id>/feed.xml</id><title type="html">一叶障目</title><subtitle>学无止境</subtitle><entry><title type="html">Go学习笔记6</title><link href="/go/2019/05/07/Go-6.html" rel="alternate" type="text/html" title="Go学习笔记6" /><published>2019-05-07T00:00:00+08:00</published><updated>2019-05-07T00:00:00+08:00</updated><id>/go/2019/05/07/Go-6</id><content type="html" xml:base="/go/2019/05/07/Go-6.html">&lt;p&gt;接口是对其他类型性的的抽象和概括，它没有具体的实现细节可以让我们的函数更加灵活和更具有适应能力。Go语言的接口独特之处是实现了隐式实现。只需要简单地拥有一些必须的方法就足够了。&lt;/p&gt;
 
 &lt;h2 id=&quot;接口就是合约&quot;&gt;接口就是合约&lt;/h2&gt;
 &lt;ul&gt;
@@ -18,9 +18,9 @@
 &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
-&lt;blockquote&gt;
-  &lt;p&gt;laravel中的facade也类似，利用了一个类型可以自由的使用另一个满足相同接口的类型来进行替换被称作可替换性(LSP里氏替换)&lt;/p&gt;
-&lt;/blockquote&gt;
+&lt;ul&gt;
+  &lt;li&gt;laravel中的facade也类似，利用了一个类型可以自由的使用另一个满足相同接口的类型来进行替换被称作可替换性(LSP里氏替换)&lt;/li&gt;
+&lt;/ul&gt;
 
 &lt;h2 id=&quot;接口类型&quot;&gt;接口类型&lt;/h2&gt;
 &lt;ul&gt;
@@ -160,12 +160,12 @@ func main() {
   &lt;li&gt;类型断言是一个使用在接口值上的操作。语法上它看起来像x.(T)被称为断言类型，这里x表示一个接口的类型和T表示一个类型。一个类型断言检查它操作对象的动态类型是否和断言的类型匹配。
     &lt;ul&gt;
       &lt;li&gt;第一种，如果断言的类型T是一个具体类型，然后类型断言检查x的动态类型是否和T相同。如果这个检查成功了，类型断言的结果是x的动态值，当然它的类型是T。&lt;/li&gt;
-      &lt;li&gt;第二种，如果相反断言的类型T是一个接口类型，然后类型断言检查是否x的动态类型满足T。如果这个检查成功了，动态值没有获取到；这个结果仍然是一个有相同类型和值部分的接口值，但是结果有类型T。
-        &lt;blockquote&gt;
-          &lt;p&gt;注意：第二种的意思是指，一个类型可以使多种接口的组合，有时候需要扩大可访问方法，所以可以通过类型断言来改变接口类型，但是不改变接口的动态类性值。&lt;/p&gt;
-        &lt;/blockquote&gt;
-      &lt;/li&gt;
+      &lt;li&gt;第二种，如果相反断言的类型T是一个接口类型，然后类型断言检查是否x的动态类型满足T。如果这个检查成功了，动态值没有获取到；这个结果仍然是一个有相同类型和值部分的接口值，但是结果有类型T。&lt;/li&gt;
     &lt;/ul&gt;
+
+    &lt;blockquote&gt;
+      &lt;p&gt;注意：第二种的意思是指，一个类型可以使多种接口的组合，有时候需要扩大可访问方法，所以可以通过类型断言来改变接口类型，但是不改变接口的动态类性值。&lt;/p&gt;
+    &lt;/blockquote&gt;
   &lt;/li&gt;
 &lt;/ul&gt;
 
@@ -345,46 +345,39 @@ func Lookup(key string) string {
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;ul&gt;
-  &lt;li&gt;可以改写成如下：&lt;/li&gt;
+  &lt;li&gt;可以改写成如下：
+```
+var cache = struct {
+  sync.Mutex
+  mapping map[string]string
+}{
+  mapping: make(map[string]string),
+}&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;var cache = struct {
-    sync.Mutex
-    mapping map[string]string
-}{
-    mapping: make(map[string]string),
-}
-
-
-func Lookup(key string) string {
+&lt;p&gt;func Lookup(key string) string {
     cache.Lock()
     v := cache.mapping[key]
     cache.Unlock()
     return v
-}
+}&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;* 使代码更简洁更优雅
+
+## 方法值和方法表达式
+
+* 类型中的函数调用分两步
+    * 用选择器选择方法，指定接收器
+    * 根据接收器和参数返回方法值
+* 我们可以根据不同的类型来决定用类型下的什么方法，通过指定不同接收器的方法，如下例子：
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;type Point struct{ X, Y float64 }&lt;/p&gt;
 
-&lt;ul&gt;
-  &lt;li&gt;使代码更简洁更优雅
-    &lt;h2 id=&quot;方法值和方法表达式&quot;&gt;方法值和方法表达式&lt;/h2&gt;
-  &lt;/li&gt;
-  &lt;li&gt;类型中的函数调用分两步
-    &lt;ul&gt;
-      &lt;li&gt;用选择器选择方法，指定接收器&lt;/li&gt;
-      &lt;li&gt;根据接收器和参数返回方法值&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;我们可以根据不同的类型来决定用类型下的什么方法，通过指定不同接收器的方法，如下例子：&lt;/li&gt;
-&lt;/ul&gt;
+&lt;p&gt;func (p Point) Add(q Point) Point { return Point{p.X + q.X, p.Y + q.Y} }
+func (p Point) Sub(q Point) Point { return Point{p.X - q.X, p.Y - q.Y} }&lt;/p&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;type Point struct{ X, Y float64 }
+&lt;p&gt;type Path []Point&lt;/p&gt;
 
-func (p Point) Add(q Point) Point { return Point{p.X + q.X, p.Y + q.Y} }
-func (p Point) Sub(q Point) Point { return Point{p.X - q.X, p.Y - q.Y} }
-
-type Path []Point
-
-func (path Path) TranslateBy(offset Point, add bool) {
+&lt;p&gt;func (path Path) TranslateBy(offset Point, add bool) {
     var op func(p, q Point) Point
     if add {
         op = Point.Add
@@ -396,7 +389,7 @@ func (path Path) TranslateBy(offset Point, add bool) {
         path[i] = op(path[i], offset)
     }
 }
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+```&lt;/p&gt;
 
 &lt;h2 id=&quot;封装&quot;&gt;封装&lt;/h2&gt;
 &lt;ul&gt;
@@ -405,13 +398,13 @@ func (path Path) TranslateBy(offset Point, add bool) {
     &lt;ul&gt;
       &lt;li&gt;首先，因为调用方不能直接修改对象的变量值，其只需要关注少量的语句并且只要弄懂少量变量的可能的值即可。&lt;/li&gt;
       &lt;li&gt;第二，隐藏实现的细节，可以防止调用方依赖那些可能变化的具体实现，这样使设计包的程序员在不破坏对外的api情况下能得到更大的自由。&lt;/li&gt;
-      &lt;li&gt;第三个优点也是最重要的优点，是阻止了外部调用方对对象内部的值任意地进行修改。
-        &lt;h2 id=&quot;总结&quot;&gt;总结&lt;/h2&gt;
-        &lt;p&gt;我们学到了如何将方法与命名类型进行组合，并且知道了如何调用这些方法。尽管方法对于OOP编程来说至关重要，但他们只是OOP编程里的半边天。为了完成OOP，我们还需要接口。Go里的接口会在接下来的学习中学习到。&lt;/p&gt;
-      &lt;/li&gt;
+      &lt;li&gt;第三个优点也是最重要的优点，是阻止了外部调用方对对象内部的值任意地进行修改。&lt;/li&gt;
     &lt;/ul&gt;
   &lt;/li&gt;
-&lt;/ul&gt;</content><author><name></name></author><summary type="html">从90年代早期开始，面向对象编程(OOP)就成为了称霸工程界和教育界的编程范式，所以之后几乎所有大规模被应用的语言都包含了对OOP的支持，go语言也不例外。OOP编程的第一方面，我们会向你展示如何有效地定义和使用方法。我们会覆盖到OOP编程的两个关键点，封装和组合。</summary></entry><entry><title type="html">Go学习笔记4</title><link href="/go/2019/04/26/Go-4.html" rel="alternate" type="text/html" title="Go学习笔记4" /><published>2019-04-26T00:00:00+08:00</published><updated>2019-04-26T00:00:00+08:00</updated><id>/go/2019/04/26/Go-4</id><content type="html" xml:base="/go/2019/04/26/Go-4.html">&lt;p&gt;函数是一组逻辑的集合，能把大的任务拆成一个一个小的任务，供软件的各个位置去调用。&lt;/p&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;总结&quot;&gt;总结&lt;/h2&gt;
+&lt;p&gt;我们学到了如何将方法与命名类型进行组合，并且知道了如何调用这些方法。尽管方法对于OOP编程来说至关重要，但他们只是OOP编程里的半边天。为了完成OOP，我们还需要接口。Go里的接口会在接下来的学习中学习到。&lt;/p&gt;</content><author><name></name></author><summary type="html">从90年代早期开始，面向对象编程(OOP)就成为了称霸工程界和教育界的编程范式，所以之后几乎所有大规模被应用的语言都包含了对OOP的支持，go语言也不例外。OOP编程的第一方面，我们会向你展示如何有效地定义和使用方法。我们会覆盖到OOP编程的两个关键点，封装和组合。</summary></entry><entry><title type="html">Go学习笔记4</title><link href="/go/2019/04/26/Go-4.html" rel="alternate" type="text/html" title="Go学习笔记4" /><published>2019-04-26T00:00:00+08:00</published><updated>2019-04-26T00:00:00+08:00</updated><id>/go/2019/04/26/Go-4</id><content type="html" xml:base="/go/2019/04/26/Go-4.html">&lt;p&gt;函数是一组逻辑的集合，能把大的任务拆成一个一个小的任务，供软件的各个位置去调用。&lt;/p&gt;
 
 &lt;h3 id=&quot;函数声明&quot;&gt;函数声明&lt;/h3&gt;
 &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;func name(parameter-list) (result-list) {

@@ -228,46 +228,39 @@ func Lookup(key string) string {
 </code></pre></div></div>
 
 <ul>
-  <li>可以改写成如下：</li>
+  <li>可以改写成如下：
+```
+var cache = struct {
+  sync.Mutex
+  mapping map[string]string
+}{
+  mapping: make(map[string]string),
+}</li>
 </ul>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>var cache = struct {
-    sync.Mutex
-    mapping map[string]string
-}{
-    mapping: make(map[string]string),
-}
-
-
-func Lookup(key string) string {
+<p>func Lookup(key string) string {
     cache.Lock()
     v := cache.mapping[key]
     cache.Unlock()
     return v
-}
+}</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>* 使代码更简洁更优雅
+
+## 方法值和方法表达式
+
+* 类型中的函数调用分两步
+    * 用选择器选择方法，指定接收器
+    * 根据接收器和参数返回方法值
+* 我们可以根据不同的类型来决定用类型下的什么方法，通过指定不同接收器的方法，如下例子：
 </code></pre></div></div>
+<p>type Point struct{ X, Y float64 }</p>
 
-<ul>
-  <li>使代码更简洁更优雅
-    <h2 id="方法值和方法表达式">方法值和方法表达式</h2>
-  </li>
-  <li>类型中的函数调用分两步
-    <ul>
-      <li>用选择器选择方法，指定接收器</li>
-      <li>根据接收器和参数返回方法值</li>
-    </ul>
-  </li>
-  <li>我们可以根据不同的类型来决定用类型下的什么方法，通过指定不同接收器的方法，如下例子：</li>
-</ul>
+<p>func (p Point) Add(q Point) Point { return Point{p.X + q.X, p.Y + q.Y} }
+func (p Point) Sub(q Point) Point { return Point{p.X - q.X, p.Y - q.Y} }</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>type Point struct{ X, Y float64 }
+<p>type Path []Point</p>
 
-func (p Point) Add(q Point) Point { return Point{p.X + q.X, p.Y + q.Y} }
-func (p Point) Sub(q Point) Point { return Point{p.X - q.X, p.Y - q.Y} }
-
-type Path []Point
-
-func (path Path) TranslateBy(offset Point, add bool) {
+<p>func (path Path) TranslateBy(offset Point, add bool) {
     var op func(p, q Point) Point
     if add {
         op = Point.Add
@@ -279,7 +272,7 @@ func (path Path) TranslateBy(offset Point, add bool) {
         path[i] = op(path[i], offset)
     }
 }
-</code></pre></div></div>
+```</p>
 
 <h2 id="封装">封装</h2>
 <ul>
@@ -288,13 +281,13 @@ func (path Path) TranslateBy(offset Point, add bool) {
     <ul>
       <li>首先，因为调用方不能直接修改对象的变量值，其只需要关注少量的语句并且只要弄懂少量变量的可能的值即可。</li>
       <li>第二，隐藏实现的细节，可以防止调用方依赖那些可能变化的具体实现，这样使设计包的程序员在不破坏对外的api情况下能得到更大的自由。</li>
-      <li>第三个优点也是最重要的优点，是阻止了外部调用方对对象内部的值任意地进行修改。
-        <h2 id="总结">总结</h2>
-        <p>我们学到了如何将方法与命名类型进行组合，并且知道了如何调用这些方法。尽管方法对于OOP编程来说至关重要，但他们只是OOP编程里的半边天。为了完成OOP，我们还需要接口。Go里的接口会在接下来的学习中学习到。</p>
-      </li>
+      <li>第三个优点也是最重要的优点，是阻止了外部调用方对对象内部的值任意地进行修改。</li>
     </ul>
   </li>
 </ul>
+
+<h2 id="总结">总结</h2>
+<p>我们学到了如何将方法与命名类型进行组合，并且知道了如何调用这些方法。尽管方法对于OOP编程来说至关重要，但他们只是OOP编程里的半边天。为了完成OOP，我们还需要接口。Go里的接口会在接下来的学习中学习到。</p>
 
 
   </div><a class="u-url" href="/go/2019/04/28/Go-5.html" hidden></a>
