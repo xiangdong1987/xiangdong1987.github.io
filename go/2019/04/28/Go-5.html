@@ -81,46 +81,55 @@ if(!(window.doNotTrack === "1" || navigator.doNotTrack === "1" || navigator.doNo
 
 <h2 id="方法声明">方法声明</h2>
 <ul>
-  <li>在函数声明时，在其名字之前放上一个变量，即是一个方法。这个附加的参数会将该函数附加到这种类型上，即相当于为这种类型定义了一个独占的方法。
-```
-package geometry</li>
+  <li>在函数声明时，在其名字之前放上一个变量，即是一个方法。这个附加的参数会将该函数附加到这种类型上，即相当于为这种类型定义了一个独占的方法。</li>
 </ul>
 
-<p>import “math”</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">package</span> <span class="n">geometry</span>
 
-<p>type Point struct{ X, Y float64 }</p>
+<span class="n">import</span> <span class="s2">"math"</span>
 
-<p>// traditional functionfunc Distance(p, q Point) float64 {
-    return math.Hypot(q.X-p.X, q.Y-p.Y)
-}</p>
+<span class="n">type</span> <span class="n">Point</span> <span class="n">struct</span><span class="p">{</span> <span class="n">X</span><span class="p">,</span> <span class="n">Y</span> <span class="n">float64</span> <span class="p">}</span>
 
-<p>// same thing, but as a method of the Point typefunc (p Point) Distance(q Point) float64 {
-    return math.Hypot(q.X-p.X, q.Y-p.Y)
-}</p>
+<span class="p">//</span> <span class="n">traditional</span> <span class="n">functionfunc</span> <span class="n">Distance</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">q</span> <span class="n">Point</span><span class="p">)</span> <span class="n">float64</span> <span class="p">{</span>
+    <span class="n">return</span> <span class="n">math</span><span class="p">.</span><span class="n">Hypot</span><span class="p">(</span><span class="n">q</span><span class="p">.</span><span class="n">X</span><span class="p">-</span><span class="n">p</span><span class="p">.</span><span class="n">X</span><span class="p">,</span> <span class="n">q</span><span class="p">.</span><span class="n">Y</span><span class="p">-</span><span class="n">p</span><span class="p">.</span><span class="n">Y</span><span class="p">)</span>
+<span class="p">}</span>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>* 上面的代码里那个附加的参数p，叫做方法的接收器(receiver)，早期的面向对象语言留下的遗产将调用一个方法称为“向一个对象发送消息”。
-* 在go语言中不适用this self做方法接收器，它建议适用类型的首字母作为接收器简短一致。
-* 包级的方法不会跟类型的方法产生混乱
+<span class="p">//</span> <span class="n">same</span> <span class="n">thing</span><span class="p">,</span> <span class="n">but</span> <span class="k">as</span> <span class="n">a</span> <span class="n">method</span> <span class="k">of</span> <span class="n">the</span> <span class="n">Point</span> <span class="n">typefunc</span> <span class="p">(</span><span class="n">p</span> <span class="n">Point</span><span class="p">)</span> <span class="n">Distance</span><span class="p">(</span><span class="n">q</span> <span class="n">Point</span><span class="p">)</span> <span class="n">float64</span> <span class="p">{</span>
+    <span class="n">return</span> <span class="n">math</span><span class="p">.</span><span class="n">Hypot</span><span class="p">(</span><span class="n">q</span><span class="p">.</span><span class="n">X</span><span class="p">-</span><span class="n">p</span><span class="p">.</span><span class="n">X</span><span class="p">,</span> <span class="n">q</span><span class="p">.</span><span class="n">Y</span><span class="p">-</span><span class="n">p</span><span class="p">.</span><span class="n">Y</span><span class="p">)</span>
+<span class="p">}</span>
+
 </code></pre></div></div>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>// A Path is a journey connecting the points with straight lines.type Path []Point
-// Distance returns the distance traveled along the path.func (path Path) Distance() float64 {
-    sum := 0.0
-    for i := range path {
-        if i &gt; 0 {
-            sum += path[i-1].Distance(path[i])
+
+<ul>
+  <li>上面的代码里那个附加的参数p，叫做方法的接收器(receiver)，早期的面向对象语言留下的遗产将调用一个方法称为“向一个对象发送消息”。</li>
+  <li>在go语言中不适用this self做方法接收器，它建议适用类型的首字母作为接收器简短一致。</li>
+  <li>包级的方法不会跟类型的方法产生混乱</li>
+</ul>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    // A Path is a journey connecting the points with straight lines.type Path []Point
+    // Distance returns the distance traveled along the path.func (path Path) Distance() float64 {
+        sum := 0.0
+        for i := range path {
+            if i &gt; 0 {
+                sum += path[i-1].Distance(path[i])
+            }
         }
+        return sum
     }
-    return sum
-}
-
-perim := Path{
-    {1, 1},
-    {5, 1},
-    {5, 4},
-    {1, 1}
-}
-fmt.Println(perim.Distance()) // "12" ``` * 在上面两个对Distance名字的方法的调用中，编译器会根据方法的名字以及接收器来决定具体调用的是哪一个函数。第一个例子中path[i-1]数组中的类型是Point，因此Point.Distance这个方法被调用；在第二个例子中perim的类型是Path，因此Distance调用的是Path.Distance。 * 对于一个给定的类型，其内部的方法都必须有唯一的方法名，但是不同的类型却可以有同样的方法名，比如我们这里Point和Path就都有Distance这个名字的方法；所以我们没有必要非在方法名之前加类型名来消除歧义，比如PathDistance。
+    
+    perim := Path{
+        {1, 1},
+        {5, 1},
+        {5, 4},
+        {1, 1}
+    }
+    fmt.Println(perim.Distance()) // "12"
 </code></pre></div></div>
+
+<ul>
+  <li>在上面两个对Distance名字的方法的调用中，编译器会根据方法的名字以及接收器来决定具体调用的是哪一个函数。第一个例子中path[i-1]数组中的类型是Point，因此Point.Distance这个方法被调用；在第二个例子中perim的类型是Path，因此Distance调用的是Path.Distance。</li>
+  <li>对于一个给定的类型，其内部的方法都必须有唯一的方法名，但是不同的类型却可以有同样的方法名，比如我们这里Point和Path就都有Distance这个名字的方法；所以我们没有必要非在方法名之前加类型名来消除歧义，比如PathDistance。</li>
+</ul>
 
 <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code> import "gopl.io/ch6/geometry"
  perim := geometry.Path{
@@ -145,92 +154,120 @@ fmt.Println(perim.Distance()) // "12" ``` * 在上面两个对Distance名字的�
       </li>
     </ul>
   </li>
-  <li>嵌入式写法，简化写代码时类型适用声明
-```</li>
+  <li>嵌入式写法，简化写代码时类型适用声明</li>
 </ul>
 
-<p>import “image/color”</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+import "image/color"
 
-<p>type Point struct{ X, Y float64 }</p>
+type Point struct{ X, Y float64 }
 
-<p>type ColoredPoint struct {
+type ColoredPoint struct {
     Point
     Color color.RGBA
-}</p>
+}
 
-<p>var cp ColoredPoint
+var cp ColoredPoint
 cp.X = 1
-fmt.Println(cp.Point.X) // “1”
+fmt.Println(cp.Point.X) // "1"
 cp.Point.Y = 2
-fmt.Println(cp.Y) // “2”</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>* 对于Point中的方法我们也有类似的用法，我们可以把ColoredPoint类型当作接收器来调用Point里的方法，即使ColoredPoint里没有声明这些方法：
+fmt.Println(cp.Y) // "2"
 </code></pre></div></div>
-<p>red := color.RGBA{255, 0, 0, 255}
+
+<ul>
+  <li>对于Point中的方法我们也有类似的用法，我们可以把ColoredPoint类型当作接收器来调用Point里的方法，即使ColoredPoint里没有声明这些方法：</li>
+</ul>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>red := color.RGBA{255, 0, 0, 255}
 blue := color.RGBA{0, 0, 255, 255}
 var p = ColoredPoint{Point{1, 1}, red}
 var q = ColoredPoint{Point{5, 4}, blue}
-fmt.Println(p.Distance(q.Point)) // “5”
+fmt.Println(p.Distance(q.Point)) // "5"
 p.ScaleBy(2)
 q.ScaleBy(2)
-fmt.Println(p.Distance(q.Point)) // “10”</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>* Point类的方法也被引入了ColoredPoint。用这种方式，内嵌可以使我们定义字段特别多的复杂类型，我们可以将字段先按小类型分组，然后定义小类型的方法，之后再把它们组合起来。
-&gt; 嵌入并不是代表继承的意思，更像是组合。并不是嵌入了某种类型这个类型类型就是某种类型的子类型，应该说是组合起来适用的更为合适。
-&gt; 如果想继承方法可以用匿名字段或者引用字段来做继承
+fmt.Println(p.Distance(q.Point)) // "10"
 </code></pre></div></div>
-<p>type ColoredPoint struct {
+
+<ul>
+  <li>Point类的方法也被引入了ColoredPoint。用这种方式，内嵌可以使我们定义字段特别多的复杂类型，我们可以将字段先按小类型分组，然后定义小类型的方法，之后再把它们组合起来。
+    <blockquote>
+      <p>嵌入并不是代表继承的意思，更像是组合。并不是嵌入了某种类型这个类型类型就是某种类型的子类型，应该说是组合起来适用的更为合适。
+如果想继承方法可以用匿名字段或者引用字段来做继承</p>
+    </blockquote>
+  </li>
+</ul>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>type ColoredPoint struct {
     *Point
     Color color.RGBA
-}</p>
+}
 
-<p>p := ColoredPoint{&amp;Point{1, 1}, red}
+p := ColoredPoint{&amp;Point{1, 1}, red}
 q := ColoredPoint{&amp;Point{5, 4}, blue}
-fmt.Println(p.Distance(<em>q.Point)) // “5”
+fmt.Println(p.Distance(*q.Point)) // "5"
 q.Point = p.Point                 // p and q now share the same Point
 p.ScaleBy(2)
-fmt.Println(</em>p.Point, *q.Point) // “{2 2} {2 2}”</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>* 就是因为有了内嵌才有下面的小技巧：
+fmt.Println(*p.Point, *q.Point) // "{2 2} {2 2}"
 </code></pre></div></div>
-<p>var (
+
+<ul>
+  <li>就是因为有了内嵌才有下面的小技巧：</li>
+</ul>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>var (
     mu sync.Mutex // guards mapping
     mapping = make(map[string]string)
-)</p>
+)
 
-<p>func Lookup(key string) string {
+func Lookup(key string) string {
     mu.Lock()
     v := mapping[key]
     mu.Unlock()
     return v
-}</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>* 可以改写成如下：
+}
 </code></pre></div></div>
-<p>var cache = struct {
+
+<ul>
+  <li>可以改写成如下：</li>
+</ul>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>var cache = struct {
     sync.Mutex
     mapping map[string]string
 }{
     mapping: make(map[string]string),
-}</p>
+}
 
-<p>func Lookup(key string) string {
+
+func Lookup(key string) string {
     cache.Lock()
     v := cache.mapping[key]
     cache.Unlock()
     return v
-}</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>* 使代码更简洁更优雅
-## 方法值和方法表达式
-* 类型中的函数调用分两步
-    * 用选择器选择方法，指定接收器
-    * 根据接收器和参数返回方法值
-* 我们可以根据不同的类型来决定用类型下的什么方法，通过指定不同接收器的方法，如下例子：
+}
 </code></pre></div></div>
-<p>type Point struct{ X, Y float64 }</p>
 
-<p>func (p Point) Add(q Point) Point { return Point{p.X + q.X, p.Y + q.Y} }
-func (p Point) Sub(q Point) Point { return Point{p.X - q.X, p.Y - q.Y} }</p>
+<ul>
+  <li>使代码更简洁更优雅
+    <h2 id="方法值和方法表达式">方法值和方法表达式</h2>
+  </li>
+  <li>类型中的函数调用分两步
+    <ul>
+      <li>用选择器选择方法，指定接收器</li>
+      <li>根据接收器和参数返回方法值</li>
+    </ul>
+  </li>
+  <li>我们可以根据不同的类型来决定用类型下的什么方法，通过指定不同接收器的方法，如下例子：</li>
+</ul>
 
-<p>type Path []Point</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>type Point struct{ X, Y float64 }
 
-<p>func (path Path) TranslateBy(offset Point, add bool) {
+func (p Point) Add(q Point) Point { return Point{p.X + q.X, p.Y + q.Y} }
+func (p Point) Sub(q Point) Point { return Point{p.X - q.X, p.Y - q.Y} }
+
+type Path []Point
+
+func (path Path) TranslateBy(offset Point, add bool) {
     var op func(p, q Point) Point
     if add {
         op = Point.Add
@@ -242,7 +279,8 @@ func (p Point) Sub(q Point) Point { return Point{p.X - q.X, p.Y - q.Y} }</p>
         path[i] = op(path[i], offset)
     }
 }
-```</p>
+</code></pre></div></div>
+
 <h2 id="封装">封装</h2>
 <ul>
   <li>一个对象的变量或者方法如果对调用方是不可见的话，一般就被定义为“封装”。封装有时候也被叫做信息隐藏，同时也是面向对象编程最关键的一个方面。</li>
