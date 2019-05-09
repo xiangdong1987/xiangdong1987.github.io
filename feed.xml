@@ -1,4 +1,194 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.8.5">Jekyll</generator><link href="/feed.xml" rel="self" type="application/atom+xml" /><link href="/" rel="alternate" type="text/html" /><updated>2019-05-07T18:12:28+08:00</updated><id>/feed.xml</id><title type="html">一叶障目</title><subtitle>学无止境</subtitle><entry><title type="html">Go学习笔记6</title><link href="/go/2019/05/07/Go-6.html" rel="alternate" type="text/html" title="Go学习笔记6" /><published>2019-05-07T00:00:00+08:00</published><updated>2019-05-07T00:00:00+08:00</updated><id>/go/2019/05/07/Go-6</id><content type="html" xml:base="/go/2019/05/07/Go-6.html">&lt;p&gt;接口是对其他类型性的的抽象和概括，它没有具体的实现细节可以让我们的函数更加灵活和更具有适应能力。Go语言的接口独特之处是实现了隐式实现。只需要简单地拥有一些必须的方法就足够了。&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.8.5">Jekyll</generator><link href="/feed.xml" rel="self" type="application/atom+xml" /><link href="/" rel="alternate" type="text/html" /><updated>2019-05-09T16:08:28+08:00</updated><id>/feed.xml</id><title type="html">一叶障目</title><subtitle>学无止境</subtitle><entry><title type="html">Go学习笔记7</title><link href="/go/2019/05/09/Go-7.html" rel="alternate" type="text/html" title="Go学习笔记7" /><published>2019-05-09T00:00:00+08:00</published><updated>2019-05-09T00:00:00+08:00</updated><id>/go/2019/05/09/Go-7</id><content type="html" xml:base="/go/2019/05/09/Go-7.html">&lt;p&gt;重头戏要来了，并发编程。这是Go的主打优势，Go通过自身设计层面，隐藏了比较晦涩难懂的并发过程，我们只需要通过goroutine和channel的配合就能实现自己想要的并发程序，实现CSP（communicating sequential processes）并发变成模型，像我这么懒得人特别喜欢站在巨人的肩膀上眺望。&lt;/p&gt;
+
+&lt;h2 id=&quot;goroutines&quot;&gt;Goroutines&lt;/h2&gt;
+&lt;ul&gt;
+  &lt;li&gt;在Go语言中，每一个并发的执行单元叫作一个goroutine。&lt;/li&gt;
+  &lt;li&gt;当一个程序启动时，其主函数即在一个单独的goroutine中运行，我们叫它main goroutine。新的goroutine会用go语句来创建。在语法上，go语句是一个普通的函数或方法调用前加上关键字go。go语句会使其语句中的函数在一个新创建的goroutine中运行。而go语句本身会迅速地完成。&lt;/li&gt;
+  &lt;li&gt;Goroutines是并发体
+    &lt;h2 id=&quot;channels&quot;&gt;Channels&lt;/h2&gt;
+  &lt;/li&gt;
+  &lt;li&gt;如果说goroutine是Go语言程序的并发体的话，那么channels则是它们之间的通信机制。&lt;/li&gt;
+  &lt;li&gt;channels 就是一个顺序的消息队列可分为下面两类
+    &lt;ul&gt;
+      &lt;li&gt;有buffer的channel:
+        &lt;ul&gt;
+          &lt;li&gt;读取时：队列非空不阻塞&lt;/li&gt;
+          &lt;li&gt;写入时：队列非满不阻塞&lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/li&gt;
+      &lt;li&gt;有buffer示例代码：
+  ```
+  func mirroredQuery() string {
+  responses := make(chan string, 3)
+  go func() { responses &amp;lt;- request(“asia.gopl.io”) }()
+  go func() { responses &amp;lt;- request(“europe.gopl.io”) }()
+  go func() { responses &amp;lt;- request(“americas.gopl.io”) }()
+  return &amp;lt;-responses // return the quickest response
+  }&lt;/li&gt;
+    &lt;/ul&gt;
+
+    &lt;p&gt;func request(hostname string) (response string) { /* … */ }
+  ```&lt;/p&gt;
+    &lt;blockquote&gt;
+      &lt;p&gt;如果我们使用了无缓存的channel，那么两个慢的goroutines将会因为没有人接收而被永远卡住。这种情况，称为goroutines泄漏，这将是一个BUG。和垃圾变量不同，泄漏的goroutines并不会被自动回收，因此确保每个不再需要的goroutine能正常退出是重要的。&lt;/p&gt;
+      &lt;ul&gt;
+        &lt;li&gt;没有buffer的channel
+          &lt;ul&gt;
+            &lt;li&gt;读取时：有写入不阻塞&lt;/li&gt;
+            &lt;li&gt;写入时：空channnel不阻塞&lt;/li&gt;
+          &lt;/ul&gt;
+        &lt;/li&gt;
+      &lt;/ul&gt;
+    &lt;/blockquote&gt;
+  &lt;/li&gt;
+  &lt;li&gt;串联channnel实现pipeline。让各个程序同时并发处理&lt;/li&gt;
+  &lt;li&gt;使用单方向的channel 避免一些异常写入和读取&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;func counter(out chan&amp;lt;- int) {
+    for x := 0; x &amp;lt; 100; x++ {
+        out &amp;lt;- x
+    }
+    close(out)
+}
+
+func squarer(out chan&amp;lt;- int, in &amp;lt;-chan int) {
+    for v := range in {
+        out &amp;lt;- v * v
+    }
+    close(out)
+}
+
+func printer(in &amp;lt;-chan int) {
+    for v := range in {
+        fmt.Println(v)
+    }
+}
+
+func main() {
+    naturals := make(chan int)
+    squares := make(chan int)
+    go counter(naturals)
+    go squarer(squares, naturals)
+    printer(squares)
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Channel的缓存也可能影响程序的性能。想象一家蛋糕店有三个厨师，一个烘焙，一个上糖衣，还有一个将每个蛋糕传递到它下一个厨师在生产线。在狭小的厨房空间环境，每个厨师在完成蛋糕后必须等待下一个厨师已经准备好接受它；这类似于在一个无缓存的channel上进行沟通。&lt;/li&gt;
+  &lt;li&gt;合理的设置缓存，就是合理的利用生产者和消费者之间的关系。尽量不要过度生产或者过度消费&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;并发循环&quot;&gt;并发循环&lt;/h2&gt;
+&lt;ul&gt;
+  &lt;li&gt;利用循环迭代进行并发是最长见的并发模型，如果不在main gorouintine 进行控制程序会瞬间执行完毕，不等待其他goroutine 完成，所以一般我们会用channel进行控制代码如下：&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;// makeThumbnails3 makes thumbnails of the specified files in parallel.func makeThumbnails3(filenames []string) {
+    ch := make(chan struct{})
+    for _, f := range filenames {
+        go func(f string) {
+            thumbnail.ImageFile(f) // NOTE: ignoring errors
+            ch &amp;lt;- struct{}{}
+        }(f)
+    }
+    // Wait for goroutines to complete.
+    for range filenames {
+        &amp;lt;-ch
+    }
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;前面讲的都是知道并行次数的情况，在不知道并行次数的情况下我们需要一个完全的计数器来控制并行的结束，通过sync.WaitGroup来控制循环进程结束
+    &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;// makeThumbnails6 makes thumbnails for each file received from the channel.
+// It returns the number of bytes occupied by the files it creates.
+func makeThumbnails6(filenames &amp;lt;-chan string) int64 {
+  sizes := make(chan int64)
+  var wg sync.WaitGroup // number of working goroutines
+  for f := range filenames {
+      wg.Add(1)
+      // worker
+      go func(f string) {
+          defer wg.Done()
+          thumb, err := thumbnail.ImageFile(f)
+          if err != nil {
+              log.Println(err)
+              return
+          }
+          info, _ := os.Stat(thumb) // OK to ignore error
+          sizes &amp;lt;- info.Size()
+      }(f)
+  }
+
+  // closer
+  go func() {
+      wg.Wait()
+      close(sizes)
+  }()
+
+  var total int64
+  for size := range sizes {
+      total += size
+  }
+  return total
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
+  &lt;/li&gt;
+  &lt;li&gt;时序图如下：
+&lt;img src=&quot;/images/11.png&quot; alt=&quot;设置1&quot; /&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;实例分析&quot;&gt;实例分析&lt;/h2&gt;
+&lt;ul&gt;
+  &lt;li&gt;网络爬虫
+    &lt;ul&gt;
+      &lt;li&gt;工作channel,用于保存正在抓取的链接&lt;/li&gt;
+      &lt;li&gt;接受命令行的goroutine&lt;/li&gt;
+      &lt;li&gt;记录访问记录的map&lt;/li&gt;
+      &lt;li&gt;循环消耗工作channel&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;优化思路
+    &lt;ul&gt;
+      &lt;li&gt;当无限开启goroutine时，会造打开过多的文件描述符，所以我们必须控制goroutine的数量，这个时候我们需要一个新的channel，token的channel,相当于令牌桶合理的有缓存channel 当做令牌桶,在go的函数获取令牌，执行结束后释放令牌。&lt;/li&gt;
+      &lt;li&gt;如何防止无限抓取，要检查工作channel是否已经完成
+        &lt;h2 id=&quot;多路复用select&quot;&gt;多路复用select&lt;/h2&gt;
+      &lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;当你有多个channel 想同时检测时你可以使用select，它保证随机的获取你要检测的channel代码如下：&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;
+func main() {
+    // ...create abort channel...
+
+    fmt.Println(&quot;Commencing countdown.  Press return to abort.&quot;)
+    tick := time.Tick(1 * time.Second)
+    for countdown := 10; countdown &amp;gt; 0; countdown-- {
+        fmt.Println(countdown)
+        select {
+        case &amp;lt;-tick:
+            // Do nothing.
+        case &amp;lt;-abort:
+            fmt.Println(&quot;Launch aborted!&quot;)
+            return
+        }
+    }
+    launch()
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;h2 id=&quot;总结&quot;&gt;总结&lt;/h2&gt;
+&lt;p&gt;并发编程并不像，想象的那么难，也没有说的那么容易，其中很多方式方法还是需要在不断的学习和实践中总结比如：&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;channel 有误buffer选用&lt;/li&gt;
+  &lt;li&gt;goroutine 泄漏问题&lt;/li&gt;
+  &lt;li&gt;goroutine 开启的限制&lt;/li&gt;
+  &lt;li&gt;程序结束的限制&lt;/li&gt;
+  &lt;li&gt;并发深度的限制等等
+只有不断学习和实践才是做为一名coder 的终身事业。&lt;/li&gt;
+&lt;/ul&gt;</content><author><name></name></author><summary type="html">重头戏要来了，并发编程。这是Go的主打优势，Go通过自身设计层面，隐藏了比较晦涩难懂的并发过程，我们只需要通过goroutine和channel的配合就能实现自己想要的并发程序，实现CSP（communicating sequential processes）并发变成模型，像我这么懒得人特别喜欢站在巨人的肩膀上眺望。</summary></entry><entry><title type="html">Go学习笔记6</title><link href="/go/2019/05/07/Go-6.html" rel="alternate" type="text/html" title="Go学习笔记6" /><published>2019-05-07T00:00:00+08:00</published><updated>2019-05-07T00:00:00+08:00</updated><id>/go/2019/05/07/Go-6</id><content type="html" xml:base="/go/2019/05/07/Go-6.html">&lt;p&gt;接口是对其他类型性的的抽象和概括，它没有具体的实现细节可以让我们的函数更加灵活和更具有适应能力。Go语言的接口独特之处是实现了隐式实现。只需要简单地拥有一些必须的方法就足够了。&lt;/p&gt;
 
 &lt;h2 id=&quot;接口就是合约&quot;&gt;接口就是合约&lt;/h2&gt;
 &lt;ul&gt;
@@ -1227,150 +1417,4 @@ soaktestrs-kimmm   1/1       Running   0          1m
 &lt;p&gt;四中yaml是逐层递增的向上的上层依赖下层，实现一个层级。&lt;/p&gt;
 
 &lt;h2 id=&quot;总结&quot;&gt;总结&lt;/h2&gt;
-&lt;p&gt;kubernets 的整理部署由上面的几个部分组成，副本的是为了实现系统稳定性，副本管理是为了实现环境的滚动更新和回滚，service是为了实现统一的网关入口和负载均衡。整体的架构就是如此，细节就是要在实践中不断的学习和积累了。&lt;/p&gt;</content><author><name></name></author><summary type="html">在学习编排之前，认识kubernets的各种组件是很重要的。他们之间的关系是怎么样的？如果构建一个合理的服务？都是要在开始之前需要学习的。</summary></entry><entry><title type="html">linux 高性能学习笔记9</title><link href="/linux/2019/04/02/linux-high-9.html" rel="alternate" type="text/html" title="linux 高性能学习笔记9" /><published>2019-04-02T00:00:00+08:00</published><updated>2019-04-02T00:00:00+08:00</updated><id>/linux/2019/04/02/linux-high-9</id><content type="html" xml:base="/linux/2019/04/02/linux-high-9.html">&lt;p&gt;同CUP管理一样，内存管理也是操作系统最核心的功能之。内存主要用来存储系统和应用程序的指令，数据，缓存等。&lt;/p&gt;
-
-&lt;h2 id=&quot;内存映射&quot;&gt;内存映射&lt;/h2&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;通常说的8G内存指的是物理内存也成主存&lt;/li&gt;
-  &lt;li&gt;进程是不可以直接访问物理内存，只有cpu可以直接访问物理内存&lt;/li&gt;
-  &lt;li&gt;大多数的主存都是动态随机访问内存（DRAM）&lt;/li&gt;
-  &lt;li&gt;linux 为每个进程分配一个独立的虚拟地址空间，并且是连续的。&lt;/li&gt;
-  &lt;li&gt;虚拟内存空间也被分为内核空间和用户空间。&lt;/li&gt;
-  &lt;li&gt;根据cpu指令可以处理数据的最大长度32位和64位&lt;/li&gt;
-  &lt;li&gt;32位cpu 最长寻址空间是4G  1G 系统空间 3G 用户空间&lt;/li&gt;
-  &lt;li&gt;64位cpu 最长寻址空间是17179869184G
-    &lt;ul&gt;
-      &lt;li&gt;头128T 系统空间&lt;/li&gt;
-      &lt;li&gt;位128T 用户空间&lt;/li&gt;
-      &lt;li&gt;其他 其他空间&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;每个进程都有用户态和内核态，所有的虚拟内存加起来一定大于物理内存，所以并不是所有虚拟内存都分配物理内存，只有那些实际使用的虚拟内存才分配物理内存，并且分配后的物理内存，是通过 &lt;strong&gt;内存映射&lt;/strong&gt; 来管理的。&lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;&lt;img src=&quot;/images/6.png&quot; alt=&quot;设置1&quot; /&gt;&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;MMU(Memory Management Unit)内存管理单元，用于存储页表&lt;/li&gt;
-  &lt;li&gt;每个进程都有一个对应的页表来做内存映射&lt;/li&gt;
-  &lt;li&gt;当虚拟地址在页表种查找不到地址时 &lt;strong&gt;缺页异常&lt;/strong&gt; 进入内核空间分配物理内存，更新进程页表，最后返回用户空间，恢复进程运行。&lt;/li&gt;
-  &lt;li&gt;MMU的最小单位是4KB称作&lt;strong&gt;页&lt;/strong&gt;&lt;/li&gt;
-  &lt;li&gt;由于页大小只有4KB，加入在32位系统中，就会有100多万的页表才能实现整个地址空间的映射。为了解决页表项过多的问题，linux提供两种机制
-    &lt;ul&gt;
-      &lt;li&gt;多级页表：吧内存分成区块来管理，讲原来的映射关系改成区块索引和区块内的偏移。由于虚拟内存空间通常只用很少一部分，那么多级页表就只保存这些使用中的区块，这样就可以大大地减少页表的项数&lt;/li&gt;
-      &lt;li&gt;&lt;img src=&quot;/images/7.png&quot; alt=&quot;设置1&quot; /&gt;&lt;/li&gt;
-      &lt;li&gt;大页：不明思议就是更大的内存块，常见2MB和1GB，多用于使用大量内存的进程上，比如Oracle,DPDK等&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h2 id=&quot;虚拟内存空间的分布&quot;&gt;虚拟内存空间的分布&lt;/h2&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;&lt;img src=&quot;/images/8.png&quot; alt=&quot;设置1&quot; /&gt;&lt;/li&gt;
-  &lt;li&gt;从低到高分五种不同的内存段：
-    &lt;ol&gt;
-      &lt;li&gt;只读段，包括代码和常量等&lt;/li&gt;
-      &lt;li&gt;数据段，包括全局变量等&lt;/li&gt;
-      &lt;li&gt;堆，包括动态分配的内存，从低地址开始向上增长&lt;/li&gt;
-      &lt;li&gt;文件映射段，包括动态库，共享内存等，从高地址开始向下增长&lt;/li&gt;
-      &lt;li&gt;栈，包括局部变量和函数调用的上下文等。栈的大小是固定的，一般是8MB&lt;/li&gt;
-    &lt;/ol&gt;
-  &lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h2 id=&quot;内存分配与回收&quot;&gt;内存分配与回收&lt;/h2&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;c语言使用malloc()方法分配内存
-    &lt;ul&gt;
-      &lt;li&gt;brk() 在c 标准库中当分配的内存小于128K默认使用brk()，当使用完成后并不会直接释放，而是缓存起来继续使用
-        &lt;ul&gt;
-          &lt;li&gt;缺点：在系统繁忙时容易产生内存碎片&lt;/li&gt;
-          &lt;li&gt;优点：可以减少缺页异常的发生&lt;/li&gt;
-        &lt;/ul&gt;
-      &lt;/li&gt;
-      &lt;li&gt;mmap() 在大于128K使用mmap()分配内存
-        &lt;ul&gt;
-          &lt;li&gt;缺点：频繁的分配内存，容易产生缺页异常&lt;/li&gt;
-          &lt;li&gt;优点：直接释放内存&lt;/li&gt;
-        &lt;/ul&gt;
-      &lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;对于内存来说，如果只分配而不释放，就会造成内存泄漏，甚至会耗尽内存。所有应用程序使用完内存后，还需要调用free()或unmap(),来释放这些不用的内存。&lt;/li&gt;
-  &lt;li&gt;系统自身也不会任由应用程序的进程用完所有内存的，在发现内存紧张时，系统就会通过一系列机制来回收内存，比如下面这三种方式：
-    &lt;ul&gt;
-      &lt;li&gt;回收缓存，比如使用LRU算法，回收最近使用最少的内存页&lt;/li&gt;
-      &lt;li&gt;回收不常访问的内存，把不常用的内存通过交换分区直接写到磁盘中（会使用交换分区Swap）&lt;/li&gt;
-      &lt;li&gt;杀死进程，内存紧张时系统还会通过OOM(Out of Memory),直接杀掉占用大量内存的进程。
-        &lt;ul&gt;
-          &lt;li&gt;是一种内核保护机制&lt;/li&gt;
-          &lt;li&gt;使用oom_score记录每个进程的使用内存评分&lt;/li&gt;
-          &lt;li&gt;一个进程消耗的内存越大，oom_score就越大&lt;/li&gt;
-          &lt;li&gt;一个进程运行占用的CPU越多，oom_score就越小&lt;/li&gt;
-          &lt;li&gt;管理员可以手动设置oom_adj,oom_adj的范围[-17,15] 数值越大，表示进程越容易被OOM杀死，-17表示禁止OOM&lt;/li&gt;
-        &lt;/ul&gt;
-      &lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h2 id=&quot;如何查看内存使用情况&quot;&gt;如何查看内存使用情况&lt;/h2&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;free 查看内存使用情况
-    &lt;ul&gt;
-      &lt;li&gt;total 是内存总大小&lt;/li&gt;
-      &lt;li&gt;used 已使用的内存的大小，包好了共享内存&lt;/li&gt;
-      &lt;li&gt;free 是未使用内存的大小&lt;/li&gt;
-      &lt;li&gt;shared 是共享内存的大小&lt;/li&gt;
-      &lt;li&gt;buff/cache 是缓存和缓冲区的大小&lt;/li&gt;
-      &lt;li&gt;available 是进程可用内存的大小&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;top查看每个进程使用内存情况
-    &lt;ul&gt;
-      &lt;li&gt;VIRT 是进程虚拟内存的大小&lt;/li&gt;
-      &lt;li&gt;RES 是常住内存的大小，进程实际使用物理内存的大小，不包含Swap和共享内存。&lt;/li&gt;
-      &lt;li&gt;SHR 是共享内存的大小，比如与其他进程共同使用的共享内存、加载的动态链接库以及程序的代码段等。&lt;/li&gt;
-      &lt;li&gt;%MEM 是进程使用物理内存占系统内存的百分比&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h2 id=&quot;buffer-和-cache&quot;&gt;Buffer 和 Cache&lt;/h2&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;通常理解buffer是写入时合并写入，加快写入速度的&lt;/li&gt;
-  &lt;li&gt;通常理解cache是读取磁盘文件的页缓存，加快速度读取的&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h3 id=&quot;linux-文件系统&quot;&gt;linux 文件系统&lt;/h3&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;在linux内所有一切皆文件&lt;/li&gt;
-  &lt;li&gt;文件分为好多类型（ls -l /dev）：
-    &lt;ul&gt;
-      &lt;li&gt;-：普通文件&lt;/li&gt;
-      &lt;li&gt;d: 目录&lt;/li&gt;
-      &lt;li&gt;l：链接&lt;/li&gt;
-      &lt;li&gt;d: 块文件&lt;/li&gt;
-      &lt;li&gt;c: 字符串文件&lt;/li&gt;
-      &lt;li&gt;s: socket文件&lt;/li&gt;
-      &lt;li&gt;p: 管道文件&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;磁盘会分区块，系统在每个区块上建立文件系统，在文件系统下创建目录，在目录中创建文件。
-    &lt;ul&gt;
-      &lt;li&gt;普通文件就是目录中的文件，他的读写基于文件系统&lt;/li&gt;
-      &lt;li&gt;块文件，就是磁盘空间，他的读写会跳过文件系统&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;对于以上的两种文件的读写，系统用了不同的优化方式
-    &lt;ul&gt;
-      &lt;li&gt;普通文件：cache&lt;/li&gt;
-      &lt;li&gt;块文件：buffer&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;以上就是cache和buffer的本质区别。&lt;/li&gt;
-&lt;/ul&gt;</content><author><name></name></author><summary type="html">同CUP管理一样，内存管理也是操作系统最核心的功能之。内存主要用来存储系统和应用程序的指令，数据，缓存等。</summary></entry></feed>
+&lt;p&gt;kubernets 的整理部署由上面的几个部分组成，副本的是为了实现系统稳定性，副本管理是为了实现环境的滚动更新和回滚，service是为了实现统一的网关入口和负载均衡。整体的架构就是如此，细节就是要在实践中不断的学习和积累了。&lt;/p&gt;</content><author><name></name></author><summary type="html">在学习编排之前，认识kubernets的各种组件是很重要的。他们之间的关系是怎么样的？如果构建一个合理的服务？都是要在开始之前需要学习的。</summary></entry></feed>
