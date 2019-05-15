@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Go学习笔记8</title>
+  <meta name="description" content="前面的学习，只学习了直接使用goroutine和channel的并发程序，忽略其他细微问题，尤其在包含共享变量的并发程序，接下来我们来学习，有共享变量的并发程序。">
+
+  <!-- evil icon -->
+
+  <link rel="stylesheet" href="/assets/evil-icons.min.css">
+  <script src="/assets/evil-icons.min.js"></script>
+
+    <!-- todo: include this into main.css -->
+
+    <link rel="stylesheet" href="/css/main.css">
+    <link rel="canonical" href="/go/2019/05/15/Go-8.html">
+        <link rel="alternate" type="application/rss+xml" title="一叶障目" href="/feed.xml">
+    </head>
+<body>
+<div class="page-content">
+  <div class="container">
+    <div class="three columns">
+      <header class="site-header">
+  <h2 class="logo"><a href="/">一叶障目</a></h2>
+
+  <div class="nav">
+
+    <label for="menu-toggle" class="menu-icon">
+      <!--div data-icon="ei-navicon"></div-->
+      <svg viewBox="0 0 18 15">
+        <path fill="#424242" d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.031C17.335,0,18,0.665,18,1.484L18,1.484z"/>
+        <path fill="#424242" d="M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0c0-0.82,0.665-1.484,1.484-1.484 h15.031C17.335,6.031,18,6.696,18,7.516L18,7.516z"/>
+        <path fill="#424242" d="M18,13.516C18,14.335,17.335,15,16.516,15H1.484C0.665,15,0,14.335,0,13.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.031C17.335,12.031,18,12.696,18,13.516L18,13.516z"/>
+      </svg>
+    </label>
+    <input type="checkbox" id="menu-toggle">
+
+    <div class="site-nav">
+      <nav>
+        <ul class="page-link">
+          <li><a href="/">主页</a></li>
+          <li><a href="/archive">存档</a></li>
+          <li><a href="/about">关于我</a></li>
+          <li><a href="/feed.xml">RSS</a></li>
+        </ul>
+      </nav>
+    </div>
+
+  </div><script>
+if(!(window.doNotTrack === "1" || navigator.doNotTrack === "1" || navigator.doNotTrack === "yes" || navigator.msDoNotTrack === "1")) {
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-137167814-1', 'auto');
+  ga('send', 'pageview');
+}
+</script>
+  
+</header>
+
+    </div>
+
+    <div class="nine columns" style="z-index:100;">
+      <div class="wrapper">
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title p-name" itemprop="name headline">Go学习笔记8</h1>
+    <p class="post-meta">
+      <time class="dt-published" datetime="2019-05-15T00:00:00+08:00" itemprop="datePublished">May 15, 2019
+      </time></p>
+  </header>
+
+  <div class="post-content e-content" itemprop="articleBody">
+    <p>前面的学习，只学习了直接使用goroutine和channel的并发程序，忽略其他细微问题，尤其在包含共享变量的并发程序，接下来我们来学习，有共享变量的并发程序。</p>
+
+<h2 id="竞争条件">竞争条件</h2>
+<ul>
+  <li>一般情况下我们没法去知道分别位于两个goroutine的事件x和y的执行顺序，x是在y之前还是之后还是同时发生是没法判断的。当我们能够没有办法自信地确认一个事件是在另一个事件的前面或者后面发生的话，就说明x和y这两个事件是并发的。
+    <ul>
+      <li>并发安全：一个函数在线性程序中可以正确地工作。如果在并发的情况下，这个函数依然可以正确地工作的话，那么我们就说这个函数是并发安全的，并发安全的函数不需要额外的同步工作</li>
+      <li>非并发安全：反之。单并发非安全的程序也可以通过某些方式变成线程安全的，并发安全的类型是例外，而不是规则，所以只有当文档中明确地说明了其是并发安全的情况下，你才可以并发地去访问它
+        <blockquote>
+          <p>导出包级别的函数一般情况下都是并发安全的。由于package级的变量没法被限制在单一的gorouine，所以修改这些变量“必须”使用互斥条件。</p>
+        </blockquote>
+      </li>
+    </ul>
+  </li>
+  <li>竞争条件：竞争条件指的是程序在多个goroutine交叉执行操作时，没有给出正确的结果。竞争条件是很恶劣的一种场景，因为这种问题会一直潜伏在你的程序里，然后在非常少见的时候蹦出来，或许只是会在很大的负载时才会发生，又或许是会在使用了某一个编译器、某一种平台或者某一种架构的时候才会出现。这些使得竞争条件带来的问题非常难以复现而且难以分析诊断。</li>
+  <li>如何避免竞争条件
+    <ul>
+      <li>第一种方法是不要去写变量。（不太可能）</li>
+      <li>第二种避免数据竞争的方法是，避免从多个goroutine访问变量。</li>
+      <li>第三种避免数据竞争的方法是允许很多goroutine去访问变量，但是在同一个时刻最多只有一个goroutine在访问。这种方式被称为“互斥”</li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="syncmutex互斥锁">sync.Mutex互斥锁</h2>
+<ul>
+  <li>前面学习的时候我们可以利用buffer channel控制gorontine的深度，如果我们用buffer等于的channel 就可以控制变量的访问如下代码：
+```
+var (
+  sema    = make(chan struct{}, 1) // a binary semaphore guarding balance
+  balance int
+)</li>
+</ul>
+
+<p>func Deposit(amount int) {
+    sema &lt;- struct{}{} // acquire token
+    balance = balance + amount
+    &lt;-sema // release token
+}</p>
+
+<p>func Balance() int {
+    sema &lt;- struct{}{} // acquire token
+    b := balance
+    &lt;-sema // release token
+    return b
+}</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>* 这种互斥很实用，而且被sync包里的Mutex类型直接支持。它的Lock方法能够获取到token(这里叫锁)，并且Unlock方法会释放这个token
+* 在锁之间的区域叫做临界区，为了使用临界区的临界关闭正确一般我会选择使用defer来控制临界区的关闭。
+
+</code></pre></div></div>
+<p>func Balance() int {
+    mu.Lock()
+    defer mu.Unlock()
+    return balance
+}</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>* Go 是没有重入锁的（java中是有重入锁：锁上锁）关于Go的互斥量不能重入这一点我们有很充分的理由。互斥量的目的是为了确保共享变量在程序执行时的关键点上能够保证不变性。不变性的其中之一是“没有goroutine访问共享变量”。
+* 所以在包的封装上，一个通用的解决方案是将一个函数分离为多个函数，比如我们把Deposit分离成两个：一个不导出的函数deposit，这个函数假设锁总是会被保持并去做实际的操作，另一个是导出的函数Deposit，这个函数会调用deposit，但在调用前会先去获取锁。
+
+## sync.RWMutex读写锁
+* 利用互斥锁，会将变量的读也锁住，如果系统中包含大量的读操作，互斥锁就完全限制了系统的功能。所以Go支持读写锁，只有在写的时候会锁定。
+* RWMutex只有当获得锁的大部分goroutine都是读操作，而锁在竞争条件下，也就是说，goroutine们必须等待才能获取到锁的时候，RWMutex才是最能带来好处的。RWMutex需要更复杂的内部记录，所以会让它比一般的无竞争锁的mutex慢一些
+## sync.Once初始化
+* 有些时候当我们初始化一些慢操作时，如果不使用锁机制进行控制的话，会造成非并发安全的情况。所以时候需要同时使用互斥锁和读写锁
+
+</code></pre></div></div>
+<p>var mu sync.RWMutex // guards iconsvar icons map[string]image.Image
+// Concurrency-safe.func Icon(name string) image.Image {
+    mu.RLock()
+    if icons != nil {
+        icon := icons[name]
+        mu.RUnlock()
+        return icon
+    }
+    mu.RUnlock()</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>// acquire an exclusive lock
+mu.Lock()
+if icons == nil { // NOTE: must recheck for nil
+    loadIcons()
+}
+icon := icons[name]
+mu.Unlock()
+return icon } ```
+</code></pre></div></div>
+
+<ul>
+  <li>这样写比较麻烦所以Go使用了sync.Once简化了整个流程</li>
+</ul>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>var loadIconsOnce sync.Once
+var icons map[string]image.Image
+// Concurrency-safe.
+func Icon(name string) image.Image {
+    loadIconsOnce.Do(loadIcons)
+    return icons[name]
+}
+</code></pre></div></div>
+
+<h2 id="竞争条件检测">竞争条件检测</h2>
+
+<ul>
+  <li>即使我们小心到不能再小心，但在并发程序中犯错还是太容易了。幸运的是，Go的runtime和工具链为我们装备了一个复杂但好用的动态分析工具，竞争检查器(the race detector)。只要在go build，go run或者go test命令后面加上-race的flag，就会使编译器创建一个你的应用的“修改”版或者一个附带了能够记录所有运行期对共享变量访问工具的test，并且会记录下每一个读或者写共享变量的goroutine的身份信息。</li>
+</ul>
+
+<h2 id="并发无阻塞">并发无阻塞</h2>
+
+<ul>
+  <li>想实现并发无阻塞，必须避免竞争条件的产生。一下实现了一个并发无阻塞的缓存。</li>
+</ul>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>type entry struct {
+    res   result
+    ready chan struct{} // closed when res is ready
+}
+
+func New(f Func) *Memo {
+    return &amp;Memo{f: f, cache: make(map[string]*entry)}
+}
+
+type Memo struct {
+    f     Func
+    mu    sync.Mutex // guards cache
+    cache map[string]*entry
+}
+
+func (memo *Memo) Get(key string) (value interface{}, err error) {
+    memo.mu.Lock()
+    e := memo.cache[key]
+    if e == nil {
+        // This is the first request for this key.
+        // This goroutine becomes responsible for computing
+        // the value and broadcasting the ready condition.
+        e = &amp;entry{ready: make(chan struct{})}
+        memo.cache[key] = e
+        memo.mu.Unlock()
+
+        e.res.value, e.res.err = memo.f(key)
+
+        close(e.ready) // broadcast ready condition
+    } else {
+        // This is a repeat request for this key.
+        memo.mu.Unlock()
+
+        &lt;-e.ready // wait for ready condition
+    }
+    return e.res.value, e.res.err
+}
+</code></pre></div></div>
+
+<blockquote>
+  <p>以上利用ready channel 实现了读广播，变量是否准备完毕。使用特性是当一个无buffer的channel会阻塞读取channel的代码位置，当关闭channel时，是会通知到读取的地方channel已经关闭，并不产生错误（但是向已经关闭的channel，传输数据会产生painc）</p>
+</blockquote>
+
+<h2 id="goroutine和线程">Goroutine和线程</h2>
+<ul>
+  <li>栈空间的区别
+    <ul>
+      <li>线程的栈是固定大小的2m</li>
+      <li>Goroutine初始是2k，可以根据程序的变化动态改变，最大有1GB，在Go中叫动态栈。
+        <blockquote>
+          <p>知识点：
+栈：一个栈的作用是用来保存函数调用上下文和内部变量</p>
+        </blockquote>
+      </li>
+    </ul>
+  </li>
+  <li>调度的区别
+    <ul>
+      <li>线程间的切换时需要保存线程上下文，切换到替他线程，是利用系统的shedule函数，由cup来调度。</li>
+      <li>Goruntine的切换是在，go Runtime 中实现的，由Go本身控制调度，并且采用了一种n:m的方式，利用n个系统线程分别处理m个Goruntine，所以一个goruntine的切换消耗比线程小的多
+        <blockquote>
+          <p>线程相比Goroutine它多调用了局部内存，增加了cpu运行周期（由于切换和读内存引起的）
+Goruntine 的调度方式也类似系统的调度方式
+GOMAXPROCS 参数是用来设定Go用多少个系统线程同时工作。</p>
+        </blockquote>
+      </li>
+    </ul>
+  </li>
+  <li>自身标识
+    <ul>
+      <li>线程是有线程id的</li>
+      <li>Goruntine是没有的，原因是防止由于thread-local storage（TLS）总是会被滥用，所引起的过分依赖线程的局部变量，程序变幻莫测。</li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="总结">总结：</h2>
+<p>并发带来的问题就是，竞争条件，如果竞争条件不处理好，会造成意料不到的结果。所以并发主要处理的就是竞争条件问题，处理竞争条件主要有如下三个方向：</p>
+<ul>
+  <li>避免写操作</li>
+  <li>避免从多个goroutine，写入数据</li>
+  <li>允许多个goruntine访问一个变量，但是同一时刻只能有一个能访问，就是互斥
+第一种方式，使用的场景特别少，只有少量静态服务才会这样使用。
+第二种方式，在设计时，由一个主Goruntine去处理些操作，其他Goruntine作为生产者利用channel处理
+第三种方式，允许多个Goruntine写变量，但是同一时刻只能有一个可以生效，利用互斥锁+channel广播的形式实现并发非阻塞
+Go实现并发的优势主要是在goruntine和线程的区别和自身的runtime并发调度，优化了线程调度之间的损耗，实现了更高效的并发。</li>
+</ul>
+
+  </div><a class="u-url" href="/go/2019/05/15/Go-8.html" hidden></a>
+</article>
+
+      </div>
+    </div>
+  </div>
+  <footer class="site-footer">
+  <div class="container">
+    <div class="footer left column one-half">
+      <section class="small-font">
+        Theme <a href="https://github.com/wild-flame/jekyll-simple"> Simple </a> by <a href="http://wildflame.me">wildflame</a>
+        © 2016
+        Powered by <a href="https://github.com/jekyll/jekyll">jekyll</a>
+      </section>
+    </div>
+
+    <div class="footer right column one-half">
+      <section class="small-font">
+        
+        <a href="https://github.com/xiangdong1987"><span class="icon icon--github"><svg viewBox="0 0 16 16"><path fill="#828282" d="M7.999,0.431c-4.285,0-7.76,3.474-7.76,7.761 c0,3.428,2.223,6.337,5.307,7.363c0.388,0.071,0.53-0.168,0.53-0.374c0-0.184-0.007-0.672-0.01-1.32 c-2.159,0.469-2.614-1.04-2.614-1.04c-0.353-0.896-0.862-1.135-0.862-1.135c-0.705-0.481,0.053-0.472,0.053-0.472 c0.779,0.055,1.189,0.8,1.189,0.8c0.692,1.186,1.816,0.843,2.258,0.645c0.071-0.502,0.271-0.843,0.493-1.037 C4.86,11.425,3.049,10.76,3.049,7.786c0-0.847,0.302-1.54,0.799-2.082C3.768,5.507,3.501,4.718,3.924,3.65 c0,0,0.652-0.209,2.134,0.796C6.677,4.273,7.34,4.187,8,4.184c0.659,0.003,1.323,0.089,1.943,0.261 c1.482-1.004,2.132-0.796,2.132-0.796c0.423,1.068,0.157,1.857,0.077,2.054c0.497,0.542,0.798,1.235,0.798,2.082 c0,2.981-1.814,3.637-3.543,3.829c0.279,0.24,0.527,0.713,0.527,1.437c0,1.037-0.01,1.874-0.01,2.129 c0,0.208,0.14,0.449,0.534,0.373c3.081-1.028,5.302-3.935,5.302-7.362C15.76,3.906,12.285,0.431,7.999,0.431z"/></svg>
+</span></a>
+
+        
+        
+      </section>
+    </div>
+  </div>
+</footer>
+
+</div>
+</body>
+</html>

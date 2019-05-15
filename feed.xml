@@ -1,4 +1,200 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.8.5">Jekyll</generator><link href="/feed.xml" rel="self" type="application/atom+xml" /><link href="/" rel="alternate" type="text/html" /><updated>2019-05-09T16:08:28+08:00</updated><id>/feed.xml</id><title type="html">一叶障目</title><subtitle>学无止境</subtitle><entry><title type="html">Go学习笔记7</title><link href="/go/2019/05/09/Go-7.html" rel="alternate" type="text/html" title="Go学习笔记7" /><published>2019-05-09T00:00:00+08:00</published><updated>2019-05-09T00:00:00+08:00</updated><id>/go/2019/05/09/Go-7</id><content type="html" xml:base="/go/2019/05/09/Go-7.html">&lt;p&gt;重头戏要来了，并发编程。这是Go的主打优势，Go通过自身设计层面，隐藏了比较晦涩难懂的并发过程，我们只需要通过goroutine和channel的配合就能实现自己想要的并发程序，实现CSP（communicating sequential processes）并发变成模型，像我这么懒得人特别喜欢站在巨人的肩膀上眺望。&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.8.5">Jekyll</generator><link href="/feed.xml" rel="self" type="application/atom+xml" /><link href="/" rel="alternate" type="text/html" /><updated>2019-05-15T17:13:08+08:00</updated><id>/feed.xml</id><title type="html">一叶障目</title><subtitle>学无止境</subtitle><entry><title type="html">Go学习笔记8</title><link href="/go/2019/05/15/Go-8.html" rel="alternate" type="text/html" title="Go学习笔记8" /><published>2019-05-15T00:00:00+08:00</published><updated>2019-05-15T00:00:00+08:00</updated><id>/go/2019/05/15/Go-8</id><content type="html" xml:base="/go/2019/05/15/Go-8.html">&lt;p&gt;前面的学习，只学习了直接使用goroutine和channel的并发程序，忽略其他细微问题，尤其在包含共享变量的并发程序，接下来我们来学习，有共享变量的并发程序。&lt;/p&gt;
+
+&lt;h2 id=&quot;竞争条件&quot;&gt;竞争条件&lt;/h2&gt;
+&lt;ul&gt;
+  &lt;li&gt;一般情况下我们没法去知道分别位于两个goroutine的事件x和y的执行顺序，x是在y之前还是之后还是同时发生是没法判断的。当我们能够没有办法自信地确认一个事件是在另一个事件的前面或者后面发生的话，就说明x和y这两个事件是并发的。
+    &lt;ul&gt;
+      &lt;li&gt;并发安全：一个函数在线性程序中可以正确地工作。如果在并发的情况下，这个函数依然可以正确地工作的话，那么我们就说这个函数是并发安全的，并发安全的函数不需要额外的同步工作&lt;/li&gt;
+      &lt;li&gt;非并发安全：反之。单并发非安全的程序也可以通过某些方式变成线程安全的，并发安全的类型是例外，而不是规则，所以只有当文档中明确地说明了其是并发安全的情况下，你才可以并发地去访问它
+        &lt;blockquote&gt;
+          &lt;p&gt;导出包级别的函数一般情况下都是并发安全的。由于package级的变量没法被限制在单一的gorouine，所以修改这些变量“必须”使用互斥条件。&lt;/p&gt;
+        &lt;/blockquote&gt;
+      &lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;竞争条件：竞争条件指的是程序在多个goroutine交叉执行操作时，没有给出正确的结果。竞争条件是很恶劣的一种场景，因为这种问题会一直潜伏在你的程序里，然后在非常少见的时候蹦出来，或许只是会在很大的负载时才会发生，又或许是会在使用了某一个编译器、某一种平台或者某一种架构的时候才会出现。这些使得竞争条件带来的问题非常难以复现而且难以分析诊断。&lt;/li&gt;
+  &lt;li&gt;如何避免竞争条件
+    &lt;ul&gt;
+      &lt;li&gt;第一种方法是不要去写变量。（不太可能）&lt;/li&gt;
+      &lt;li&gt;第二种避免数据竞争的方法是，避免从多个goroutine访问变量。&lt;/li&gt;
+      &lt;li&gt;第三种避免数据竞争的方法是允许很多goroutine去访问变量，但是在同一个时刻最多只有一个goroutine在访问。这种方式被称为“互斥”&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;syncmutex互斥锁&quot;&gt;sync.Mutex互斥锁&lt;/h2&gt;
+&lt;ul&gt;
+  &lt;li&gt;前面学习的时候我们可以利用buffer channel控制gorontine的深度，如果我们用buffer等于的channel 就可以控制变量的访问如下代码：
+```
+var (
+  sema    = make(chan struct{}, 1) // a binary semaphore guarding balance
+  balance int
+)&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;func Deposit(amount int) {
+    sema &amp;lt;- struct{}{} // acquire token
+    balance = balance + amount
+    &amp;lt;-sema // release token
+}&lt;/p&gt;
+
+&lt;p&gt;func Balance() int {
+    sema &amp;lt;- struct{}{} // acquire token
+    b := balance
+    &amp;lt;-sema // release token
+    return b
+}&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;* 这种互斥很实用，而且被sync包里的Mutex类型直接支持。它的Lock方法能够获取到token(这里叫锁)，并且Unlock方法会释放这个token
+* 在锁之间的区域叫做临界区，为了使用临界区的临界关闭正确一般我会选择使用defer来控制临界区的关闭。
+
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;func Balance() int {
+    mu.Lock()
+    defer mu.Unlock()
+    return balance
+}&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;* Go 是没有重入锁的（java中是有重入锁：锁上锁）关于Go的互斥量不能重入这一点我们有很充分的理由。互斥量的目的是为了确保共享变量在程序执行时的关键点上能够保证不变性。不变性的其中之一是“没有goroutine访问共享变量”。
+* 所以在包的封装上，一个通用的解决方案是将一个函数分离为多个函数，比如我们把Deposit分离成两个：一个不导出的函数deposit，这个函数假设锁总是会被保持并去做实际的操作，另一个是导出的函数Deposit，这个函数会调用deposit，但在调用前会先去获取锁。
+
+## sync.RWMutex读写锁
+* 利用互斥锁，会将变量的读也锁住，如果系统中包含大量的读操作，互斥锁就完全限制了系统的功能。所以Go支持读写锁，只有在写的时候会锁定。
+* RWMutex只有当获得锁的大部分goroutine都是读操作，而锁在竞争条件下，也就是说，goroutine们必须等待才能获取到锁的时候，RWMutex才是最能带来好处的。RWMutex需要更复杂的内部记录，所以会让它比一般的无竞争锁的mutex慢一些
+## sync.Once初始化
+* 有些时候当我们初始化一些慢操作时，如果不使用锁机制进行控制的话，会造成非并发安全的情况。所以时候需要同时使用互斥锁和读写锁
+
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;var mu sync.RWMutex // guards iconsvar icons map[string]image.Image
+// Concurrency-safe.func Icon(name string) image.Image {
+    mu.RLock()
+    if icons != nil {
+        icon := icons[name]
+        mu.RUnlock()
+        return icon
+    }
+    mu.RUnlock()&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;// acquire an exclusive lock
+mu.Lock()
+if icons == nil { // NOTE: must recheck for nil
+    loadIcons()
+}
+icon := icons[name]
+mu.Unlock()
+return icon } ```
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;这样写比较麻烦所以Go使用了sync.Once简化了整个流程&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;var loadIconsOnce sync.Once
+var icons map[string]image.Image
+// Concurrency-safe.
+func Icon(name string) image.Image {
+    loadIconsOnce.Do(loadIcons)
+    return icons[name]
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h2 id=&quot;竞争条件检测&quot;&gt;竞争条件检测&lt;/h2&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;即使我们小心到不能再小心，但在并发程序中犯错还是太容易了。幸运的是，Go的runtime和工具链为我们装备了一个复杂但好用的动态分析工具，竞争检查器(the race detector)。只要在go build，go run或者go test命令后面加上-race的flag，就会使编译器创建一个你的应用的“修改”版或者一个附带了能够记录所有运行期对共享变量访问工具的test，并且会记录下每一个读或者写共享变量的goroutine的身份信息。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;并发无阻塞&quot;&gt;并发无阻塞&lt;/h2&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;想实现并发无阻塞，必须避免竞争条件的产生。一下实现了一个并发无阻塞的缓存。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;type entry struct {
+    res   result
+    ready chan struct{} // closed when res is ready
+}
+
+func New(f Func) *Memo {
+    return &amp;amp;Memo{f: f, cache: make(map[string]*entry)}
+}
+
+type Memo struct {
+    f     Func
+    mu    sync.Mutex // guards cache
+    cache map[string]*entry
+}
+
+func (memo *Memo) Get(key string) (value interface{}, err error) {
+    memo.mu.Lock()
+    e := memo.cache[key]
+    if e == nil {
+        // This is the first request for this key.
+        // This goroutine becomes responsible for computing
+        // the value and broadcasting the ready condition.
+        e = &amp;amp;entry{ready: make(chan struct{})}
+        memo.cache[key] = e
+        memo.mu.Unlock()
+
+        e.res.value, e.res.err = memo.f(key)
+
+        close(e.ready) // broadcast ready condition
+    } else {
+        // This is a repeat request for this key.
+        memo.mu.Unlock()
+
+        &amp;lt;-e.ready // wait for ready condition
+    }
+    return e.res.value, e.res.err
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;以上利用ready channel 实现了读广播，变量是否准备完毕。使用特性是当一个无buffer的channel会阻塞读取channel的代码位置，当关闭channel时，是会通知到读取的地方channel已经关闭，并不产生错误（但是向已经关闭的channel，传输数据会产生painc）&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;h2 id=&quot;goroutine和线程&quot;&gt;Goroutine和线程&lt;/h2&gt;
+&lt;ul&gt;
+  &lt;li&gt;栈空间的区别
+    &lt;ul&gt;
+      &lt;li&gt;线程的栈是固定大小的2m&lt;/li&gt;
+      &lt;li&gt;Goroutine初始是2k，可以根据程序的变化动态改变，最大有1GB，在Go中叫动态栈。
+        &lt;blockquote&gt;
+          &lt;p&gt;知识点：
+栈：一个栈的作用是用来保存函数调用上下文和内部变量&lt;/p&gt;
+        &lt;/blockquote&gt;
+      &lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;调度的区别
+    &lt;ul&gt;
+      &lt;li&gt;线程间的切换时需要保存线程上下文，切换到替他线程，是利用系统的shedule函数，由cup来调度。&lt;/li&gt;
+      &lt;li&gt;Goruntine的切换是在，go Runtime 中实现的，由Go本身控制调度，并且采用了一种n:m的方式，利用n个系统线程分别处理m个Goruntine，所以一个goruntine的切换消耗比线程小的多
+        &lt;blockquote&gt;
+          &lt;p&gt;线程相比Goroutine它多调用了局部内存，增加了cpu运行周期（由于切换和读内存引起的）
+Goruntine 的调度方式也类似系统的调度方式
+GOMAXPROCS 参数是用来设定Go用多少个系统线程同时工作。&lt;/p&gt;
+        &lt;/blockquote&gt;
+      &lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;自身标识
+    &lt;ul&gt;
+      &lt;li&gt;线程是有线程id的&lt;/li&gt;
+      &lt;li&gt;Goruntine是没有的，原因是防止由于thread-local storage（TLS）总是会被滥用，所引起的过分依赖线程的局部变量，程序变幻莫测。&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;总结&quot;&gt;总结：&lt;/h2&gt;
+&lt;p&gt;并发带来的问题就是，竞争条件，如果竞争条件不处理好，会造成意料不到的结果。所以并发主要处理的就是竞争条件问题，处理竞争条件主要有如下三个方向：&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;避免写操作&lt;/li&gt;
+  &lt;li&gt;避免从多个goroutine，写入数据&lt;/li&gt;
+  &lt;li&gt;允许多个goruntine访问一个变量，但是同一时刻只能有一个能访问，就是互斥
+第一种方式，使用的场景特别少，只有少量静态服务才会这样使用。
+第二种方式，在设计时，由一个主Goruntine去处理些操作，其他Goruntine作为生产者利用channel处理
+第三种方式，允许多个Goruntine写变量，但是同一时刻只能有一个可以生效，利用互斥锁+channel广播的形式实现并发非阻塞
+Go实现并发的优势主要是在goruntine和线程的区别和自身的runtime并发调度，优化了线程调度之间的损耗，实现了更高效的并发。&lt;/li&gt;
+&lt;/ul&gt;</content><author><name></name></author><summary type="html">前面的学习，只学习了直接使用goroutine和channel的并发程序，忽略其他细微问题，尤其在包含共享变量的并发程序，接下来我们来学习，有共享变量的并发程序。</summary></entry><entry><title type="html">Go学习笔记7</title><link href="/go/2019/05/09/Go-7.html" rel="alternate" type="text/html" title="Go学习笔记7" /><published>2019-05-09T00:00:00+08:00</published><updated>2019-05-09T00:00:00+08:00</updated><id>/go/2019/05/09/Go-7</id><content type="html" xml:base="/go/2019/05/09/Go-7.html">&lt;p&gt;重头戏要来了，并发编程。这是Go的主打优势，Go通过自身设计层面，隐藏了比较晦涩难懂的并发过程，我们只需要通过goroutine和channel的配合就能实现自己想要的并发程序，实现CSP（communicating sequential processes）并发变成模型，像我这么懒得人特别喜欢站在巨人的肩膀上眺望。&lt;/p&gt;
 
 &lt;h2 id=&quot;goroutines&quot;&gt;Goroutines&lt;/h2&gt;
 &lt;ul&gt;
@@ -1313,108 +1509,4 @@ sudo docker run -p 8810:8810 -it chelun-test:v1 -v /data:/data /bin/bash
 &lt;/code&gt;&lt;/pre&gt;
 &lt;h2 id=&quot;总结&quot;&gt;总结&lt;/h2&gt;
 
-&lt;p&gt;镜像的制作就是一个环境搭建的流程，需要细心的记录没一部操作，也要合理话层级。尽量用少的层级来实现环境的待见。后面的路还很长需要继续学习。&lt;/p&gt;</content><author><name></name></author><summary type="html">学习k8s制作镜像就是毕竟之路，而如果想要一个快速的仓库，本地仓库就是首选，所以学习单间本地dock registry很重要。</summary></entry><entry><title type="html">整体理解kubenets各种组件</title><link href="/kubernets/2019/04/03/kubernets-2.html" rel="alternate" type="text/html" title="整体理解kubenets各种组件" /><published>2019-04-03T00:00:00+08:00</published><updated>2019-04-03T00:00:00+08:00</updated><id>/kubernets/2019/04/03/kubernets-2</id><content type="html" xml:base="/kubernets/2019/04/03/kubernets-2.html">&lt;p&gt;在学习编排之前，认识kubernets的各种组件是很重要的。他们之间的关系是怎么样的？如果构建一个合理的服务？都是要在开始之前需要学习的。&lt;/p&gt;
-
-&lt;h2 id=&quot;containers-容器&quot;&gt;Containers (容器)&lt;/h2&gt;
-
-&lt;p&gt;容器就是我们之前将的docker，或其他虚拟化容器。不过docker应该是主流。一般人认为容器应该是kubernets的最小单位，其实并不是它是组成最小的单位的主要成分。接下来要讲的Pod才是最小的kubernets组成单位。&lt;/p&gt;
-
-&lt;p&gt;&lt;a href=&quot;https://xiangdong1987.github.io/docker/2019/04/03/docker-local-registry.html&quot;&gt;如何搭建本地docker registry&lt;/a&gt;&lt;/p&gt;
-
-&lt;h2 id=&quot;pod-豆荚&quot;&gt;Pod (豆荚)&lt;/h2&gt;
-
-&lt;p&gt;pod是组成kebernet的最小单位，每个pod中会包含一个或多个docker容器，为了管理pod的就引入了Replication controller.&lt;/p&gt;
-
-&lt;h2 id=&quot;replication-controller-rc&quot;&gt;Replication Controller (RC)&lt;/h2&gt;
-
-&lt;p&gt;副本控制器不明思议，就是管理副本的，副本的单位就是pod，随着程序的发展，RC已经被正在被Replication Set所替换，他们之间的区别RS堆label有更多的功能，可以利用表达式去匹配label标签。&lt;/p&gt;
-
-&lt;h2 id=&quot;replication-set-rs&quot;&gt;Replication Set (RS)&lt;/h2&gt;
-
-&lt;p&gt;跟RC相比它多了一些功能，对于selector 有更多的功能，可以使整个RS的意义更清晰，更能让维护人员理解。比如如下配置&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&quot;language-angular2html&quot;&gt;apiVersion: extensions/v1beta1
- kind: ReplicaSet
- metadata:
-   name: soaktestrs
- spec:
-   replicas: 3
-   selector:
-     matchLabels:
-       app: soaktestrs
-   template:
-     metadata:
-       labels:
-         app: soaktestrs
-         environment: dev
-     spec:
-       containers:
-       - name: soaktestrs
-         image: nickchase/soaktest
-         ports:
-         - containerPort: 80
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;管是这样无法表这个服务到底是做什么用的&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&quot;language-angular2html&quot;&gt;...
-spec:
-   replicas: 3
-   selector:
-     matchExpressions:
-      - {key: app, operator: In, values: [soaktestrs, soaktestrs, soaktest]}
-      - {key: teir, operator: NotIn, values: [production]}
-  template:
-     metadata:
-...
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;我们可以通过描述得到如下：&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&quot;language-angular2html&quot;&gt;
-# kubectl create -f replicaset.yaml
-replicaset &quot;soaktestrs&quot; created
-
-# kubectl describe rs soaktestrs
-Name:           soaktestrs
-Namespace:      default
-Image(s):       nickchase/soaktest
-Selector:       app in (soaktest,soaktestrs),teir notin (production)
-Labels:         app=soaktestrs
-Replicas:       3 current / 3 desired
-Pods Status:    3 Running / 0 Waiting / 0 Succeeded / 0 Failed
-No volumes.
-Events:
-  FirstSeen     LastSeen        Count   From                            SubobjectPath   Type    Reason                   Message
-  ---------     --------        -----   ----                            -------------   --------------                   -------
-  1m            1m              1       {replicaset-controller }                        Normal  SuccessfulCreate Created pod: soaktestrs-it2hf
-  1m            1m              1       {replicaset-controller }                       Normal  SuccessfulCreate Created pod: soaktestrs-kimmm
-  1m            1m              1       {replicaset-controller }                        Normal  SuccessfulCreate Created pod: soaktestrs-8i4ra
-
-# kubectl get pods
-NAME               READY     STATUS    RESTARTS   AGE
-soaktestrs-8i4ra   1/1       Running   0          1m
-soaktestrs-it2hf   1/1       Running   0          1m
-soaktestrs-kimmm   1/1       Running   0          1m
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h2 id=&quot;deployment&quot;&gt;Deployment&lt;/h2&gt;
-
-&lt;p&gt;Deployment以RC做为管理单元实现Roll updating 和 Roll Back,实现动态更新和回滚的功能。&lt;/p&gt;
-
-&lt;h2 id=&quot;service&quot;&gt;Service&lt;/h2&gt;
-
-&lt;p&gt;service 主要是在deployment的基础上，管理ip Port Dns ,并且自动实现负载均衡和调度。&lt;/p&gt;
-
-&lt;h2 id=&quot;yaml的种类&quot;&gt;Yaml的种类&lt;/h2&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;Replication Controller&lt;/li&gt;
-  &lt;li&gt;Replication Set&lt;/li&gt;
-  &lt;li&gt;Deployment&lt;/li&gt;
-  &lt;li&gt;Service&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;四中yaml是逐层递增的向上的上层依赖下层，实现一个层级。&lt;/p&gt;
-
-&lt;h2 id=&quot;总结&quot;&gt;总结&lt;/h2&gt;
-&lt;p&gt;kubernets 的整理部署由上面的几个部分组成，副本的是为了实现系统稳定性，副本管理是为了实现环境的滚动更新和回滚，service是为了实现统一的网关入口和负载均衡。整体的架构就是如此，细节就是要在实践中不断的学习和积累了。&lt;/p&gt;</content><author><name></name></author><summary type="html">在学习编排之前，认识kubernets的各种组件是很重要的。他们之间的关系是怎么样的？如果构建一个合理的服务？都是要在开始之前需要学习的。</summary></entry></feed>
+&lt;p&gt;镜像的制作就是一个环境搭建的流程，需要细心的记录没一部操作，也要合理话层级。尽量用少的层级来实现环境的待见。后面的路还很长需要继续学习。&lt;/p&gt;</content><author><name></name></author><summary type="html">学习k8s制作镜像就是毕竟之路，而如果想要一个快速的仓库，本地仓库就是首选，所以学习单间本地dock registry很重要。</summary></entry></feed>
