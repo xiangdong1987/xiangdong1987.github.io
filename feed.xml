@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.8.5">Jekyll</generator><link href="/feed.xml" rel="self" type="application/atom+xml" /><link href="/" rel="alternate" type="text/html" /><updated>2019-05-15T17:13:08+08:00</updated><id>/feed.xml</id><title type="html">一叶障目</title><subtitle>学无止境</subtitle><entry><title type="html">Go学习笔记8</title><link href="/go/2019/05/15/Go-8.html" rel="alternate" type="text/html" title="Go学习笔记8" /><published>2019-05-15T00:00:00+08:00</published><updated>2019-05-15T00:00:00+08:00</updated><id>/go/2019/05/15/Go-8</id><content type="html" xml:base="/go/2019/05/15/Go-8.html">&lt;p&gt;前面的学习，只学习了直接使用goroutine和channel的并发程序，忽略其他细微问题，尤其在包含共享变量的并发程序，接下来我们来学习，有共享变量的并发程序。&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.8.5">Jekyll</generator><link href="/feed.xml" rel="self" type="application/atom+xml" /><link href="/" rel="alternate" type="text/html" /><updated>2019-05-15T17:16:07+08:00</updated><id>/feed.xml</id><title type="html">一叶障目</title><subtitle>学无止境</subtitle><entry><title type="html">Go学习笔记8</title><link href="/go/2019/05/15/Go-8.html" rel="alternate" type="text/html" title="Go学习笔记8" /><published>2019-05-15T00:00:00+08:00</published><updated>2019-05-15T00:00:00+08:00</updated><id>/go/2019/05/15/Go-8</id><content type="html" xml:base="/go/2019/05/15/Go-8.html">&lt;p&gt;前面的学习，只学习了直接使用goroutine和channel的并发程序，忽略其他细微问题，尤其在包含共享变量的并发程序，接下来我们来学习，有共享变量的并发程序。&lt;/p&gt;
 
 &lt;h2 id=&quot;竞争条件&quot;&gt;竞争条件&lt;/h2&gt;
 &lt;ul&gt;
@@ -24,46 +24,55 @@
 
 &lt;h2 id=&quot;syncmutex互斥锁&quot;&gt;sync.Mutex互斥锁&lt;/h2&gt;
 &lt;ul&gt;
-  &lt;li&gt;前面学习的时候我们可以利用buffer channel控制gorontine的深度，如果我们用buffer等于的channel 就可以控制变量的访问如下代码：
-```
-var (
-  sema    = make(chan struct{}, 1) // a binary semaphore guarding balance
-  balance int
-)&lt;/li&gt;
+  &lt;li&gt;前面学习的时候我们可以利用buffer channel控制gorontine的深度，如果我们用buffer等于的channel 就可以控制变量的访问如下代码：&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;p&gt;func Deposit(amount int) {
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;var (
+    sema    = make(chan struct{}, 1) // a binary semaphore guarding balance
+    balance int
+)
+
+func Deposit(amount int) {
     sema &amp;lt;- struct{}{} // acquire token
     balance = balance + amount
     &amp;lt;-sema // release token
-}&lt;/p&gt;
+}
 
-&lt;p&gt;func Balance() int {
+func Balance() int {
     sema &amp;lt;- struct{}{} // acquire token
     b := balance
     &amp;lt;-sema // release token
     return b
-}&lt;/p&gt;
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;* 这种互斥很实用，而且被sync包里的Mutex类型直接支持。它的Lock方法能够获取到token(这里叫锁)，并且Unlock方法会释放这个token
-* 在锁之间的区域叫做临界区，为了使用临界区的临界关闭正确一般我会选择使用defer来控制临界区的关闭。
-
+}
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-&lt;p&gt;func Balance() int {
+
+&lt;ul&gt;
+  &lt;li&gt;这种互斥很实用，而且被sync包里的Mutex类型直接支持。它的Lock方法能够获取到token(这里叫锁)，并且Unlock方法会释放这个token&lt;/li&gt;
+  &lt;li&gt;在锁之间的区域叫做临界区，为了使用临界区的临界关闭正确一般我会选择使用defer来控制临界区的关闭。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;func Balance() int {
     mu.Lock()
     defer mu.Unlock()
     return balance
-}&lt;/p&gt;
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;* Go 是没有重入锁的（java中是有重入锁：锁上锁）关于Go的互斥量不能重入这一点我们有很充分的理由。互斥量的目的是为了确保共享变量在程序执行时的关键点上能够保证不变性。不变性的其中之一是“没有goroutine访问共享变量”。
-* 所以在包的封装上，一个通用的解决方案是将一个函数分离为多个函数，比如我们把Deposit分离成两个：一个不导出的函数deposit，这个函数假设锁总是会被保持并去做实际的操作，另一个是导出的函数Deposit，这个函数会调用deposit，但在调用前会先去获取锁。
-
-## sync.RWMutex读写锁
-* 利用互斥锁，会将变量的读也锁住，如果系统中包含大量的读操作，互斥锁就完全限制了系统的功能。所以Go支持读写锁，只有在写的时候会锁定。
-* RWMutex只有当获得锁的大部分goroutine都是读操作，而锁在竞争条件下，也就是说，goroutine们必须等待才能获取到锁的时候，RWMutex才是最能带来好处的。RWMutex需要更复杂的内部记录，所以会让它比一般的无竞争锁的mutex慢一些
-## sync.Once初始化
-* 有些时候当我们初始化一些慢操作时，如果不使用锁机制进行控制的话，会造成非并发安全的情况。所以时候需要同时使用互斥锁和读写锁
-
+}
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-&lt;p&gt;var mu sync.RWMutex // guards iconsvar icons map[string]image.Image
+
+&lt;ul&gt;
+  &lt;li&gt;Go 是没有重入锁的（java中是有重入锁：锁上锁）关于Go的互斥量不能重入这一点我们有很充分的理由。互斥量的目的是为了确保共享变量在程序执行时的关键点上能够保证不变性。不变性的其中之一是“没有goroutine访问共享变量”。&lt;/li&gt;
+  &lt;li&gt;所以在包的封装上，一个通用的解决方案是将一个函数分离为多个函数，比如我们把Deposit分离成两个：一个不导出的函数deposit，这个函数假设锁总是会被保持并去做实际的操作，另一个是导出的函数Deposit，这个函数会调用deposit，但在调用前会先去获取锁。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;syncrwmutex读写锁&quot;&gt;sync.RWMutex读写锁&lt;/h2&gt;
+&lt;ul&gt;
+  &lt;li&gt;利用互斥锁，会将变量的读也锁住，如果系统中包含大量的读操作，互斥锁就完全限制了系统的功能。所以Go支持读写锁，只有在写的时候会锁定。&lt;/li&gt;
+  &lt;li&gt;RWMutex只有当获得锁的大部分goroutine都是读操作，而锁在竞争条件下，也就是说，goroutine们必须等待才能获取到锁的时候，RWMutex才是最能带来好处的。RWMutex需要更复杂的内部记录，所以会让它比一般的无竞争锁的mutex慢一些
+    &lt;h2 id=&quot;synconce初始化&quot;&gt;sync.Once初始化&lt;/h2&gt;
+  &lt;/li&gt;
+  &lt;li&gt;有些时候当我们初始化一些慢操作时，如果不使用锁机制进行控制的话，会造成非并发安全的情况。所以时候需要同时使用互斥锁和读写锁&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;var mu sync.RWMutex // guards iconsvar icons map[string]image.Image
 // Concurrency-safe.func Icon(name string) image.Image {
     mu.RLock()
     if icons != nil {
@@ -71,16 +80,17 @@ var (
         mu.RUnlock()
         return icon
     }
-    mu.RUnlock()&lt;/p&gt;
+    mu.RUnlock()
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;// acquire an exclusive lock
-mu.Lock()
-if icons == nil { // NOTE: must recheck for nil
-    loadIcons()
+    // acquire an exclusive lock
+    mu.Lock()
+    if icons == nil { // NOTE: must recheck for nil
+        loadIcons()
+    }
+    icon := icons[name]
+    mu.Unlock()
+    return icon
 }
-icon := icons[name]
-mu.Unlock()
-return icon } ```
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;ul&gt;
