@@ -1,4 +1,77 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.8.5">Jekyll</generator><link href="/feed.xml" rel="self" type="application/atom+xml" /><link href="/" rel="alternate" type="text/html" /><updated>2019-05-15T17:16:07+08:00</updated><id>/feed.xml</id><title type="html">一叶障目</title><subtitle>学无止境</subtitle><entry><title type="html">Go学习笔记8</title><link href="/go/2019/05/15/Go-8.html" rel="alternate" type="text/html" title="Go学习笔记8" /><published>2019-05-15T00:00:00+08:00</published><updated>2019-05-15T00:00:00+08:00</updated><id>/go/2019/05/15/Go-8</id><content type="html" xml:base="/go/2019/05/15/Go-8.html">&lt;p&gt;前面的学习，只学习了直接使用goroutine和channel的并发程序，忽略其他细微问题，尤其在包含共享变量的并发程序，接下来我们来学习，有共享变量的并发程序。&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.8.5">Jekyll</generator><link href="/feed.xml" rel="self" type="application/atom+xml" /><link href="/" rel="alternate" type="text/html" /><updated>2019-05-24T13:41:21+08:00</updated><id>/feed.xml</id><title type="html">一叶障目</title><subtitle>学无止境</subtitle><entry><title type="html">Go学习笔记9</title><link href="/go/2019/05/24/Go-9.html" rel="alternate" type="text/html" title="Go学习笔记9" /><published>2019-05-24T00:00:00+08:00</published><updated>2019-05-24T00:00:00+08:00</updated><id>/go/2019/05/24/Go-9</id><content type="html" xml:base="/go/2019/05/24/Go-9.html">&lt;p&gt;包是为了减少重复造轮子，为开发人员减少心智的设计，允许程序员开发公用包或者自己私用的包，减少重复的造轮子。测试也程序员面对的重大问题之一，从我以一个php程序员的角度来看，Go语言的测试工具的设计上也是完爆php，一个成熟的语言测试工具真的是必不可少的。&lt;/p&gt;
+
+&lt;h2 id=&quot;包和工具&quot;&gt;包和工具&lt;/h2&gt;
+&lt;ul&gt;
+  &lt;li&gt;Go一共有100多个标准包可以用下面命令来查看：&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;go list std | wc -l
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Go 包编译的特点
+    &lt;ul&gt;
+      &lt;li&gt;所有的包的导入都要在文件的开头声明，不需要分析整个代码直接编译特定包&lt;/li&gt;
+      &lt;li&gt;不允许有循环引入，实现一个有向五环图，加快编译速度，也可以实现单包并发编译&lt;/li&gt;
+      &lt;li&gt;编译后的目标文件不仅会导出信息，还记录了包的依赖关系，不需要遍历文件&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;导入路径：都是用字符串表示，由构建起进行解析。&lt;/li&gt;
+  &lt;li&gt;包声明：在默认情况下导入包的包名是导入路径的最后一部分，但是也有特殊情况
+    &lt;ul&gt;
+      &lt;li&gt;main包和导入路径无关，主要是让go build 生成可执行文件&lt;/li&gt;
+      &lt;li&gt;_test文件，构建器会忽略当前文件&lt;/li&gt;
+      &lt;li&gt;带有版本号的包，也会忽略版本号。&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;导入声明可以单独import 也可以用（）来包裹所有包，用换行还可以进行分组，分组中会按照顺序编译。&lt;/li&gt;
+  &lt;li&gt;包的匿名导入，如果包不被使用但被导入，编译时会产生错误，但有时候程序设计上需要根据参数导入不同的包，这个时候需要先导入才能使用，所以使用import _ “image/png” 匿名导入的方式，来实现程序功能。&lt;/li&gt;
+  &lt;li&gt;包的命名尽量简短，但也不要有歧义，最好拿最主要的实体命名&lt;/li&gt;
+  &lt;li&gt;工具：
+    &lt;ul&gt;
+      &lt;li&gt;有瑞士军刀风格go hlep来看功能&lt;/li&gt;
+      &lt;li&gt;在构建之前，工程目录也是要先设置好的&lt;/li&gt;
+      &lt;li&gt;go build 会将程序构建到工程目录的 bin 目录下&lt;/li&gt;
+      &lt;li&gt;Go 有健全的文档机制，只要我们在导出的函数前，完成注释即可，第一行是摘要，保持简洁，后面的可以任意长度，如果过长也可以单独文件doc.go 文件。&lt;/li&gt;
+      &lt;li&gt;godoc 可以生成也浏览的html 页面方便查询。&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;测试&quot;&gt;测试&lt;/h2&gt;
+&lt;ul&gt;
+  &lt;li&gt;普通测试
+    &lt;ul&gt;
+      &lt;li&gt;_test.go 为文件名的文件，使用go test进行测试&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;测试覆盖率
+    &lt;ul&gt;
+      &lt;li&gt;覆盖率只是帮助找到代码脆弱的部分&lt;/li&gt;
+      &lt;li&gt;go test -v -run=Coverage gopl.io/ch7/eval&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;基准测试
+    &lt;ul&gt;
+      &lt;li&gt;Benchmark为前缀的&lt;/li&gt;
+      &lt;li&gt;测试一个程序在固定工作负载下的性能。&lt;/li&gt;
+      &lt;li&gt;go test -bench=. -benchmem&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;性能测试
+    &lt;ul&gt;
+      &lt;li&gt;对于cpu 阻塞 和 内存的使用都可以用go test 进行测试。
+        &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;  $ go test -cpuprofile=cpu.out
+  $ go test -blockprofile=block.out
+  $ go test -memprofile=mem.out
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;        &lt;/div&gt;
+      &lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;总结&quot;&gt;总结&lt;/h2&gt;
+&lt;p&gt;Go 的包设计和工具的设计都是为了更好的方便程序员代码的开发和合理的利用，这种设计思想只有多年从事coder的人才能体会其中的妙用，测试也是解放了我们debug的时间，我觉得程序员都是懒的，只有懒才能触发我们的创造力，解放我们的时间，让我们有更多的时间做创造性的工作。&lt;/p&gt;</content><author><name></name></author><summary type="html">包是为了减少重复造轮子，为开发人员减少心智的设计，允许程序员开发公用包或者自己私用的包，减少重复的造轮子。测试也程序员面对的重大问题之一，从我以一个php程序员的角度来看，Go语言的测试工具的设计上也是完爆php，一个成熟的语言测试工具真的是必不可少的。</summary></entry><entry><title type="html">Go学习笔记8</title><link href="/go/2019/05/15/Go-8.html" rel="alternate" type="text/html" title="Go学习笔记8" /><published>2019-05-15T00:00:00+08:00</published><updated>2019-05-15T00:00:00+08:00</updated><id>/go/2019/05/15/Go-8</id><content type="html" xml:base="/go/2019/05/15/Go-8.html">&lt;p&gt;前面的学习，只学习了直接使用goroutine和channel的并发程序，忽略其他细微问题，尤其在包含共享变量的并发程序，接下来我们来学习，有共享变量的并发程序。&lt;/p&gt;
 
 &lt;h2 id=&quot;竞争条件&quot;&gt;竞争条件&lt;/h2&gt;
 &lt;ul&gt;
@@ -1448,75 +1521,4 @@ func g() {
       &lt;li&gt;词法块可以深度嵌套，变量的生命周期在此法块中。&lt;/li&gt;
     &lt;/ul&gt;
   &lt;/li&gt;
-&lt;/ul&gt;</content><author><name></name></author><summary type="html">最近写了很多了Go代码，但是对于Go的深入内容知之甚少，为了达到知其然，并知其所以然的想法。开始了学习之旅，首选学习素材GO圣经。把自己觉得有用的都记下来，以便以后拿来温习。</summary></entry><entry><title type="html">如何搭建本地docker registry</title><link href="/docker/2019/04/03/docker-local-registry.html" rel="alternate" type="text/html" title="如何搭建本地docker registry" /><published>2019-04-03T00:00:00+08:00</published><updated>2019-04-03T00:00:00+08:00</updated><id>/docker/2019/04/03/docker-local-registry</id><content type="html" xml:base="/docker/2019/04/03/docker-local-registry.html">&lt;p&gt;学习k8s制作镜像就是毕竟之路，而如果想要一个快速的仓库，本地仓库就是首选，所以学习单间本地dock registry很重要。&lt;/p&gt;
-
-&lt;h2 id=&quot;获取镜像&quot;&gt;获取镜像&lt;/h2&gt;
-
-&lt;p&gt;拉取远程镜像用于制作本地镜像&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&quot;language-angular2html&quot;&gt;docker pull nginx:alpine
-&lt;/code&gt;&lt;/pre&gt;
-&lt;h2 id=&quot;本地docker-registry&quot;&gt;本地docker registry&lt;/h2&gt;
-&lt;p&gt;拉取docker registry&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&quot;language-angular2html&quot;&gt;docker pull registry:latest
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;运行docker registry&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&quot;language-angular2html&quot;&gt;docker run \
-  --detach \
-  --name registry \
-  --hostname registry \
-  --volume $(pwd)/registry:/var/lib/registry/docker/registry \
-  --publish 5000:5000 \
-  --restart unless-stopped \
-  registry:latest
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h2 id=&quot;制作镜像&quot;&gt;制作镜像&lt;/h2&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;利用DockerFile制作镜像&lt;/li&gt;
-  &lt;li&gt;先将环境拉取到本地&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;pre&gt;&lt;code class=&quot;language-angular2html&quot;&gt;//拉取官方php
-docker pull php:7.1-cli-jessie
-&lt;/code&gt;&lt;/pre&gt;
-&lt;ul&gt;
-  &lt;li&gt;进入docker进行环境配置记录配置命令制作DockerFile&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;pre&gt;&lt;code class=&quot;language-angular2html&quot;&gt;docker run -it php:7.1-cli-jessie /bin/bash
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;
-    &lt;p&gt;&lt;a href=&quot;https://github.com/xiangdong1987/local-env/tree/master&quot;&gt;根据官方PHP镜像修改后的Dockerfile&lt;/a&gt;&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;容器相关命令&lt;/p&gt;
-  &lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;pre&gt;&lt;code class=&quot;language-angular2html&quot;&gt;//容器属性
-sudo docker inspect 6d4a2498c108 (容器id)
-//容器ip
-docker inspect [container_name] | grep IPAddress
-//端口转发
-iiptables -t nat -A DOCKER -p tcp -dport 8001 -j DNAT --to-destination 192.169.1.1:8080
-//容器查看
-sudo docker ps  /-a 
-//删除容器
-sudo docker rm 容器id
-//容器镜像查看
-sudo docker images 
-//删除镜像
-sudo docker image rm 镜像id
-//运行docker -p 映射端口  -v 挂在目录  -it 进入容器
-sudo docker run -p 8810:8810 -it chelun-test:v1 -v /data:/data /bin/bash
-
-&lt;/code&gt;&lt;/pre&gt;
-&lt;h2 id=&quot;总结&quot;&gt;总结&lt;/h2&gt;
-
-&lt;p&gt;镜像的制作就是一个环境搭建的流程，需要细心的记录没一部操作，也要合理话层级。尽量用少的层级来实现环境的待见。后面的路还很长需要继续学习。&lt;/p&gt;</content><author><name></name></author><summary type="html">学习k8s制作镜像就是毕竟之路，而如果想要一个快速的仓库，本地仓库就是首选，所以学习单间本地dock registry很重要。</summary></entry></feed>
+&lt;/ul&gt;</content><author><name></name></author><summary type="html">最近写了很多了Go代码，但是对于Go的深入内容知之甚少，为了达到知其然，并知其所以然的想法。开始了学习之旅，首选学习素材GO圣经。把自己觉得有用的都记下来，以便以后拿来温习。</summary></entry></feed>
