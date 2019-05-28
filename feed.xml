@@ -1,4 +1,57 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.8.5">Jekyll</generator><link href="/feed.xml" rel="self" type="application/atom+xml" /><link href="/" rel="alternate" type="text/html" /><updated>2019-05-24T13:41:21+08:00</updated><id>/feed.xml</id><title type="html">一叶障目</title><subtitle>学无止境</subtitle><entry><title type="html">Go学习笔记9</title><link href="/go/2019/05/24/Go-9.html" rel="alternate" type="text/html" title="Go学习笔记9" /><published>2019-05-24T00:00:00+08:00</published><updated>2019-05-24T00:00:00+08:00</updated><id>/go/2019/05/24/Go-9</id><content type="html" xml:base="/go/2019/05/24/Go-9.html">&lt;p&gt;包是为了减少重复造轮子，为开发人员减少心智的设计，允许程序员开发公用包或者自己私用的包，减少重复的造轮子。测试也程序员面对的重大问题之一，从我以一个php程序员的角度来看，Go语言的测试工具的设计上也是完爆php，一个成熟的语言测试工具真的是必不可少的。&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.8.5">Jekyll</generator><link href="/feed.xml" rel="self" type="application/atom+xml" /><link href="/" rel="alternate" type="text/html" /><updated>2019-05-28T19:21:17+08:00</updated><id>/feed.xml</id><title type="html">一叶障目</title><subtitle>学无止境</subtitle><entry><title type="html">php组件化实践</title><link href="/php/2019/05/28/php-1.html" rel="alternate" type="text/html" title="php组件化实践" /><published>2019-05-28T00:00:00+08:00</published><updated>2019-05-28T00:00:00+08:00</updated><id>/php/2019/05/28/php-1</id><content type="html" xml:base="/php/2019/05/28/php-1.html">&lt;p&gt;最近学习了go语言，非常钦佩它从语言上对于Coder的友好化，对于它的包规划也感到很用心，其实做为一个phper，我们php也是有很好的工具的，那就是composer,它同样起到了规范化和组件化的作用。一个人的作用总归是有限的，只有集合广大人民的力量才是正道。&lt;/p&gt;
+
+&lt;h1 id=&quot;实践过程&quot;&gt;实践过程&lt;/h1&gt;
+&lt;ol&gt;
+  &lt;li&gt;组件化什么？
+    &lt;ul&gt;
+      &lt;li&gt;我一直有个想法做一套后台组件，能快速拼装后台功能，对于一些开源组件，内部实现复杂，自定义困难。所以想自己实现一套可复用的后台组件。 方便以后的开发。&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;如何实现组件化？
+    &lt;ul&gt;
+      &lt;li&gt;对于php来说，composer是不二选择，规范的定义，简单的维护，版本控制，大大减少心理负担。&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;如何定义自己的composer 组件？
+    &lt;ol&gt;
+      &lt;li&gt;实现自己的组件&lt;/li&gt;
+      &lt;li&gt;上传github&lt;/li&gt;
+      &lt;li&gt;
+        &lt;p&gt;定义composer.json&lt;/p&gt;
+
+        &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt; {
+   &quot;name&quot;: &quot;xdd/x-template&quot;,    //包名  必须是二级的
+   &quot;description&quot;: &quot;后台模板组件&quot;,
+   &quot;license&quot;: &quot;MIT&quot;,
+   &quot;authors&quot;: [
+     {
+       &quot;name&quot;: &quot;xdd&quot;,
+       &quot;email&quot;: &quot;xiangdong198719@gmail.com&quot;
+     }
+   ],
+   &quot;autoload&quot;: {
+     &quot;psr-4&quot;: {
+       &quot;Component\\&quot;: &quot;src/component&quot;,    //命名空间目录
+       &quot;Interfaces\\&quot;: &quot;src/interface&quot;          //命名空间目录
+     }
+   },
+   &quot;require&quot;: {}
+ }
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;        &lt;/div&gt;
+      &lt;/li&gt;
+      &lt;li&gt;在packagist检出自己的github就完成了一个自己的composer&lt;/li&gt;
+      &lt;li&gt;composer版本是根据github的tag来创建的只需要给github 打版本标签即可。
+        &lt;blockquote&gt;
+          &lt;p&gt;根据上面的步骤可以轻松完成组件化
+我实现的后台组件模块化 &lt;a href=&quot;https://github.com/xiangdong1987/xTemplate&quot;&gt;https://github.com/xiangdong1987/xTemplate&lt;/a&gt;
+希望大家来贡献代码&lt;/p&gt;
+          &lt;h1 id=&quot;总结&quot;&gt;总结&lt;/h1&gt;
+          &lt;p&gt;最为一个特别懒的程序员，如何把一个复杂重复的工作，做的有趣和简单是我唯一能促使我不断写代码的唯一动力。&lt;/p&gt;
+        &lt;/blockquote&gt;
+      &lt;/li&gt;
+    &lt;/ol&gt;
+  &lt;/li&gt;
+&lt;/ol&gt;</content><author><name></name></author><summary type="html">最近学习了go语言，非常钦佩它从语言上对于Coder的友好化，对于它的包规划也感到很用心，其实做为一个phper，我们php也是有很好的工具的，那就是composer,它同样起到了规范化和组件化的作用。一个人的作用总归是有限的，只有集合广大人民的力量才是正道。</summary></entry><entry><title type="html">Go学习笔记9</title><link href="/go/2019/05/24/Go-9.html" rel="alternate" type="text/html" title="Go学习笔记9" /><published>2019-05-24T00:00:00+08:00</published><updated>2019-05-24T00:00:00+08:00</updated><id>/go/2019/05/24/Go-9</id><content type="html" xml:base="/go/2019/05/24/Go-9.html">&lt;p&gt;包是为了减少重复造轮子，为开发人员减少心智的设计，允许程序员开发公用包或者自己私用的包，减少重复的造轮子。测试也程序员面对的重大问题之一，从我以一个php程序员的角度来看，Go语言的测试工具的设计上也是完爆php，一个成熟的语言测试工具真的是必不可少的。&lt;/p&gt;
 
 &lt;h2 id=&quot;包和工具&quot;&gt;包和工具&lt;/h2&gt;
 &lt;ul&gt;
@@ -1441,84 +1494,4 @@ rtmp://192.168.112.20:1935/live/movie
   &lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;p&gt;等等视频直播是一个大的技术栈不是像我这种简单的玩一下的，如果想深入做还是需要一定的功力和精力。只是供大家学习和体验。&lt;/p&gt;</content><author><name></name></author><summary type="html">视频直播是近些年特别火的技术栈，一直想学习如何实现视频直播。初期也了解了一些协议相关的知识，苦于都是c++相关学习起来比较难以理解，学习了Go语言之后突然想找一找是否有Go语言实现的直播服务，惊奇的发现，Livego这个开源直播服务端，自此展开了Go直播实践之路，由于工作繁重，只能抽时间搞，耽误了好几天的更新，话不多说直入正题。</summary></entry><entry><title type="html">Go学习笔记1</title><link href="/go/2019/04/11/Go-1.html" rel="alternate" type="text/html" title="Go学习笔记1" /><published>2019-04-11T00:00:00+08:00</published><updated>2019-04-11T00:00:00+08:00</updated><id>/go/2019/04/11/Go-1</id><content type="html" xml:base="/go/2019/04/11/Go-1.html">&lt;p&gt;最近写了很多了Go代码，但是对于Go的深入内容知之甚少，为了达到知其然，并知其所以然的想法。开始了学习之旅，首选学习素材&lt;a href=&quot;https://books.studygolang.com/gopl-zh/index.html&quot;&gt;GO圣经&lt;/a&gt;。把自己觉得有用的都记下来，以便以后拿来温习。&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;Go 没有的特性
-    &lt;ul&gt;
-      &lt;li&gt;它没有隐式的数值转换&lt;/li&gt;
-      &lt;li&gt;没有构造函数和析构函数&lt;/li&gt;
-      &lt;li&gt;没有运算符重载&lt;/li&gt;
-      &lt;li&gt;没有默认参数&lt;/li&gt;
-      &lt;li&gt;没有继承&lt;/li&gt;
-      &lt;li&gt;没有泛型&lt;/li&gt;
-      &lt;li&gt;没有异常&lt;/li&gt;
-      &lt;li&gt;没有宏&lt;/li&gt;
-      &lt;li&gt;没有函数修饰&lt;/li&gt;
-      &lt;li&gt;更没有线程局部存储&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;声明的类型
-    &lt;ul&gt;
-      &lt;li&gt;var：变量&lt;/li&gt;
-      &lt;li&gt;type：类型&lt;/li&gt;
-      &lt;li&gt;const：常量&lt;/li&gt;
-      &lt;li&gt;func：函数&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;各种类型对应的零值
-    &lt;ul&gt;
-      &lt;li&gt;数值对应的零值是0&lt;/li&gt;
-      &lt;li&gt;布尔值对应零值是false&lt;/li&gt;
-      &lt;li&gt;字符串对应零值是空字符串&lt;/li&gt;
-      &lt;li&gt;接口或引用类型（包括slice、指针、map、chan和函数）对应nil&lt;/li&gt;
-      &lt;li&gt;数组或者结构体对应内部每种类型对应的零值&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;变量的声明周期
-    &lt;ul&gt;
-      &lt;li&gt;变量的生命周期指的是在程序运行期间变量有效存在的时间间隔。对于在包一级声明的变量来说，它们的生命周期和整个程序的运行周期是一致的。而相比之下，局部变量的声明周期则是动态的：每次从创建一个新变量的声明语句开始，直到该变量不再被引用为止，然后变量的存储空间可能被回收。函数的参数变量和返回值变量都是局部变量。它们在函数每次被调用的时候创建。&lt;/li&gt;
-      &lt;li&gt;垃圾回收
-        &lt;ul&gt;
-          &lt;li&gt;基本的实现思路是，从每个包级的变量和每个当前运行函数的每一个局部变量开始，通过指针或引用的访问路径遍历，是否可以找到该变量。如果不存在这样的访问路径，那么说明该变量是不可达的，也就是说它是否存在并不会影响程序后续的计算结果。因为一个变量的有效周期只取决于是否可达，因此一个循环迭代内部的局部变量的生命周期可能超出其局部作用域。同时，局部变量可能在函数返回之后依然存在。编译器会自动选择在栈上还是在堆上分配局部变量的存储空间，但可能令人惊讶的是，这个选择并不是由用var还是new声明变量的方式决定的。&lt;/li&gt;
-        &lt;/ul&gt;
-      &lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;var global *int
-func f() {
-    var x int
-    x = 1
-    global = &amp;amp;x
-}
-func g() {
-    y := new(int)
-    *y = 1
-}
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;f函数里的x变量必须在堆上分配，因为它在函数退出后依然可以通过包一级的global变量找到，虽然它是在函数内部定义的；用Go语言的术语说，这个x局部变量从函数f中逃逸了。相反，当g函数返回时，变量&lt;em&gt;y将是不可达的，也就是说可以马上被回收的。因此，&lt;/em&gt;y并没有从函数g中逃逸，编译器可以选择在栈上分配*y的存储空间（也可以选择在堆上分配，然后由Go语言的GC回收这个变量的内存空间），虽然这里用的是new方式。其实在任何时候，你并不需为了编写正确的代码而要考虑变量的逃逸行为，要记住的是，逃逸的变量需要额外分配内存，同时对性能的优化可能会产生细微的影响。&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;赋值
-    &lt;ul&gt;
-      &lt;li&gt;赋值语句是显式的赋值形式，但是程序中还有很多地方会发生隐式的赋值行为：函数调用会隐式地将调用参数的值赋值给函数的参数变量，一个返回语句会隐式地将返回操作的值赋值给结果变量，一个复合类型的字面量也会产生赋值行为。例如下面的语句：
-        &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;medals := []string{&quot;gold&quot;, &quot;silver&quot;, &quot;bronze&quot;}
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;        &lt;/div&gt;
-      &lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;作用域
-    &lt;ul&gt;
-      &lt;li&gt;不要将作用域和生命周期混为一谈。声明语句的作用域对应的是一个源代码的文本区域；它是一个编译时的属性。一个变量的生命周期是指程序运行时变量存在的有效时间段，在此时间区域内它可以被程序的其他部分引用；是一个运行时的概念。&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;作用域类型
-    &lt;ul&gt;
-      &lt;li&gt;词法块：花括弧所包含的一系列语句&lt;/li&gt;
-      &lt;li&gt;词法块可以深度嵌套，变量的生命周期在此法块中。&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-&lt;/ul&gt;</content><author><name></name></author><summary type="html">最近写了很多了Go代码，但是对于Go的深入内容知之甚少，为了达到知其然，并知其所以然的想法。开始了学习之旅，首选学习素材GO圣经。把自己觉得有用的都记下来，以便以后拿来温习。</summary></entry></feed>
+&lt;p&gt;等等视频直播是一个大的技术栈不是像我这种简单的玩一下的，如果想深入做还是需要一定的功力和精力。只是供大家学习和体验。&lt;/p&gt;</content><author><name></name></author><summary type="html">视频直播是近些年特别火的技术栈，一直想学习如何实现视频直播。初期也了解了一些协议相关的知识，苦于都是c++相关学习起来比较难以理解，学习了Go语言之后突然想找一找是否有Go语言实现的直播服务，惊奇的发现，Livego这个开源直播服务端，自此展开了Go直播实践之路，由于工作繁重，只能抽时间搞，耽误了好几天的更新，话不多说直入正题。</summary></entry></feed>
