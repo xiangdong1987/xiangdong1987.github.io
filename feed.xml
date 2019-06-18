@@ -1,4 +1,61 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.8.5">Jekyll</generator><link href="/feed.xml" rel="self" type="application/atom+xml" /><link href="/" rel="alternate" type="text/html" /><updated>2019-05-28T19:21:17+08:00</updated><id>/feed.xml</id><title type="html">一叶障目</title><subtitle>学无止境</subtitle><entry><title type="html">php组件化实践</title><link href="/php/2019/05/28/php-1.html" rel="alternate" type="text/html" title="php组件化实践" /><published>2019-05-28T00:00:00+08:00</published><updated>2019-05-28T00:00:00+08:00</updated><id>/php/2019/05/28/php-1</id><content type="html" xml:base="/php/2019/05/28/php-1.html">&lt;p&gt;最近学习了go语言，非常钦佩它从语言上对于Coder的友好化，对于它的包规划也感到很用心，其实做为一个phper，我们php也是有很好的工具的，那就是composer,它同样起到了规范化和组件化的作用。一个人的作用总归是有限的，只有集合广大人民的力量才是正道。&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.8.5">Jekyll</generator><link href="/feed.xml" rel="self" type="application/atom+xml" /><link href="/" rel="alternate" type="text/html" /><updated>2019-06-18T15:29:24+08:00</updated><id>/feed.xml</id><title type="html">一叶障目</title><subtitle>学无止境</subtitle><entry><title type="html">网络不通如何处理</title><link href="/linux/2019/06/18/linux-network.html" rel="alternate" type="text/html" title="网络不通如何处理" /><published>2019-06-18T00:00:00+08:00</published><updated>2019-06-18T00:00:00+08:00</updated><id>/linux/2019/06/18/linux-network</id><content type="html" xml:base="/linux/2019/06/18/linux-network.html">&lt;p&gt;在开发网路应用程序时，网络不通的情话是经常发生的，如果快速查找和定位网络问题就是一个重要的技能。今天来总结一下：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;第一步，使用ping查看网络是否畅通，如果不畅通需要进一步查看其它方向。&lt;/li&gt;
+  &lt;li&gt;第二步，在ping的通的情况家，dig查询CDN情况
+    &lt;ul&gt;
+      &lt;li&gt;dig 使用
+        &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;  dig baidu.com
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;        &lt;/div&gt;
+      &lt;/li&gt;
+      &lt;li&gt;dig 的5个组成部分
+        &lt;ol&gt;
+          &lt;li&gt;显示 dig 命令的版本和输入的参数&lt;/li&gt;
+          &lt;li&gt;显示服务返回的一些技术详情，比较重要的是 status。如果 status 的值为 NOERROR 则说明本次查询成功结束。&lt;/li&gt;
+          &lt;li&gt;“QUESTION SECTION” 显示我们要查询的域名。&lt;/li&gt;
+          &lt;li&gt;“ANSWER SECTION” 是查询到的结果。&lt;/li&gt;
+          &lt;li&gt;是本次查询的一些统计信息，比如用了多长时间，查询了哪个 DNS 服务器，在什么时间进行的查询&lt;/li&gt;
+        &lt;/ol&gt;
+      &lt;/li&gt;
+      &lt;li&gt;记录类型：
+        &lt;ul&gt;
+          &lt;li&gt;A 指向一个ipv4地址&lt;/li&gt;
+          &lt;li&gt;AAAA 指向一个ipv6地址&lt;/li&gt;
+          &lt;li&gt;CNAME 将一个域名指向另一个域名&lt;/li&gt;
+          &lt;li&gt;MX 如果需要设置邮箱，让邮箱能够收到邮件，需要添加 MX 记录。&lt;/li&gt;
+          &lt;li&gt;NS 域名服务器记录，如果需要把子域名交给其他 DNS 服务器解析，就需要添加 NS 记录。&lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/li&gt;
+      &lt;li&gt;查询指定记录
+        &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;  dig abc.filterinto.com CNAME
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;        &lt;/div&gt;
+      &lt;/li&gt;
+      &lt;li&gt;从指定服务器上查询
+        &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;  dig @8.8.8.8 abc.filterinto.com
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;        &lt;/div&gt;
+        &lt;blockquote&gt;
+          &lt;p&gt;如果不指定 DNS 服务器，dig 会依次使用 /etc/resolv.conf 里的地址作为 DNS 服务器。&lt;/p&gt;
+        &lt;/blockquote&gt;
+      &lt;/li&gt;
+      &lt;li&gt;反向查询：查询DNS服务器名称
+        &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;   dig -x 8.8.8.8 +short
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;        &lt;/div&gt;
+      &lt;/li&gt;
+      &lt;li&gt;TTL 主要是控制 DNS 记录在 DNS 服务器上的缓存时间&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;第三步，如果CDN没有问题的情况下，使用trackroute来检查路由，基本可以断定大部分问题了。
+    &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;      traceroute www.baidu.com
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
+    &lt;p&gt;# 总结
+ 网络查找问题要从OSI七层中一层一层的查找
+ 物理层—网线，网卡
+ 链路层—基本不需要检查
+ 传输层—检查包是否发出
+ 网络层—路由是否正确
+ 会话层以上就是应用层了，检测应用程序是否正常即可。&lt;/p&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;</content><author><name></name></author><summary type="html">在开发网路应用程序时，网络不通的情话是经常发生的，如果快速查找和定位网络问题就是一个重要的技能。今天来总结一下：</summary></entry><entry><title type="html">php组件化实践</title><link href="/php/2019/05/28/php-1.html" rel="alternate" type="text/html" title="php组件化实践" /><published>2019-05-28T00:00:00+08:00</published><updated>2019-05-28T00:00:00+08:00</updated><id>/php/2019/05/28/php-1</id><content type="html" xml:base="/php/2019/05/28/php-1.html">&lt;p&gt;最近学习了go语言，非常钦佩它从语言上对于Coder的友好化，对于它的包规划也感到很用心，其实做为一个phper，我们php也是有很好的工具的，那就是composer,它同样起到了规范化和组件化的作用。一个人的作用总归是有限的，只有集合广大人民的力量才是正道。&lt;/p&gt;
 
 &lt;h1 id=&quot;实践过程&quot;&gt;实践过程&lt;/h1&gt;
 &lt;ol&gt;
@@ -1429,69 +1486,4 @@ func trace(msg string) func() {
 &lt;/ul&gt;
 
 &lt;h2 id=&quot;总结&quot;&gt;总结&lt;/h2&gt;
-&lt;p&gt;虽然每种语言都有这些类型，但是每种语言在细节处理上有相似也有不同，这些相似和不同就体现出了不同人的思考方式，总之代码是死的，思维是活的。多思考多实践，形成自己的思维体系更重要。&lt;/p&gt;</content><author><name></name></author><summary type="html">Go数据类型有如下类型。 基础类型 符合类型 引用类型 接口类型 类型内容很多只能慢慢学习，今天学习基础类型。</summary></entry><entry><title type="html">Go直播实践</title><link href="/go/live/2019/04/16/Go_live-1.html" rel="alternate" type="text/html" title="Go直播实践" /><published>2019-04-16T00:00:00+08:00</published><updated>2019-04-16T00:00:00+08:00</updated><id>/go/live/2019/04/16/Go_live-1</id><content type="html" xml:base="/go/live/2019/04/16/Go_live-1.html">&lt;p&gt;视频直播是近些年特别火的技术栈，一直想学习如何实现视频直播。初期也了解了一些协议相关的知识，苦于都是c++相关学习起来比较难以理解，学习了Go语言之后突然想找一找是否有Go语言实现的直播服务，惊奇的发现，Livego这个开源直播服务端，自此展开了Go直播实践之路，由于工作繁重，只能抽时间搞，耽误了好几天的更新，话不多说直入正题。&lt;/p&gt;
-
-&lt;h2 id=&quot;服务端&quot;&gt;服务端&lt;/h2&gt;
-&lt;ul&gt;
-  &lt;li&gt;&lt;a href=&quot;https://github.com/gwuhaolin/livego&quot;&gt;livego&lt;/a&gt; 精挑细选 简单可靠 便于二次开发&lt;/li&gt;
-  &lt;li&gt;livego的相关参数可以看源码或者help非常直观&lt;/li&gt;
-  &lt;li&gt;对于服务端不是很难编译到运行不到2分钟，主要是注意推流时，格式的选取&lt;/li&gt;
-  &lt;li&gt;上行推流：使用ffmpeg上行视频流
-    &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;ffmpeg -re -i test.mp4 -c copy -f flv 
-rtmp://192.168.112.20:1935/live/movie
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
-    &lt;p&gt;总结：服务端是较为简单的没有任何难点&lt;/p&gt;
-    &lt;h2 id=&quot;客户端&quot;&gt;客户端&lt;/h2&gt;
-    &lt;p&gt;对于一个服务端来说，客户端编码是最让人头疼的。我选取的h5客户端流解析工具&lt;a href=&quot;https://github.com/bilibili/flv.js&quot;&gt;flv.js&lt;/a&gt;&lt;/p&gt;
-    &lt;blockquote&gt;
-      &lt;p&gt;题外话
-对于前端工具真的很烦，npm安装可把我搞惨了，我是虚拟机+共享目录，我在虚拟机中npm install 它居然不认识我的共享目录，总是在rename的时候，提示权限有误无法操作，致使我在构建flv.js客户端环境上花了大量的时间，把一个两天搞定的事，一周才搞定。我是通过在虚拟机其他目录进行install在将安装好的文件拷贝到共享目录，最终还是搞定了。还有吐槽一下哔哩哔哩这么一个厉害的前端同学才给5000的工资真的说不过去。给做开源的各位大大点赞。&lt;/p&gt;
-    &lt;/blockquote&gt;
-  &lt;/li&gt;
-  &lt;li&gt;安装环境
-    &lt;ul&gt;
-      &lt;li&gt;克隆github&lt;/li&gt;
-      &lt;li&gt;npm install&lt;/li&gt;
-      &lt;li&gt;npm install -g gulp&lt;/li&gt;
-      &lt;li&gt;gulp release
-不知道这些组件是干什么用的，就按就得了哈哈
-        &lt;h2 id=&quot;测试&quot;&gt;测试&lt;/h2&gt;
-      &lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;nginx 配置demo&lt;/li&gt;
-  &lt;li&gt;编译开启服务
-    &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;  go build
-  ./livego
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
-  &lt;/li&gt;
-  &lt;li&gt;推流
-    &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;  ffmpeg -re -i test.mp4 -c copy -f flv rtmp://192.168.112.20:1935/live/movie
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
-  &lt;/li&gt;
-  &lt;li&gt;demo中配置源&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;&lt;img src=&quot;/images/9.png&quot; alt=&quot;628bf39eeb1d51e6e0106e4bd5b6d08a.png&quot; /&gt;
- ## 总结&lt;/p&gt;
-&lt;ul&gt;
-  &lt;li&gt;GO真的是一个好语言，一个好的粘合剂&lt;/li&gt;
-  &lt;li&gt;前端工具真麻烦，像php的composer多好，还是前端的变化太快，跟不上潮流，还是喜欢一些底层一点的不那么麻烦。&lt;/li&gt;
-  &lt;li&gt;直播
-    &lt;ul&gt;
-      &lt;li&gt;协议的实现&lt;/li&gt;
-      &lt;li&gt;流的上行&lt;/li&gt;
-      &lt;li&gt;流的下行&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;还有一些其他的可以学习的内容比如
-    &lt;ul&gt;
-      &lt;li&gt;视频的格式&lt;/li&gt;
-      &lt;li&gt;流的缓存&lt;/li&gt;
-      &lt;li&gt;压力测试&lt;/li&gt;
-      &lt;li&gt;负载均衡&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;等等视频直播是一个大的技术栈不是像我这种简单的玩一下的，如果想深入做还是需要一定的功力和精力。只是供大家学习和体验。&lt;/p&gt;</content><author><name></name></author><summary type="html">视频直播是近些年特别火的技术栈，一直想学习如何实现视频直播。初期也了解了一些协议相关的知识，苦于都是c++相关学习起来比较难以理解，学习了Go语言之后突然想找一找是否有Go语言实现的直播服务，惊奇的发现，Livego这个开源直播服务端，自此展开了Go直播实践之路，由于工作繁重，只能抽时间搞，耽误了好几天的更新，话不多说直入正题。</summary></entry></feed>
+&lt;p&gt;虽然每种语言都有这些类型，但是每种语言在细节处理上有相似也有不同，这些相似和不同就体现出了不同人的思考方式，总之代码是死的，思维是活的。多思考多实践，形成自己的思维体系更重要。&lt;/p&gt;</content><author><name></name></author><summary type="html">Go数据类型有如下类型。 基础类型 符合类型 引用类型 接口类型 类型内容很多只能慢慢学习，今天学习基础类型。</summary></entry></feed>
