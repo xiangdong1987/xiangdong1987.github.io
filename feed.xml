@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.8.5">Jekyll</generator><link href="/feed.xml" rel="self" type="application/atom+xml" /><link href="/" rel="alternate" type="text/html" /><updated>2019-07-08T09:52:33+08:00</updated><id>/feed.xml</id><title type="html">一叶障目</title><subtitle>学无止境</subtitle><entry><title type="html">网络不通如何处理</title><link href="/python/2019/07/08/python-guess_lottery.html" rel="alternate" type="text/html" title="网络不通如何处理" /><published>2019-07-08T00:00:00+08:00</published><updated>2019-07-08T00:00:00+08:00</updated><id>/python/2019/07/08/python-guess_lottery</id><content type="html" xml:base="/python/2019/07/08/python-guess_lottery.html">&lt;h1 id=&quot;双色球预测到放弃&quot;&gt;双色球预测到放弃&lt;/h1&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.8.5">Jekyll</generator><link href="/feed.xml" rel="self" type="application/atom+xml" /><link href="/" rel="alternate" type="text/html" /><updated>2019-07-08T10:51:35+08:00</updated><id>/feed.xml</id><title type="html">一叶障目</title><subtitle>学无止境</subtitle><entry><title type="html">网络不通如何处理</title><link href="/python/2019/07/08/python-guess_lottery.html" rel="alternate" type="text/html" title="网络不通如何处理" /><published>2019-07-08T00:00:00+08:00</published><updated>2019-07-08T00:00:00+08:00</updated><id>/python/2019/07/08/python-guess_lottery</id><content type="html" xml:base="/python/2019/07/08/python-guess_lottery.html">&lt;h1 id=&quot;双色球预测到放弃&quot;&gt;双色球预测到放弃&lt;/h1&gt;
 &lt;h2 id=&quot;起因&quot;&gt;起因&lt;/h2&gt;
 &lt;p&gt;我一直有个发财梦，就是靠技术能计算出双色球的走势，从而实现财富自由走向人生巅峰，这个梦一直魂牵梦绕着我，直到最新开始学大数据分析开始，我坚信只要有梦想早晚一天会破碎。&lt;/p&gt;
 &lt;h2 id=&quot;过程&quot;&gt;过程&lt;/h2&gt;
@@ -32,17 +32,19 @@
 &lt;/ul&gt;
 
 &lt;p&gt;通过用不同的算法对不同的数据类型就行预测，而得到我们想要预测的模型，这个整个过程就是大数据分析，大数据关键问题就是数据。&lt;/p&gt;
+
 &lt;h2 id=&quot;简单的过程描述&quot;&gt;简单的过程描述&lt;/h2&gt;
 &lt;ol&gt;
   &lt;li&gt;我的数据获取是用爬虫对&lt;a href=&quot;http://datachart.500.com/ssq/?expect=100&quot;&gt;http://datachart.500.com/ssq/?expect=100&lt;/a&gt; 的历史数据进行爬去，代码实践请看git。&lt;/li&gt;
   &lt;li&gt;我对数据进行了处理，讲获取的历史数据错开期数进行排序，用当期的数据预测下期的结果。&lt;/li&gt;
-  &lt;li&gt;利用svm 多项式回归，对结果进行预测结果越接近1 就是下期出现某数。
-    &lt;h2 id=&quot;犯过的愚蠢错误&quot;&gt;犯过的愚蠢错误&lt;/h2&gt;
-    &lt;p&gt;用整个训练集中的一条进行预测，结果发现100% 中奖我以为我发了，好吧是我太蠢了。&lt;/p&gt;
-    &lt;h2 id=&quot;总结&quot;&gt;总结&lt;/h2&gt;
-    &lt;p&gt;通过预测的结果显示，中一个数据的概率非常小，所有的中奖概率每一期都是8亿分之1，每一次都是独立的事件，是无法根据历史数据来预测的，对于可预测时间必须是一种能线性或者真实存在的某种规律才能进行预测。好吧我的发财梦碎了，老实的板砖吧！&lt;/p&gt;
-  &lt;/li&gt;
-&lt;/ol&gt;</content><author><name></name></author><summary type="html">双色球预测到放弃 起因 我一直有个发财梦，就是靠技术能计算出双色球的走势，从而实现财富自由走向人生巅峰，这个梦一直魂牵梦绕着我，直到最新开始学大数据分析开始，我坚信只要有梦想早晚一天会破碎。 过程 学习过程历时2周，从python语言基础到，大数据分析工具的使用。过程参考下面的github https://github.com/xiangdong1987/python_data_analysis</summary></entry><entry><title type="html">网络不通如何处理</title><link href="/linux/2019/06/18/linux-network.html" rel="alternate" type="text/html" title="网络不通如何处理" /><published>2019-06-18T00:00:00+08:00</published><updated>2019-06-18T00:00:00+08:00</updated><id>/linux/2019/06/18/linux-network</id><content type="html" xml:base="/linux/2019/06/18/linux-network.html">&lt;p&gt;在开发网路应用程序时，网络不通的情话是经常发生的，如果快速查找和定位网络问题就是一个重要的技能。今天来总结一下：&lt;/p&gt;
+  &lt;li&gt;利用svm 多项式回归，对结果进行预测结果越接近1 就是下期出现某数。&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h2 id=&quot;犯过的愚蠢错误&quot;&gt;犯过的愚蠢错误&lt;/h2&gt;
+&lt;p&gt;用整个训练集中的一条进行预测，结果发现100% 中奖我以为我发了，好吧是我太蠢了。&lt;/p&gt;
+
+&lt;h2 id=&quot;总结&quot;&gt;总结&lt;/h2&gt;
+&lt;p&gt;通过预测的结果显示，中一个数据的概率非常小，所有的中奖概率每一期都是8亿分之1，每一次都是独立的事件，是无法根据历史数据来预测的，对于可预测时间必须是一种能线性或者真实存在的某种规律才能进行预测。好吧我的发财梦碎了，老实的板砖吧！&lt;/p&gt;</content><author><name></name></author><summary type="html">双色球预测到放弃 起因 我一直有个发财梦，就是靠技术能计算出双色球的走势，从而实现财富自由走向人生巅峰，这个梦一直魂牵梦绕着我，直到最新开始学大数据分析开始，我坚信只要有梦想早晚一天会破碎。 过程 学习过程历时2周，从python语言基础到，大数据分析工具的使用。过程参考下面的github https://github.com/xiangdong1987/python_data_analysis</summary></entry><entry><title type="html">网络不通如何处理</title><link href="/linux/2019/06/18/linux-network.html" rel="alternate" type="text/html" title="网络不通如何处理" /><published>2019-06-18T00:00:00+08:00</published><updated>2019-06-18T00:00:00+08:00</updated><id>/linux/2019/06/18/linux-network</id><content type="html" xml:base="/linux/2019/06/18/linux-network.html">&lt;p&gt;在开发网路应用程序时，网络不通的情话是经常发生的，如果快速查找和定位网络问题就是一个重要的技能。今天来总结一下：&lt;/p&gt;
 
 &lt;ul&gt;
   &lt;li&gt;第一步，使用ping查看网络是否畅通，如果不畅通需要进一步查看其它方向。&lt;/li&gt;
