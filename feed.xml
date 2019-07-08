@@ -1,4 +1,48 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.8.5">Jekyll</generator><link href="/feed.xml" rel="self" type="application/atom+xml" /><link href="/" rel="alternate" type="text/html" /><updated>2019-06-18T15:29:24+08:00</updated><id>/feed.xml</id><title type="html">一叶障目</title><subtitle>学无止境</subtitle><entry><title type="html">网络不通如何处理</title><link href="/linux/2019/06/18/linux-network.html" rel="alternate" type="text/html" title="网络不通如何处理" /><published>2019-06-18T00:00:00+08:00</published><updated>2019-06-18T00:00:00+08:00</updated><id>/linux/2019/06/18/linux-network</id><content type="html" xml:base="/linux/2019/06/18/linux-network.html">&lt;p&gt;在开发网路应用程序时，网络不通的情话是经常发生的，如果快速查找和定位网络问题就是一个重要的技能。今天来总结一下：&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.8.5">Jekyll</generator><link href="/feed.xml" rel="self" type="application/atom+xml" /><link href="/" rel="alternate" type="text/html" /><updated>2019-07-08T09:52:33+08:00</updated><id>/feed.xml</id><title type="html">一叶障目</title><subtitle>学无止境</subtitle><entry><title type="html">网络不通如何处理</title><link href="/python/2019/07/08/python-guess_lottery.html" rel="alternate" type="text/html" title="网络不通如何处理" /><published>2019-07-08T00:00:00+08:00</published><updated>2019-07-08T00:00:00+08:00</updated><id>/python/2019/07/08/python-guess_lottery</id><content type="html" xml:base="/python/2019/07/08/python-guess_lottery.html">&lt;h1 id=&quot;双色球预测到放弃&quot;&gt;双色球预测到放弃&lt;/h1&gt;
+&lt;h2 id=&quot;起因&quot;&gt;起因&lt;/h2&gt;
+&lt;p&gt;我一直有个发财梦，就是靠技术能计算出双色球的走势，从而实现财富自由走向人生巅峰，这个梦一直魂牵梦绕着我，直到最新开始学大数据分析开始，我坚信只要有梦想早晚一天会破碎。&lt;/p&gt;
+&lt;h2 id=&quot;过程&quot;&gt;过程&lt;/h2&gt;
+&lt;p&gt;学习过程历时2周，从python语言基础到，大数据分析工具的使用。过程参考下面的github&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/xiangdong1987/python_data_analysis&quot; title=&quot;https://github.com/xiangdong1987/python_data_analysis&quot;&gt;https://github.com/xiangdong1987/python_data_analysis&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;课程是根据极客时间的下面的课程&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;https://time.geekbang.org/column/intro/147&quot; title=&quot;数据分析实战&quot;&gt;数据分析实战45讲&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;总体感受，老师讲的挺实战的，不过如果讲原理也太多太深的数学知识也很难消化，比如我自己也展开的看了看，不过太难了，还是需要的时候看吧&lt;/p&gt;
+
+&lt;p&gt;对于大数据分析无外乎三个阶段&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;数据获取与加载（80%的时间）&lt;/li&gt;
+  &lt;li&gt;数据清洗与加工（15%的时间）&lt;/li&gt;
+  &lt;li&gt;模型生成与预测（5%的时间）&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;使用的数据算法包含如下几种（还有几种还没学完，想看关注github）：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/xiangdong1987/python_data_analysis/tree/master/algorithm/Bayes&quot; title=&quot;贝叶斯算法&quot;&gt;贝叶斯算法&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/xiangdong1987/python_data_analysis/tree/master/algorithm/decisionTree&quot; title=&quot;决策树算法&quot;&gt;决策树算法&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/xiangdong1987/python_data_analysis/tree/master/algorithm/svm&quot; title=&quot;SVM算法&quot;&gt;SVM算法&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/xiangdong1987/python_data_analysis/tree/master/algorithm/KNN&quot; title=&quot;KNN算法&quot;&gt;KNN算法&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;通过用不同的算法对不同的数据类型就行预测，而得到我们想要预测的模型，这个整个过程就是大数据分析，大数据关键问题就是数据。&lt;/p&gt;
+&lt;h2 id=&quot;简单的过程描述&quot;&gt;简单的过程描述&lt;/h2&gt;
+&lt;ol&gt;
+  &lt;li&gt;我的数据获取是用爬虫对&lt;a href=&quot;http://datachart.500.com/ssq/?expect=100&quot;&gt;http://datachart.500.com/ssq/?expect=100&lt;/a&gt; 的历史数据进行爬去，代码实践请看git。&lt;/li&gt;
+  &lt;li&gt;我对数据进行了处理，讲获取的历史数据错开期数进行排序，用当期的数据预测下期的结果。&lt;/li&gt;
+  &lt;li&gt;利用svm 多项式回归，对结果进行预测结果越接近1 就是下期出现某数。
+    &lt;h2 id=&quot;犯过的愚蠢错误&quot;&gt;犯过的愚蠢错误&lt;/h2&gt;
+    &lt;p&gt;用整个训练集中的一条进行预测，结果发现100% 中奖我以为我发了，好吧是我太蠢了。&lt;/p&gt;
+    &lt;h2 id=&quot;总结&quot;&gt;总结&lt;/h2&gt;
+    &lt;p&gt;通过预测的结果显示，中一个数据的概率非常小，所有的中奖概率每一期都是8亿分之1，每一次都是独立的事件，是无法根据历史数据来预测的，对于可预测时间必须是一种能线性或者真实存在的某种规律才能进行预测。好吧我的发财梦碎了，老实的板砖吧！&lt;/p&gt;
+  &lt;/li&gt;
+&lt;/ol&gt;</content><author><name></name></author><summary type="html">双色球预测到放弃 起因 我一直有个发财梦，就是靠技术能计算出双色球的走势，从而实现财富自由走向人生巅峰，这个梦一直魂牵梦绕着我，直到最新开始学大数据分析开始，我坚信只要有梦想早晚一天会破碎。 过程 学习过程历时2周，从python语言基础到，大数据分析工具的使用。过程参考下面的github https://github.com/xiangdong1987/python_data_analysis</summary></entry><entry><title type="html">网络不通如何处理</title><link href="/linux/2019/06/18/linux-network.html" rel="alternate" type="text/html" title="网络不通如何处理" /><published>2019-06-18T00:00:00+08:00</published><updated>2019-06-18T00:00:00+08:00</updated><id>/linux/2019/06/18/linux-network</id><content type="html" xml:base="/linux/2019/06/18/linux-network.html">&lt;p&gt;在开发网路应用程序时，网络不通的情话是经常发生的，如果快速查找和定位网络问题就是一个重要的技能。今天来总结一下：&lt;/p&gt;
 
 &lt;ul&gt;
   &lt;li&gt;第一步，使用ping查看网络是否畅通，如果不畅通需要进一步查看其它方向。&lt;/li&gt;
@@ -1361,129 +1405,4 @@ func trace(msg string) func() {
 &lt;/ul&gt;
 
 &lt;h2 id=&quot;总结&quot;&gt;总结&lt;/h2&gt;
-&lt;p&gt;类型就是数据结构，写代码先定义数据结构，数据结构决定了代码的走向决定了用什么算法。学海无涯苦作舟，千帆过尽还复来。继续努力吧。&lt;/p&gt;</content><author><name></name></author><summary type="html">Go数据类型有如下类型。 基础类型 复合类型 引用类型 接口类型 类型内容很多只能慢慢学习，今天学习复合类型。</summary></entry><entry><title type="html">Go学习笔记2</title><link href="/go/2019/04/17/Go-2.html" rel="alternate" type="text/html" title="Go学习笔记2" /><published>2019-04-17T00:00:00+08:00</published><updated>2019-04-17T00:00:00+08:00</updated><id>/go/2019/04/17/Go-2</id><content type="html" xml:base="/go/2019/04/17/Go-2.html">&lt;p&gt;Go数据类型有如下类型。&lt;/p&gt;
-&lt;ul&gt;
-  &lt;li&gt;基础类型&lt;/li&gt;
-  &lt;li&gt;符合类型&lt;/li&gt;
-  &lt;li&gt;引用类型&lt;/li&gt;
-  &lt;li&gt;接口类型
-类型内容很多只能慢慢学习，今天学习基础类型。&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h2 id=&quot;基础类型&quot;&gt;基础类型&lt;/h2&gt;
-&lt;ul&gt;
-  &lt;li&gt;数字
-    &lt;ul&gt;
-      &lt;li&gt;有符号无符号&lt;/li&gt;
-      &lt;li&gt;Unicode字符rune类型是和int32等价的类型&lt;/li&gt;
-      &lt;li&gt;byte也是uint8类型的等价类型&lt;/li&gt;
-      &lt;li&gt;计算溢出 高位截断
-        &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt; var u uint8 = 255
- fmt.Println(u, u+1, u*u) // &quot;255 0 1&quot;
- var i int8 = 127
- fmt.Println(i, i+1, i*i) // &quot;127 -128 1&quot;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;        &lt;/div&gt;
-      &lt;/li&gt;
-      &lt;li&gt;位运算
-  ```
- var x uint8 = 1«1 | 1«5var y uint8 = 1«1 | 1«2&lt;/li&gt;
-    &lt;/ul&gt;
-
-    &lt;p&gt;fmt.Printf(“%08b\n”, x) // “00100010”, the set {1, 5}
- fmt.Printf(“%08b\n”, y) // “00000110”, the set {1, 2}&lt;/p&gt;
-
-    &lt;p&gt;fmt.Printf(“%08b\n”, x&amp;amp;y)  // “00000010”, the intersection {1}
- fmt.Printf(“%08b\n”, x|y)  // “00100110”, the union {1, 2, 5}
- fmt.Printf(“%08b\n”, x^y)  // “00100100”, the symmetric difference {2, 5}
- fmt.Printf(“%08b\n”, x&amp;amp;^y) // “00100000”, the difference {5}&lt;/p&gt;
-
-    &lt;p&gt;for i := uint(0); i &amp;lt; 8; i++ {
-     if x&amp;amp;(1«i) != 0 { // membership test
-         fmt.Println(i) // “1”, “5”
-     }
- }&lt;/p&gt;
-
-    &lt;p&gt;fmt.Printf(“%08b\n”, x«1) // “01000100”, the set {2, 6}
- fmt.Printf(“%08b\n”, x»1) // “00010001”, the set {0, 4}
-  ```&lt;/p&gt;
-    &lt;ul&gt;
-      &lt;li&gt;浮点型
-        &lt;blockquote&gt;
-          &lt;p&gt;一个float32类型的浮点数可以提供大约6个十进制数的精度，而float64则可以提供约15个十进制数的精度；通常应该优先使用float64类型，因为float32类型的累计计算误差很容易扩散，并且float32能精确表示的正整数并不是很大（译注：因为float32的有效bit位只有23个，其它的bit位用于指数和符号；当整数大于23bit能表达的范围时，float32的表示将出现误差）&lt;/p&gt;
-        &lt;/blockquote&gt;
-      &lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;字符串:一个字符串是一个不可改变的字节序列
-    &lt;ul&gt;
-      &lt;li&gt;不变性意味如果两个字符串共享相同的底层数据的话也是安全的，这使得复制任何长度的字符串代价是低廉的&lt;/li&gt;
-      &lt;li&gt;编码：编码是一个基础，但是很复杂的东西，很多原理都跟编码有关。
-        &lt;ul&gt;
-          &lt;li&gt;ASC II：是最初的编码定义，用一个字节来表示 0-127 表示英文和符号&lt;/li&gt;
-          &lt;li&gt;Unicode：随着计算机的广泛使用，其他国家的语言和文字需要展示，一个字节不够用了所以用4个字节来保存，诞生了unicode编码，至今unicode已经120000的字符了&lt;/li&gt;
-          &lt;li&gt;&lt;a href=&quot;http://unicode.org &quot;&gt;Unicode官方&lt;/a&gt;&lt;/li&gt;
-          &lt;li&gt;UTF-8:由于unicode 需要4个字节，有字符实际用不到这么多存储为，但是占用了这么的空间很浪费，所以UTF-8可变长字编码格式产生了，它位不同的长度的Uicode编码使用不用的表示方式。如下
-            &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt; 0xxxxxxx                                                   runes 0-127    (ASCII)
- 110xxxxx 10xxxxxx                                  128-2047       (values &amp;lt;128 unused)
- 1110xxxx 10xxxxxx 10xxxxxx                   2048-65535     (values &amp;lt;2048 unused)
- 11110xxx 10xxxxxx 10xxxxxx 10xxxxxx   65536-0x10ffff (other values unused)
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;            &lt;/div&gt;
-          &lt;/li&gt;
-          &lt;li&gt;Go语言的range循环在处理字符串的时候，会自动隐式解码UTF8字符串&lt;/li&gt;
-        &lt;/ul&gt;
-      &lt;/li&gt;
-      &lt;li&gt;标准库中四个重要的库
-        &lt;ul&gt;
-          &lt;li&gt;btyes:btye的查找，替换，比较，截取，拆分，合并等功能
-            &lt;ul&gt;
-              &lt;li&gt;因为字符串是只读的，因此逐步构建字符串会导致很多分配和复制&lt;/li&gt;
-            &lt;/ul&gt;
-          &lt;/li&gt;
-          &lt;li&gt;strings：字符串btye的查找，替换，比较，截取，拆分，合并等功能&lt;/li&gt;
-          &lt;li&gt;strconv：字符串转化&lt;/li&gt;
-          &lt;li&gt;unicode：给字符分类&lt;/li&gt;
-        &lt;/ul&gt;
-      &lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;布尔：没有什么特别注意的，就是要讲数字当bool值需要做一个函数转换
-    &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt; func itob(i int) bool { return i != 0 }
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
-  &lt;/li&gt;
-  &lt;li&gt;常量：常量表达式的值在编译期计算，而不是在运行期。
-    &lt;ul&gt;
-      &lt;li&gt;iota 可以批量生成常量
- ```angular2html
- type Weekday int&lt;/li&gt;
-    &lt;/ul&gt;
-
-    &lt;p&gt;const (
-     Sunday Weekday = iota
-     Monday
-     Tuesday
-     Wednesday
-     Thursday
-     Friday
-     Saturday
- )
- //复杂例子
- const (
-     _ = 1 « (10 * iota)
-     KiB // 1024
-     MiB // 1048576
-     GiB // 1073741824
-     TiB // 1099511627776             (exceeds 1 « 32)
-     PiB // 1125899906842624
-     EiB // 1152921504606846976
-     ZiB // 1180591620717411303424    (exceeds 1 « 64)
-     YiB // 1208925819614629174706176
- )
- ```&lt;/p&gt;
-    &lt;ul&gt;
-      &lt;li&gt;无类型常量：我个人理解无类型常量有点像php不定义变量类型，系统自动识别，后面学习到接口时有重要的作用。&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h2 id=&quot;总结&quot;&gt;总结&lt;/h2&gt;
-&lt;p&gt;虽然每种语言都有这些类型，但是每种语言在细节处理上有相似也有不同，这些相似和不同就体现出了不同人的思考方式，总之代码是死的，思维是活的。多思考多实践，形成自己的思维体系更重要。&lt;/p&gt;</content><author><name></name></author><summary type="html">Go数据类型有如下类型。 基础类型 符合类型 引用类型 接口类型 类型内容很多只能慢慢学习，今天学习基础类型。</summary></entry></feed>
+&lt;p&gt;类型就是数据结构，写代码先定义数据结构，数据结构决定了代码的走向决定了用什么算法。学海无涯苦作舟，千帆过尽还复来。继续努力吧。&lt;/p&gt;</content><author><name></name></author><summary type="html">Go数据类型有如下类型。 基础类型 复合类型 引用类型 接口类型 类型内容很多只能慢慢学习，今天学习复合类型。</summary></entry></feed>
