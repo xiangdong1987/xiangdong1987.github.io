@@ -5,7 +5,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <title>easyGo 开源心得</title>
+  <title>easyGin 开源心得</title>
   <meta name="description" content="自上次在v2ex发了一篇，关于我对从php转go的心得，发了自己的开源(https://github.com/xiangdong1987/easyGin)[https://github.com/xiangdong1987/easyGin]感觉反响挺大，被骂的挺惨的，不过我也从中学习了很多东西。今天来总结一下，顺便...">
 
   <!-- evil icon -->
@@ -70,7 +70,7 @@ if(!(window.doNotTrack === "1" || navigator.doNotTrack === "1" || navigator.doNo
         <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
 
   <header class="post-header">
-    <h1 class="post-title p-name" itemprop="name headline">easyGo 开源心得</h1>
+    <h1 class="post-title p-name" itemprop="name headline">easyGin 开源心得</h1>
     <p class="post-meta">
       <time class="dt-published" datetime="2019-07-30T00:00:00+08:00" itemprop="datePublished">Jul 30, 2019
       </time></p>
@@ -86,20 +86,21 @@ if(!(window.doNotTrack === "1" || navigator.doNotTrack === "1" || navigator.doNo
   <li>使用方式：
     <ul>
       <li>更新到新版go</li>
-      <li>设置如下配置
-  ```
-  //开启mod
-  export GO111MODULE=on</li>
+      <li>设置如下配置</li>
     </ul>
 
-    <p>//设置代理
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  //开启mod
+  export GO111MODULE=on
+    
+  //设置代理
   export GOPROXY=https://gocenter.io
-  ```</p>
-    <blockquote>
-      <p>只能说谁用谁知道</p>
-    </blockquote>
+</code></pre></div>    </div>
   </li>
 </ul>
+
+<blockquote>
+  <p>只能说谁用谁知道</p>
+</blockquote>
 
 <h2 id="go-template">Go template</h2>
 <ul>
@@ -127,21 +128,22 @@ if err = t.Execute(buf, curdStrut); err != nil {
 }
 fmt.Println(result)
 </code></pre></div></div>
+
 <h2 id="go-convey代码测试及代码覆盖">Go convey代码测试及代码覆盖</h2>
 <ul>
-  <li>这个库提供了代码测试的重新封装，使用友好，还可以提供页面展示代码覆盖率自动测试功能。程序规范化典范（感觉又要挨骂了）
-    <div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">func</span><span class="x"> </span><span class="n">TestInitRouter</span><span class="p">(</span><span class="n">t</span><span class="x"> </span><span class="o">*</span><span class="n">testing</span><span class="o">.</span><span class="n">T</span><span class="p">)</span><span class="x"> </span><span class="p">{</span><span class="x">
-  </span><span class="n">Convey</span><span class="p">(</span><span class="s">"model 路由"</span><span class="p">,</span><span class="x"> </span><span class="n">t</span><span class="p">,</span><span class="x"> </span><span class="k">func</span><span class="p">()</span><span class="x"> </span><span class="p">{</span><span class="x">
-      </span><span class="n">InitDB</span><span class="p">(</span><span class="s">"company"</span><span class="p">)</span><span class="x">
-      </span><span class="n">err</span><span class="x"> </span><span class="o">:=</span><span class="x"> </span><span class="n">InitRouter</span><span class="p">(</span><span class="s">"Person"</span><span class="p">,</span><span class="x"> </span><span class="s">"D:/data/go/src/easyGin/router/"</span><span class="p">)</span><span class="x">
-      </span><span class="n">Convey</span><span class="p">(</span><span class="s">"model 生成"</span><span class="p">,</span><span class="x"> </span><span class="k">func</span><span class="p">()</span><span class="x"> </span><span class="p">{</span><span class="x">
-          </span><span class="n">So</span><span class="p">(</span><span class="n">err</span><span class="p">,</span><span class="x"> </span><span class="n">ShouldEqual</span><span class="p">,</span><span class="x"> </span><span class="no">nil</span><span class="p">)</span><span class="x">
-      </span><span class="p">})</span><span class="x">
-  </span><span class="p">})</span><span class="x">
-</span><span class="p">}</span><span class="x">
-</span></code></pre></div>    </div>
-  </li>
+  <li>这个库提供了代码测试的重新封装，使用友好，还可以提供页面展示代码覆盖率自动测试功能。程序规范化典范（感觉又要挨骂了）</li>
 </ul>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">func</span><span class="x"> </span><span class="n">TestInitRouter</span><span class="p">(</span><span class="n">t</span><span class="x"> </span><span class="o">*</span><span class="n">testing</span><span class="o">.</span><span class="n">T</span><span class="p">)</span><span class="x"> </span><span class="p">{</span><span class="x">
+	</span><span class="n">Convey</span><span class="p">(</span><span class="s">"model 路由"</span><span class="p">,</span><span class="x"> </span><span class="n">t</span><span class="p">,</span><span class="x"> </span><span class="k">func</span><span class="p">()</span><span class="x"> </span><span class="p">{</span><span class="x">
+		</span><span class="n">InitDB</span><span class="p">(</span><span class="s">"company"</span><span class="p">)</span><span class="x">
+		</span><span class="n">err</span><span class="x"> </span><span class="o">:=</span><span class="x"> </span><span class="n">InitRouter</span><span class="p">(</span><span class="s">"Person"</span><span class="p">,</span><span class="x"> </span><span class="s">"D:/data/go/src/easyGin/router/"</span><span class="p">)</span><span class="x">
+		</span><span class="n">Convey</span><span class="p">(</span><span class="s">"model 生成"</span><span class="p">,</span><span class="x"> </span><span class="k">func</span><span class="p">()</span><span class="x"> </span><span class="p">{</span><span class="x">
+			</span><span class="n">So</span><span class="p">(</span><span class="n">err</span><span class="p">,</span><span class="x"> </span><span class="n">ShouldEqual</span><span class="p">,</span><span class="x"> </span><span class="no">nil</span><span class="p">)</span><span class="x">
+		</span><span class="p">})</span><span class="x">
+	</span><span class="p">})</span><span class="x">
+</span><span class="p">}</span><span class="x">
+</span></code></pre></div></div>
 
 <h2 id="性能测试">性能测试</h2>
 <ul>
