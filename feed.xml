@@ -1,4 +1,56 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.8.5">Jekyll</generator><link href="/feed.xml" rel="self" type="application/atom+xml" /><link href="/" rel="alternate" type="text/html" /><updated>2019-08-01T19:04:00+08:00</updated><id>/feed.xml</id><title type="html">一叶障目</title><subtitle>学无止境</subtitle><entry><title type="html">折腾kafka</title><link href="/go/2019/08/01/Go-kafka.html" rel="alternate" type="text/html" title="折腾kafka" /><published>2019-08-01T00:00:00+08:00</published><updated>2019-08-01T00:00:00+08:00</updated><id>/go/2019/08/01/Go-kafka</id><content type="html" xml:base="/go/2019/08/01/Go-kafka.html">&lt;p&gt;kafka 实践学习，对于一个java大生态的工具，还是需要学习和了解的，毕竟java大佬这么多年了，值得学习的地方非常多。&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.8.5">Jekyll</generator><link href="/feed.xml" rel="self" type="application/atom+xml" /><link href="/" rel="alternate" type="text/html" /><updated>2019-08-13T16:25:47+08:00</updated><id>/feed.xml</id><title type="html">一叶障目</title><subtitle>学无止境</subtitle><entry><title type="html">记一次面试经历</title><link href="/blog/2019/08/13/Blog-interview.html" rel="alternate" type="text/html" title="记一次面试经历" /><published>2019-08-13T00:00:00+08:00</published><updated>2019-08-13T00:00:00+08:00</updated><id>/blog/2019/08/13/Blog-interview</id><content type="html" xml:base="/blog/2019/08/13/Blog-interview.html">&lt;p&gt;现在的公司待久了，没什么晋升机会，突然想跳槽了，正好也检验一下自己的水平位置。本来内心是毫无波澜的，谁知道面试后内心波涛汹涌。今天来谈谈感受。&lt;/p&gt;
+&lt;h2 id=&quot;行情&quot;&gt;行情&lt;/h2&gt;
+&lt;ul&gt;
+  &lt;li&gt;大厂卡学历&lt;/li&gt;
+  &lt;li&gt;小公司薪资降低&lt;/li&gt;
+  &lt;li&gt;能力要求高
+    &lt;h2 id=&quot;投简历&quot;&gt;投简历&lt;/h2&gt;
+  &lt;/li&gt;
+  &lt;li&gt;只投了一些心仪的公司，php转go没太报希望&lt;/li&gt;
+  &lt;li&gt;针对jd准备了很多相关知识 （结果完全没用到）
+    &lt;ul&gt;
+      &lt;li&gt;比如分布式系统&lt;/li&gt;
+      &lt;li&gt;一致性哈希&lt;/li&gt;
+      &lt;li&gt;cassandra&lt;/li&gt;
+      &lt;li&gt;go 基础知识&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;面试公司
+    &lt;ul&gt;
+      &lt;li&gt;一家电商&lt;/li&gt;
+      &lt;li&gt;一家哈喽单车
+        &lt;h2 id=&quot;面试难度&quot;&gt;面试难度&lt;/h2&gt;
+        &lt;p&gt;总结：常规要会，深度要深，广度要广&lt;/p&gt;
+      &lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;常规：
+    &lt;ul&gt;
+      &lt;li&gt;mysql&lt;/li&gt;
+      &lt;li&gt;redis&lt;/li&gt;
+      &lt;li&gt;tcp协议&lt;/li&gt;
+      &lt;li&gt;linux系统&lt;/li&gt;
+      &lt;li&gt;逻辑思维&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;深度
+    &lt;ul&gt;
+      &lt;li&gt;数据结构&lt;/li&gt;
+      &lt;li&gt;算法实现&lt;/li&gt;
+      &lt;li&gt;语言特性实现&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;广度
+    &lt;ul&gt;
+      &lt;li&gt;语言特性&lt;/li&gt;
+      &lt;li&gt;相关定义&lt;/li&gt;
+      &lt;li&gt;组件了解
+        &lt;h2 id=&quot;总结&quot;&gt;总结&lt;/h2&gt;
+        &lt;p&gt;经过短暂的两次面试发现，面试是对自己一次真实情况的合理评估，在没有准备充分的情况千万不要乱尝试，除非打算用面海战术，面海战术可以快速提升，但是有可能让你错过心仪的公司。准备系统的整理一下自己的知识体系，觉得知识都有就是不成体系，无法内化。&lt;/p&gt;
+      &lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;</content><author><name></name></author><summary type="html">现在的公司待久了，没什么晋升机会，突然想跳槽了，正好也检验一下自己的水平位置。本来内心是毫无波澜的，谁知道面试后内心波涛汹涌。今天来谈谈感受。 行情 大厂卡学历 小公司薪资降低 能力要求高 投简历 只投了一些心仪的公司，php转go没太报希望 针对jd准备了很多相关知识 （结果完全没用到） 比如分布式系统 一致性哈希 cassandra go 基础知识 面试公司 一家电商 一家哈喽单车 面试难度 总结：常规要会，深度要深，广度要广 常规： mysql redis tcp协议 linux系统 逻辑思维 深度 数据结构 算法实现 语言特性实现 广度 语言特性 相关定义 组件了解 总结 经过短暂的两次面试发现，面试是对自己一次真实情况的合理评估，在没有准备充分的情况千万不要乱尝试，除非打算用面海战术，面海战术可以快速提升，但是有可能让你错过心仪的公司。准备系统的整理一下自己的知识体系，觉得知识都有就是不成体系，无法内化。</summary></entry><entry><title type="html">折腾kafka</title><link href="/go/2019/08/01/Go-kafka.html" rel="alternate" type="text/html" title="折腾kafka" /><published>2019-08-01T00:00:00+08:00</published><updated>2019-08-01T00:00:00+08:00</updated><id>/go/2019/08/01/Go-kafka</id><content type="html" xml:base="/go/2019/08/01/Go-kafka.html">&lt;p&gt;kafka 实践学习，对于一个java大生态的工具，还是需要学习和了解的，毕竟java大佬这么多年了，值得学习的地方非常多。&lt;/p&gt;
 
 &lt;h2 id=&quot;apache-kafka&quot;&gt;Apache Kafka&lt;/h2&gt;
 &lt;p&gt;Apache Kafka是一个分布式发布 - 订阅消息系统和一个强大的队列，可以处理大量的数据，并使您能够将消息从一个端点传递到另一个端点。&lt;/p&gt;
@@ -1069,214 +1121,4 @@ func main() {
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;h2 id=&quot;总结&quot;&gt;总结&lt;/h2&gt;
-&lt;p&gt;接口主要是学习设计的模式，如何用简单的不重复的代码写出通用性良好的程序，Go在语言设计层面做了很多文章，接口就是一个我认为非常重要的一种特性，它抽象整体的执行流程，只需将关键流程封装，在使用不同类型当参数时，以实现接口的方式来传入，实现类工厂模式你只需要按照接口的标准传入参数即可。&lt;em&gt;接口是不同包中类型的粘合剂&lt;/em&gt;，所以说在同一个包内如果没有必要不要过度抽象，过多的接口也会影响运行时效率。&lt;/p&gt;</content><author><name></name></author><summary type="html">接口是对其他类型性的的抽象和概括，它没有具体的实现细节可以让我们的函数更加灵活和更具有适应能力。Go语言的接口独特之处是实现了隐式实现。只需要简单地拥有一些必须的方法就足够了。</summary></entry><entry><title type="html">Go学习笔记5</title><link href="/go/2019/04/28/Go-5.html" rel="alternate" type="text/html" title="Go学习笔记5" /><published>2019-04-28T00:00:00+08:00</published><updated>2019-04-28T00:00:00+08:00</updated><id>/go/2019/04/28/Go-5</id><content type="html" xml:base="/go/2019/04/28/Go-5.html">&lt;p&gt;从90年代早期开始，面向对象编程(OOP)就成为了称霸工程界和教育界的编程范式，所以之后几乎所有大规模被应用的语言都包含了对OOP的支持，go语言也不例外。OOP编程的第一方面，我们会向你展示如何有效地定义和使用方法。我们会覆盖到OOP编程的两个关键点，封装和组合。&lt;/p&gt;
-
-&lt;h2 id=&quot;方法声明&quot;&gt;方法声明&lt;/h2&gt;
-&lt;ul&gt;
-  &lt;li&gt;在函数声明时，在其名字之前放上一个变量，即是一个方法。这个附加的参数会将该函数附加到这种类型上，即相当于为这种类型定义了一个独占的方法。&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;package&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;geometry&lt;/span&gt;
-
-&lt;span class=&quot;n&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;math&quot;&lt;/span&gt;
-
-&lt;span class=&quot;n&quot;&gt;type&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Point&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;struct&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;X&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Y&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;float64&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-
-&lt;span class=&quot;p&quot;&gt;//&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;traditional&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;functionfunc&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Distance&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;p&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;q&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Point&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;float64&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;math&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Hypot&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;q&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;X&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;p&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;X&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;q&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Y&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;p&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Y&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-
-&lt;span class=&quot;p&quot;&gt;//&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;same&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;thing&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;but&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;as&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;a&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;method&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;of&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;the&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Point&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;typefunc&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;p&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Point&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Distance&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;q&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Point&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;float64&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;math&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Hypot&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;q&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;X&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;p&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;X&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;q&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Y&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;p&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Y&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;上面的代码里那个附加的参数p，叫做方法的接收器(receiver)，早期的面向对象语言留下的遗产将调用一个方法称为“向一个对象发送消息”。&lt;/li&gt;
-  &lt;li&gt;在go语言中不适用this self做方法接收器，它建议适用类型的首字母作为接收器简短一致。&lt;/li&gt;
-  &lt;li&gt;包级的方法不会跟类型的方法产生混乱&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;    // A Path is a journey connecting the points with straight lines.type Path []Point
-    // Distance returns the distance traveled along the path.func (path Path) Distance() float64 {
-        sum := 0.0
-        for i := range path {
-            if i &amp;gt; 0 {
-                sum += path[i-1].Distance(path[i])
-            }
-        }
-        return sum
-    }
-    
-    perim := Path{
-        {1, 1},
-        {5, 1},
-        {5, 4},
-        {1, 1}
-    }
-    fmt.Println(perim.Distance()) // &quot;12&quot;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;在上面两个对Distance名字的方法的调用中，编译器会根据方法的名字以及接收器来决定具体调用的是哪一个函数。第一个例子中path[i-1]数组中的类型是Point，因此Point.Distance这个方法被调用；在第二个例子中perim的类型是Path，因此Distance调用的是Path.Distance。&lt;/li&gt;
-  &lt;li&gt;对于一个给定的类型，其内部的方法都必须有唯一的方法名，但是不同的类型却可以有同样的方法名，比如我们这里Point和Path就都有Distance这个名字的方法；所以我们没有必要非在方法名之前加类型名来消除歧义，比如PathDistance。&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt; import &quot;gopl.io/ch6/geometry&quot;
- perim := geometry.Path{
-    {1, 1}, 
-    {5, 1}, 
-    {5, 4}, 
-    {1, 1}
- }
- fmt.Println(geometry.PathDistance(perim)) // &quot;12&quot;, standalone function
- fmt.Println(perim.Distance())             // &quot;12&quot;, method of geometry.Path
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;如果我们要用方法去计算perim的distance，还需要去写全geometry的包名，和其函数名，但是因为Path这个变量定义了一个可以直接用的Distance方法，所以我们可以直接写perim.Distance()。相当于可以少打很多字，作者应该是这个意思。因为在Go里包外调用函数需要带上包名，还是挺麻烦的。
-    &lt;h2 id=&quot;基于指针的对象方法&quot;&gt;基于指针的对象方法&lt;/h2&gt;
-  &lt;/li&gt;
-  &lt;li&gt;不管你的method的receiver是指针类型还是非指针类型，都是可以通过指针/非指针类型进行调用的，编译器会帮你做类型转换。在声明一个method的receiver该是指针还是非指针类型时，你需要考虑两方面的内部，
-    &lt;ul&gt;
-      &lt;li&gt;第一方面是这个对象本身是不是特别大，如果声明为非指针变量时，调用会产生一次拷贝；&lt;/li&gt;
-      &lt;li&gt;第二方面是如果你用指针类型作为receiver，那么你一定要注意，这种指针类型指向的始终是一块内存地址，就算你对其进行了拷贝。熟悉C或者C艹的人这里应该很快能明白。
-        &lt;h2 id=&quot;通过嵌入结构体来扩展类型&quot;&gt;通过嵌入结构体来扩展类型&lt;/h2&gt;
-      &lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;嵌入式写法，简化写代码时类型适用声明&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;
-import &quot;image/color&quot;
-
-type Point struct{ X, Y float64 }
-
-type ColoredPoint struct {
-    Point
-    Color color.RGBA
-}
-
-var cp ColoredPoint
-cp.X = 1
-fmt.Println(cp.Point.X) // &quot;1&quot;
-cp.Point.Y = 2
-fmt.Println(cp.Y) // &quot;2&quot;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;对于Point中的方法我们也有类似的用法，我们可以把ColoredPoint类型当作接收器来调用Point里的方法，即使ColoredPoint里没有声明这些方法：&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;red := color.RGBA{255, 0, 0, 255}
-blue := color.RGBA{0, 0, 255, 255}
-var p = ColoredPoint{Point{1, 1}, red}
-var q = ColoredPoint{Point{5, 4}, blue}
-fmt.Println(p.Distance(q.Point)) // &quot;5&quot;
-p.ScaleBy(2)
-q.ScaleBy(2)
-fmt.Println(p.Distance(q.Point)) // &quot;10&quot;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;Point类的方法也被引入了ColoredPoint。用这种方式，内嵌可以使我们定义字段特别多的复杂类型，我们可以将字段先按小类型分组，然后定义小类型的方法，之后再把它们组合起来。
-    &lt;blockquote&gt;
-      &lt;p&gt;嵌入并不是代表继承的意思，更像是组合。并不是嵌入了某种类型这个类型类型就是某种类型的子类型，应该说是组合起来适用的更为合适。
-如果想继承方法可以用匿名字段或者引用字段来做继承&lt;/p&gt;
-    &lt;/blockquote&gt;
-  &lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;type ColoredPoint struct {
-    *Point
-    Color color.RGBA
-}
-
-p := ColoredPoint{&amp;amp;Point{1, 1}, red}
-q := ColoredPoint{&amp;amp;Point{5, 4}, blue}
-fmt.Println(p.Distance(*q.Point)) // &quot;5&quot;
-q.Point = p.Point                 // p and q now share the same Point
-p.ScaleBy(2)
-fmt.Println(*p.Point, *q.Point) // &quot;{2 2} {2 2}&quot;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;就是因为有了内嵌才有下面的小技巧：&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;var (
-    mu sync.Mutex // guards mapping
-    mapping = make(map[string]string)
-)
-
-func Lookup(key string) string {
-    mu.Lock()
-    v := mapping[key]
-    mu.Unlock()
-    return v
-}
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;可以改写成如下：
-```
-var cache = struct {
-  sync.Mutex
-  mapping map[string]string
-}{
-  mapping: make(map[string]string),
-}&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;func Lookup(key string) string {
-    cache.Lock()
-    v := cache.mapping[key]
-    cache.Unlock()
-    return v
-}&lt;/p&gt;
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;* 使代码更简洁更优雅
-
-## 方法值和方法表达式
-
-* 类型中的函数调用分两步
-    * 用选择器选择方法，指定接收器
-    * 根据接收器和参数返回方法值
-* 我们可以根据不同的类型来决定用类型下的什么方法，通过指定不同接收器的方法，如下例子：
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-&lt;p&gt;type Point struct{ X, Y float64 }&lt;/p&gt;
-
-&lt;p&gt;func (p Point) Add(q Point) Point { return Point{p.X + q.X, p.Y + q.Y} }
-func (p Point) Sub(q Point) Point { return Point{p.X - q.X, p.Y - q.Y} }&lt;/p&gt;
-
-&lt;p&gt;type Path []Point&lt;/p&gt;
-
-&lt;p&gt;func (path Path) TranslateBy(offset Point, add bool) {
-    var op func(p, q Point) Point
-    if add {
-        op = Point.Add
-    } else {
-        op = Point.Sub
-    }
-    for i := range path {
-        // Call either path[i].Add(offset) or path[i].Sub(offset).
-        path[i] = op(path[i], offset)
-    }
-}
-```&lt;/p&gt;
-
-&lt;h2 id=&quot;封装&quot;&gt;封装&lt;/h2&gt;
-&lt;ul&gt;
-  &lt;li&gt;一个对象的变量或者方法如果对调用方是不可见的话，一般就被定义为“封装”。封装有时候也被叫做信息隐藏，同时也是面向对象编程最关键的一个方面。&lt;/li&gt;
-  &lt;li&gt;封装的优点
-    &lt;ul&gt;
-      &lt;li&gt;首先，因为调用方不能直接修改对象的变量值，其只需要关注少量的语句并且只要弄懂少量变量的可能的值即可。&lt;/li&gt;
-      &lt;li&gt;第二，隐藏实现的细节，可以防止调用方依赖那些可能变化的具体实现，这样使设计包的程序员在不破坏对外的api情况下能得到更大的自由。&lt;/li&gt;
-      &lt;li&gt;第三个优点也是最重要的优点，是阻止了外部调用方对对象内部的值任意地进行修改。&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h2 id=&quot;总结&quot;&gt;总结&lt;/h2&gt;
-&lt;p&gt;我们学到了如何将方法与命名类型进行组合，并且知道了如何调用这些方法。尽管方法对于OOP编程来说至关重要，但他们只是OOP编程里的半边天。为了完成OOP，我们还需要接口。Go里的接口会在接下来的学习中学习到。&lt;/p&gt;</content><author><name></name></author><summary type="html">从90年代早期开始，面向对象编程(OOP)就成为了称霸工程界和教育界的编程范式，所以之后几乎所有大规模被应用的语言都包含了对OOP的支持，go语言也不例外。OOP编程的第一方面，我们会向你展示如何有效地定义和使用方法。我们会覆盖到OOP编程的两个关键点，封装和组合。</summary></entry></feed>
+&lt;p&gt;接口主要是学习设计的模式，如何用简单的不重复的代码写出通用性良好的程序，Go在语言设计层面做了很多文章，接口就是一个我认为非常重要的一种特性，它抽象整体的执行流程，只需将关键流程封装，在使用不同类型当参数时，以实现接口的方式来传入，实现类工厂模式你只需要按照接口的标准传入参数即可。&lt;em&gt;接口是不同包中类型的粘合剂&lt;/em&gt;，所以说在同一个包内如果没有必要不要过度抽象，过多的接口也会影响运行时效率。&lt;/p&gt;</content><author><name></name></author><summary type="html">接口是对其他类型性的的抽象和概括，它没有具体的实现细节可以让我们的函数更加灵活和更具有适应能力。Go语言的接口独特之处是实现了隐式实现。只需要简单地拥有一些必须的方法就足够了。</summary></entry></feed>
