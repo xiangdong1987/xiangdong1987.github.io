@@ -1,4 +1,124 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.8.5">Jekyll</generator><link href="/feed.xml" rel="self" type="application/atom+xml" /><link href="/" rel="alternate" type="text/html" /><updated>2019-08-13T16:25:47+08:00</updated><id>/feed.xml</id><title type="html">一叶障目</title><subtitle>学无止境</subtitle><entry><title type="html">记一次面试经历</title><link href="/blog/2019/08/13/Blog-interview.html" rel="alternate" type="text/html" title="记一次面试经历" /><published>2019-08-13T00:00:00+08:00</published><updated>2019-08-13T00:00:00+08:00</updated><id>/blog/2019/08/13/Blog-interview</id><content type="html" xml:base="/blog/2019/08/13/Blog-interview.html">&lt;p&gt;现在的公司待久了，没什么晋升机会，突然想跳槽了，正好也检验一下自己的水平位置。本来内心是毫无波澜的，谁知道面试后内心波涛汹涌。今天来谈谈感受。&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.8.5">Jekyll</generator><link href="/feed.xml" rel="self" type="application/atom+xml" /><link href="/" rel="alternate" type="text/html" /><updated>2019-08-27T20:33:39+08:00</updated><id>/feed.xml</id><title type="html">一叶障目</title><subtitle>学无止境</subtitle><entry><title type="html">filebeat折腾</title><link href="/filebeats/2019/08/26/Blog-filebeat.html" rel="alternate" type="text/html" title="filebeat折腾" /><published>2019-08-26T00:00:00+08:00</published><updated>2019-08-26T00:00:00+08:00</updated><id>/filebeats/2019/08/26/Blog-filebeat</id><content type="html" xml:base="/filebeats/2019/08/26/Blog-filebeat.html">&lt;p&gt;最近一段时间都在整理知识体系，还没整理完备，然后就被拉着做新的消息队列的接入，原来使用kafka，切到了rabbitmq。切换还算顺利，同时又有同事想做日志系统的想法。我突然灵光一线，为什么不能filebeat + 消息队列实现集中式日志管理呢？&lt;/p&gt;
+&lt;h2 id=&quot;调研&quot;&gt;调研&lt;/h2&gt;
+&lt;ul&gt;
+  &lt;li&gt;kafka 适合日志型 队列服务，采取订阅式的消息拉取&lt;/li&gt;
+  &lt;li&gt;rabbitmq 功能能丰富，适合业务逻辑使用，不建议用作日志收集&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;table&gt;
+  &lt;thead&gt;
+    &lt;tr&gt;
+      &lt;th&gt;功能&lt;/th&gt;
+      &lt;th&gt;kafka&lt;/th&gt;
+      &lt;th&gt;Rabbitmq&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;td&gt;优先级队列&lt;/td&gt;
+      &lt;td&gt;不支持&lt;/td&gt;
+      &lt;td&gt;支持，建议优先级大小设置在0-10之间&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;延迟队列&lt;/td&gt;
+      &lt;td&gt;不支持&lt;/td&gt;
+      &lt;td&gt;支持&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;死信队列&lt;/td&gt;
+      &lt;td&gt;不支持&lt;/td&gt;
+      &lt;td&gt;支持（死信队列，是指一些无法正常消费的消息，为了不影响正常的队列运行，将这些消息添加到死信队列，通过处理死信队列处理异常消息）&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;重试队列&lt;/td&gt;
+      &lt;td&gt;不支持&lt;/td&gt;
+      &lt;td&gt;不支持，RabbitMQ中可以参考延迟队列实现重试队列，二次封装比较简单。如果要在Kafka中实现延迟队列功能，相对比较复杂&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;消费模式&lt;/td&gt;
+      &lt;td&gt;拉模式（订阅）&lt;/td&gt;
+      &lt;td&gt;推模式+拉模式广播消费支持。Kafka对于广播消费的支持相对而言更加正统支持，但力度较Kafka弱消息&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;回溯&lt;/td&gt;
+      &lt;td&gt;支持。Kafka支持按照Offset和timestamp两种维度进行消息回溯不支持。&lt;/td&gt;
+      &lt;td&gt;RabbitMQ中消息一旦被确认消费就会被标记删除&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;消息堆积&lt;/td&gt;
+      &lt;td&gt;支持&lt;/td&gt;
+      &lt;td&gt;支持。一般情况下，内存堆积达到特定阀值时会影响其性能，但这不是绝对的。如果考虑吞吐因素，Kafka的堆积效率比RabbitMQ总体上要高很多&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;持久化&lt;/td&gt;
+      &lt;td&gt;支持&lt;/td&gt;
+      &lt;td&gt;支持&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;消息追踪&lt;/td&gt;
+      &lt;td&gt;不支持。消息追踪可以通过外部系统来支持，但是支持力度没有内置细腻支持。&lt;/td&gt;
+      &lt;td&gt;RabbitMQ中可以采用Firehose或者rabbitmq_tracing插件实现。不过开启rabbitmq_tracing插件会大幅影响性能，不建议生产环境开启，反倒是可以使用Firehose与外部链路系统结合提供高细腻度的消息追踪支持&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;消息过滤&lt;/td&gt;
+      &lt;td&gt;客户端级别支持&lt;/td&gt;
+      &lt;td&gt;不支持，但是二次封装一下也非常简单&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;多租户&lt;/td&gt;
+      &lt;td&gt;不支持&lt;/td&gt;
+      &lt;td&gt;支持&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;多协议&lt;/td&gt;
+      &lt;td&gt;支持只支持定义协议，目前几个主流版本见存在兼容性问题&lt;/td&gt;
+      &lt;td&gt;RabbitMQ本身就是AMQP协议的实现，同时支持MQTT、STOMP等协议。&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;跨语言&lt;/td&gt;
+      &lt;td&gt;支持采用Scala和java编写，支持多种语言的客户端&lt;/td&gt;
+      &lt;td&gt;采用Erlang编写，支持多种语言的客户端&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;流量控制&lt;/td&gt;
+      &lt;td&gt;支持client和user级别，通过主动设置可将流控作用域生产者或消费者&lt;/td&gt;
+      &lt;td&gt;RabbitMQ的流控基于Credit-Based的算法，是内部被动触发的保护机制，作用于生产者层面&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;消息顺序性&lt;/td&gt;
+      &lt;td&gt;支持单分区级别的顺序性&lt;/td&gt;
+      &lt;td&gt;顺序的条件比较苛刻，需要单线程发送，单线程消费并且不采用延迟队列，优先队列等一些高级功能，从某种意义上来说不算支持顺序性&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;安全支持&lt;/td&gt;
+      &lt;td&gt;（TLS/SSL、SASL）身份认证和（读写）权限控制&lt;/td&gt;
+      &lt;td&gt;与Kafka相似&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;幂等性&lt;/td&gt;
+      &lt;td&gt;支持单个生产者单分区单回话的幂等性（单次或多次执行后是一样的）&lt;/td&gt;
+      &lt;td&gt;不支持&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;事务性消息&lt;/td&gt;
+      &lt;td&gt;支持&lt;/td&gt;
+      &lt;td&gt;支持&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;filebeats 支持kafka 不支持 rabbitmq
+    &lt;h2 id=&quot;折腾filebeats&quot;&gt;折腾filebeats&lt;/h2&gt;
+  &lt;/li&gt;
+  &lt;li&gt;Go 的kafka 已经折腾过了，为了给自己练练手准备让filebeats支持rabbitmq 。&lt;/li&gt;
+  &lt;li&gt;找到了https://github.com/sidleal/mqttout&lt;/li&gt;
+  &lt;li&gt;自己尝试使用发现新版filebeat的接口有些改变，而且他用的链接rabbitmq的底层库也比较老，唯有自己动手&lt;/li&gt;
+  &lt;li&gt;在原有的基础上做了改动https://github.com/xiangdong1987/mqttout感觉能用，用的到大家随便用。
+    &lt;h2 id=&quot;总结&quot;&gt;总结&lt;/h2&gt;
+    &lt;p&gt;学习的过程就是想到就去实践，不懂得就去学习，最后达成目标，估计这就是一个大龄程序员还能继续码代码的动力了。继续整理知识体系去了。留下一个思路，用kafka+filebeats实现模调系统以及日志系统。或者听听各位大神的意见。&lt;/p&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;</content><author><name></name></author><summary type="html">最近一段时间都在整理知识体系，还没整理完备，然后就被拉着做新的消息队列的接入，原来使用kafka，切到了rabbitmq。切换还算顺利，同时又有同事想做日志系统的想法。我突然灵光一线，为什么不能filebeat + 消息队列实现集中式日志管理呢？ 调研 kafka 适合日志型 队列服务，采取订阅式的消息拉取 rabbitmq 功能能丰富，适合业务逻辑使用，不建议用作日志收集</summary></entry><entry><title type="html">记一次面试经历</title><link href="/blog/2019/08/13/Blog-interview.html" rel="alternate" type="text/html" title="记一次面试经历" /><published>2019-08-13T00:00:00+08:00</published><updated>2019-08-13T00:00:00+08:00</updated><id>/blog/2019/08/13/Blog-interview</id><content type="html" xml:base="/blog/2019/08/13/Blog-interview.html">&lt;p&gt;现在的公司待久了，没什么晋升机会，突然想跳槽了，正好也检验一下自己的水平位置。本来内心是毫无波澜的，谁知道面试后内心波涛汹涌。今天来谈谈感受。&lt;/p&gt;
 &lt;h2 id=&quot;行情&quot;&gt;行情&lt;/h2&gt;
 &lt;ul&gt;
   &lt;li&gt;大厂卡学历&lt;/li&gt;
@@ -925,200 +1045,4 @@ func main() {
   &lt;li&gt;程序结束的限制&lt;/li&gt;
   &lt;li&gt;并发深度的限制等等
 只有不断学习和实践才是做为一名coder 的终身事业。&lt;/li&gt;
-&lt;/ul&gt;</content><author><name></name></author><summary type="html">重头戏要来了，并发编程。这是Go的主打优势，Go通过自身设计层面，隐藏了比较晦涩难懂的并发过程，我们只需要通过goroutine和channel的配合就能实现自己想要的并发程序，实现CSP（communicating sequential processes）并发变成模型，像我这么懒得人特别喜欢站在巨人的肩膀上眺望。</summary></entry><entry><title type="html">Go学习笔记6</title><link href="/go/2019/05/07/Go-6.html" rel="alternate" type="text/html" title="Go学习笔记6" /><published>2019-05-07T00:00:00+08:00</published><updated>2019-05-07T00:00:00+08:00</updated><id>/go/2019/05/07/Go-6</id><content type="html" xml:base="/go/2019/05/07/Go-6.html">&lt;p&gt;接口是对其他类型性的的抽象和概括，它没有具体的实现细节可以让我们的函数更加灵活和更具有适应能力。Go语言的接口独特之处是实现了隐式实现。只需要简单地拥有一些必须的方法就足够了。&lt;/p&gt;
-
-&lt;h2 id=&quot;接口就是合约&quot;&gt;接口就是合约&lt;/h2&gt;
-&lt;ul&gt;
-  &lt;li&gt;通过定义接口来实现不同类型统一使用某种方法&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;package&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;fmt&lt;/span&gt;
-
-&lt;span class=&quot;n&quot;&gt;func&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Fprintf&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;w&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;io&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Writer&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;format&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;string&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;args&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;...&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;interface&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{})&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;int&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;error&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;func&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Printf&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;format&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;string&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;args&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;...&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;interface&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{})&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;int&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;error&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Fprintf&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;os&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Stdout&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;format&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;args&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;...)&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;func&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Sprintf&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;format&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;string&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;args&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;...&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;interface&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{})&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;string&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;buf&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;bytes&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Buffer&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;Fprintf&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&amp;amp;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;buf&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;format&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;args&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;...)&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;buf&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;String&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;laravel中的facade也类似，利用了一个类型可以自由的使用另一个满足相同接口的类型来进行替换被称作可替换性(LSP里氏替换)&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h2 id=&quot;接口类型&quot;&gt;接口类型&lt;/h2&gt;
-&lt;ul&gt;
-  &lt;li&gt;Go源生包里的利用单方法接口实现LSP里氏替换&lt;/li&gt;
-  &lt;li&gt;通过单方法接口拼装实现接口组合实现复杂功能&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h2 id=&quot;接口类型的实现&quot;&gt;接口类型的实现&lt;/h2&gt;
-&lt;ul&gt;
-  &lt;li&gt;接口指定的规则非常简单：表达一个类型属于某个接口只要这个类型实现这个接口&lt;/li&gt;
-  &lt;li&gt;接口与接口之间可以直接复制，只要=右边的接口包含左边的接口就是成立的&lt;/li&gt;
-  &lt;li&gt;指针类型也可以设定接口，是Go语言底层自己隐式寻址&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;type IntSet struct { /* ... */ }
-func (*IntSet) String() stringvar _ = IntSet{}.String() // compile error: String requires *IntSet receiver
-
-var s IntSet
-var _ = s.String() // OK: s is a variable and &amp;amp;s has a String method
-
-var _ fmt.Stringer = &amp;amp;s // OK
-var _ fmt.Stringer = s  // compile error: IntSet lacks String method
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;就像信封封装和隐藏信件起来一样，接口类型封装和隐藏具体类型和它的值。即使具体类型有其它的方法也只有接口类型暴露出来的方法会被调用到&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;os.Stdout.Write([]byte(&quot;hello&quot;)) // OK: *os.File has Write method
-os.Stdout.Close()                // OK: *os.File has Close method
-
-var w io.Writer
-w = os.Stdout
-w.Write([]byte(&quot;hello&quot;)) // OK: io.Writer has Write method
-w.Close()                // compile error: io.Writer lacks Close method
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;空接口看上去好像没有用，但实际上interface{}被称为空接口类型是不可或缺的。因为空接口类型对实现它的类型没有要求，所以我们可以将任意一个值赋给空接口类型。&lt;/li&gt;
-  &lt;li&gt;每一个具体类型的组基于它们相同的行为可以表示成一个接口类型。不像基于类的语言，他们一个类实现的接口集合需要进行显式的定义，在Go语言中我们可以在需要的时候定义一个新的抽象或者特定特点的组，而不需要修改具体类型的定义。当具体的类型来自不同的作者时这种方式会特别有用。当然也确实没有必要在具体的类型中指出这些共性。&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h2 id=&quot;flagvalue-接口实践&quot;&gt;flag.Value 接口实践&lt;/h2&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;type Celsius float64    // 摄氏温度
-type Fahrenheit float64 // 华氏温度
-
-const (
-	AbsoluteZeroC Celsius = -273.15 // 绝对零度
-	FreezingC     Celsius = 0       // 结冰点温度
-	BoilingC      Celsius = 100     // 沸水温度
-)
-
-func CToF(c Celsius) Fahrenheit { return Fahrenheit(c*9/5 + 32) }
-
-func FToC(f Fahrenheit) Celsius { return Celsius((f - 32) * 5 / 9) }
-// *celsiusFlag satisfies the flag.Value interface.
-func (c Celsius) String() string { return fmt.Sprintf(&quot;%g°C&quot;, c) }
-
-type celsiusFlag struct{ Celsius }
-
-func (f *celsiusFlag) Set(s string) error {
-	var unit string
-	var value float64
-	fmt.Sscanf(s, &quot;%f%s&quot;, &amp;amp;value, &amp;amp;unit) // no error check needed
-	switch unit {
-	case &quot;C&quot;, &quot;°C&quot;:
-		f.Celsius = Celsius(value)
-		return nil
-	case &quot;F&quot;, &quot;°F&quot;:
-		f.Celsius = FToC(Fahrenheit(value))
-		return nil
-	}
-	return fmt.Errorf(&quot;invalid temperature %q&quot;, s)
-}
-
-func CelsiusFlag(name string, value Celsius, usage string) *Celsius {
-	f := celsiusFlag{value}
-	flag.CommandLine.Var(&amp;amp;f, name, usage)
-	return &amp;amp;f.Celsius
-}
-
-var temp = CelsiusFlag(&quot;temp&quot;, 20.0, &quot;the temperature&quot;)
-
-func TestFlag() {
-	flag.Parse()
-	fmt.Println(*temp)
-}
-
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;总结：其实接口就是不同类型之间的桥梁，将要使用的不同类型，通过接口类型实现相同的接口类型，从而在各异性的基础上又产生出相同的接口类型的共性，实现逻辑复用。&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;h2 id=&quot;接口值&quot;&gt;接口值&lt;/h2&gt;
-&lt;ul&gt;
-  &lt;li&gt;概念上讲一个接口的值，接口值，由两个部分组成，一个具体的类型和那个类型的值。&lt;/li&gt;
-  &lt;li&gt;在Go语言中，变量总是被一个定义明确的值初始化，即使接口类型也不例外。对于一个接口的零值就是它的类型和值的部分都是nil&lt;/li&gt;
-  &lt;li&gt;零值接口时可以跟nil进行比较的来判断是否为零值接口&lt;/li&gt;
-  &lt;li&gt;调用空接口上的任意方法都会产生panic&lt;/li&gt;
-  &lt;li&gt;接口值可以使用＝＝和！＝来进行比较。两个接口值相等仅当它们都是nil值或者它们的动态类型相同并且动态值也根据这个动态类型的＝＝操作相等。因为接口值是可比较的，所以它们可以用在map的键或者作为switch语句的操作数，然而，如果两个接口值的动态类型相同，但是这个动态类型是不可比较的（比如切片），将它们进行比较就会失败并且panic。
-考虑到这点，接口类型是非常与众不同的。其它类型要么是安全的可比较类型（如基本类型和指针）要么是完全不可比较的类型（如切片，映射类型，和函数），但是在比较接口值或者包含了接口值的聚合类型时，我们必须要意识到潜在的panic。同样的风险也存在于使用接口作为map的键或者switch的操作数。只能比较你非常确定它们的动态值是可比较类型的接口值。&lt;/li&gt;
-  &lt;li&gt;一个不包含任何值的nil接口值和一个刚好包含nil指针的接口值是不同的&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;const debug = true
-
-func main() {
-    var buf *bytes.Buffer
-    if debug {
-        buf = new(bytes.Buffer) // enable collection of output
-    }
-    f(buf) // NOTE: subtly incorrect!
-    if debug {
-        // ...use buf...
-    }
-}
-
-// If out is non-nil, output will be written to it.func f(out io.Writer) {
-    // ...do something...
-    if out != nil {
-        out.Write([]byte(&quot;done!\n&quot;))
-    }
-}
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h2 id=&quot;重点参考的接口包&quot;&gt;重点参考的接口包&lt;/h2&gt;
-&lt;ul&gt;
-  &lt;li&gt;sort.Interface接口&lt;/li&gt;
-  &lt;li&gt;http.Handler接口&lt;/li&gt;
-  &lt;li&gt;error 接口&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h2 id=&quot;类型断言&quot;&gt;类型断言&lt;/h2&gt;
-&lt;ul&gt;
-  &lt;li&gt;类型断言是一个使用在接口值上的操作。语法上它看起来像x.(T)被称为断言类型，这里x表示一个接口的类型和T表示一个类型。一个类型断言检查它操作对象的动态类型是否和断言的类型匹配。
-    &lt;ul&gt;
-      &lt;li&gt;第一种，如果断言的类型T是一个具体类型，然后类型断言检查x的动态类型是否和T相同。如果这个检查成功了，类型断言的结果是x的动态值，当然它的类型是T。&lt;/li&gt;
-      &lt;li&gt;第二种，如果相反断言的类型T是一个接口类型，然后类型断言检查是否x的动态类型满足T。如果这个检查成功了，动态值没有获取到；这个结果仍然是一个有相同类型和值部分的接口值，但是结果有类型T。&lt;/li&gt;
-    &lt;/ul&gt;
-
-    &lt;blockquote&gt;
-      &lt;p&gt;注意：第二种的意思是指，一个类型可以使多种接口的组合，有时候需要扩大可访问方法，所以可以通过类型断言来改变接口类型，但是不改变接口的动态类性值。&lt;/p&gt;
-    &lt;/blockquote&gt;
-  &lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h2 id=&quot;类型开关&quot;&gt;类型开关&lt;/h2&gt;
-&lt;ul&gt;
-  &lt;li&gt;利用switch做类型开关&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;func sqlQuote(x interface{}) string {
-    switch x := x.(type) {
-    case nil:
-        return &quot;NULL&quot;
-    case int, uint:
-        return fmt.Sprintf(&quot;%d&quot;, x) // x has type interface{} here.
-    case bool:
-        if x {
-            return &quot;TRUE&quot;
-        }
-        return &quot;FALSE&quot;
-    case string:
-        return sqlQuoteString(x) // (not shown)
-    default:
-        panic(fmt.Sprintf(&quot;unexpected type %T: %v&quot;, x, x))
-    }
-}
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h2 id=&quot;总结&quot;&gt;总结&lt;/h2&gt;
-&lt;p&gt;接口主要是学习设计的模式，如何用简单的不重复的代码写出通用性良好的程序，Go在语言设计层面做了很多文章，接口就是一个我认为非常重要的一种特性，它抽象整体的执行流程，只需将关键流程封装，在使用不同类型当参数时，以实现接口的方式来传入，实现类工厂模式你只需要按照接口的标准传入参数即可。&lt;em&gt;接口是不同包中类型的粘合剂&lt;/em&gt;，所以说在同一个包内如果没有必要不要过度抽象，过多的接口也会影响运行时效率。&lt;/p&gt;</content><author><name></name></author><summary type="html">接口是对其他类型性的的抽象和概括，它没有具体的实现细节可以让我们的函数更加灵活和更具有适应能力。Go语言的接口独特之处是实现了隐式实现。只需要简单地拥有一些必须的方法就足够了。</summary></entry></feed>
+&lt;/ul&gt;</content><author><name></name></author><summary type="html">重头戏要来了，并发编程。这是Go的主打优势，Go通过自身设计层面，隐藏了比较晦涩难懂的并发过程，我们只需要通过goroutine和channel的配合就能实现自己想要的并发程序，实现CSP（communicating sequential processes）并发变成模型，像我这么懒得人特别喜欢站在巨人的肩膀上眺望。</summary></entry></feed>
