@@ -1,5 +1,6 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.8.5">Jekyll</generator><link href="/feed.xml" rel="self" type="application/atom+xml" /><link href="/" rel="alternate" type="text/html" /><updated>2019-08-27T20:38:01+08:00</updated><id>/feed.xml</id><title type="html">一叶障目</title><subtitle>学无止境</subtitle><entry><title type="html">filebeat折腾</title><link href="/filebeats/2019/08/26/Blog-filebeat.html" rel="alternate" type="text/html" title="filebeat折腾" /><published>2019-08-26T00:00:00+08:00</published><updated>2019-08-26T00:00:00+08:00</updated><id>/filebeats/2019/08/26/Blog-filebeat</id><content type="html" xml:base="/filebeats/2019/08/26/Blog-filebeat.html">&lt;p&gt;最近一段时间都在整理知识体系，还没整理完备，然后就被拉着做新的消息队列的接入，原来使用kafka，切到了rabbitmq。切换还算顺利，同时又有同事想做日志系统的想法。我突然灵光一线，为什么不能filebeat + 消息队列实现集中式日志管理呢？&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.8.5">Jekyll</generator><link href="/feed.xml" rel="self" type="application/atom+xml" /><link href="/" rel="alternate" type="text/html" /><updated>2019-08-27T20:39:46+08:00</updated><id>/feed.xml</id><title type="html">一叶障目</title><subtitle>学无止境</subtitle><entry><title type="html">filebeat折腾</title><link href="/filebeats/2019/08/26/Blog-filebeat.html" rel="alternate" type="text/html" title="filebeat折腾" /><published>2019-08-26T00:00:00+08:00</published><updated>2019-08-26T00:00:00+08:00</updated><id>/filebeats/2019/08/26/Blog-filebeat</id><content type="html" xml:base="/filebeats/2019/08/26/Blog-filebeat.html">&lt;p&gt;最近一段时间都在整理知识体系，还没整理完备，然后就被拉着做新的消息队列的接入，原来使用kafka，切到了rabbitmq。切换还算顺利，同时又有同事想做日志系统的想法。我突然灵光一线，为什么不能filebeat + 消息队列实现集中式日志管理呢？&lt;/p&gt;
 &lt;h2 id=&quot;调研&quot;&gt;调研&lt;/h2&gt;
+
 &lt;ul&gt;
   &lt;li&gt;kafka 适合日志型 队列服务，采取订阅式的消息拉取&lt;/li&gt;
   &lt;li&gt;rabbitmq 功能能丰富，适合业务逻辑使用，不建议用作日志收集&lt;/li&gt;
@@ -112,6 +113,7 @@
 &lt;/ul&gt;
 
 &lt;h2 id=&quot;折腾filebeats&quot;&gt;折腾filebeats&lt;/h2&gt;
+
 &lt;ul&gt;
   &lt;li&gt;Go 的kafka 已经折腾过了，为了给自己练练手准备让filebeats支持rabbitmq 。&lt;/li&gt;
   &lt;li&gt;找到了https://github.com/sidleal/mqttout&lt;/li&gt;
@@ -120,7 +122,8 @@
 &lt;/ul&gt;
 
 &lt;h2 id=&quot;总结&quot;&gt;总结&lt;/h2&gt;
-&lt;p&gt;学习的过程就是想到就去实践，不懂得就去学习，最后达成目标，估计这就是一个大龄程序员还能继续码代码的动力了。继续整理知识体系去了。留下一个思路，用kafka+filebeats实现模调系统以及日志系统。或者听听各位大神的意见。&lt;/p&gt;</content><author><name></name></author><summary type="html">最近一段时间都在整理知识体系，还没整理完备，然后就被拉着做新的消息队列的接入，原来使用kafka，切到了rabbitmq。切换还算顺利，同时又有同事想做日志系统的想法。我突然灵光一线，为什么不能filebeat + 消息队列实现集中式日志管理呢？ 调研 kafka 适合日志型 队列服务，采取订阅式的消息拉取 rabbitmq 功能能丰富，适合业务逻辑使用，不建议用作日志收集</summary></entry><entry><title type="html">记一次面试经历</title><link href="/blog/2019/08/13/Blog-interview.html" rel="alternate" type="text/html" title="记一次面试经历" /><published>2019-08-13T00:00:00+08:00</published><updated>2019-08-13T00:00:00+08:00</updated><id>/blog/2019/08/13/Blog-interview</id><content type="html" xml:base="/blog/2019/08/13/Blog-interview.html">&lt;p&gt;现在的公司待久了，没什么晋升机会，突然想跳槽了，正好也检验一下自己的水平位置。本来内心是毫无波澜的，谁知道面试后内心波涛汹涌。今天来谈谈感受。&lt;/p&gt;
+
+&lt;p&gt;学习的过程就是想到就去实践，不懂得就去学习，最后达成目标，估计这就是一个大龄程序员还能继续码代码的动力了。继续整理知识体系去了。留下一个思路，用kafka+filebeats实现模调系统以及日志系统。或者听听各位大神的意见。&lt;/p&gt;</content><author><name></name></author><summary type="html">最近一段时间都在整理知识体系，还没整理完备，然后就被拉着做新的消息队列的接入，原来使用kafka，切到了rabbitmq。切换还算顺利，同时又有同事想做日志系统的想法。我突然灵光一线，为什么不能filebeat + 消息队列实现集中式日志管理呢？ 调研</summary></entry><entry><title type="html">记一次面试经历</title><link href="/blog/2019/08/13/Blog-interview.html" rel="alternate" type="text/html" title="记一次面试经历" /><published>2019-08-13T00:00:00+08:00</published><updated>2019-08-13T00:00:00+08:00</updated><id>/blog/2019/08/13/Blog-interview</id><content type="html" xml:base="/blog/2019/08/13/Blog-interview.html">&lt;p&gt;现在的公司待久了，没什么晋升机会，突然想跳槽了，正好也检验一下自己的水平位置。本来内心是毫无波澜的，谁知道面试后内心波涛汹涌。今天来谈谈感受。&lt;/p&gt;
 &lt;h2 id=&quot;行情&quot;&gt;行情&lt;/h2&gt;
 &lt;ul&gt;
   &lt;li&gt;大厂卡学历&lt;/li&gt;

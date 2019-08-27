@@ -82,10 +82,6 @@ if(!(window.doNotTrack === "1" || navigator.doNotTrack === "1" || navigator.doNo
           
           <p>最近一段时间都在整理知识体系，还没整理完备，然后就被拉着做新的消息队列的接入，原来使用kafka，切到了rabbitmq。切换还算顺利，同时又有同事想做日志系统的想法。我突然灵光一线，为什么不能filebeat + 消息队列实现集中式日志管理呢？</p>
 <h2 id="调研">调研</h2>
-<ul>
-  <li>kafka 适合日志型 队列服务，采取订阅式的消息拉取</li>
-  <li>rabbitmq 功能能丰富，适合业务逻辑使用，不建议用作日志收集</li>
-</ul>
 
 
            
