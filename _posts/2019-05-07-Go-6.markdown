@@ -1,0 +1,182 @@
+---
+layout: post
+title:  Go学习笔记6
+date:   2019-05-07
+categories: Go
+---
+接口是对其他类型性的的抽象和概括，它没有具体的实现细节可以让我们的函数更加灵活和更具有适应能力。Go语言的接口独特之处是实现了隐式实现。只需要简单地拥有一些必须的方法就足够了。
+
+## 接口就是合约
+* 通过定义接口来实现不同类型统一使用某种方法
+
+```
+package fmt
+
+func Fprintf(w io.Writer, format string, args ...interface{}) (int, error)
+func Printf(format string, args ...interface{}) (int, error) {
+    return Fprintf(os.Stdout, format, args...)
+}
+func Sprintf(format string, args ...interface{}) string {
+    var buf bytes.Buffer
+    Fprintf(&buf, format, args...)
+    return buf.String()
+}
+```
+
+* laravel中的facade也类似，利用了一个类型可以自由的使用另一个满足相同接口的类型来进行替换被称作可替换性(LSP里氏替换)
+
+## 接口类型
+* Go源生包里的利用单方法接口实现LSP里氏替换
+* 通过单方法接口拼装实现接口组合实现复杂功能
+
+## 接口类型的实现
+* 接口指定的规则非常简单：表达一个类型属于某个接口只要这个类型实现这个接口
+* 接口与接口之间可以直接复制，只要=右边的接口包含左边的接口就是成立的
+* 指针类型也可以设定接口，是Go语言底层自己隐式寻址
+
+```
+type IntSet struct { /* ... */ }
+func (*IntSet) String() stringvar _ = IntSet{}.String() // compile error: String requires *IntSet receiver
+
+var s IntSet
+var _ = s.String() // OK: s is a variable and &s has a String method
+
+var _ fmt.Stringer = &s // OK
+var _ fmt.Stringer = s  // compile error: IntSet lacks String method
+```
+
+* 就像信封封装和隐藏信件起来一样，接口类型封装和隐藏具体类型和它的值。即使具体类型有其它的方法也只有接口类型暴露出来的方法会被调用到
+
+```
+os.Stdout.Write([]byte("hello")) // OK: *os.File has Write method
+os.Stdout.Close()                // OK: *os.File has Close method
+
+var w io.Writer
+w = os.Stdout
+w.Write([]byte("hello")) // OK: io.Writer has Write method
+w.Close()                // compile error: io.Writer lacks Close method
+```
+
+* 空接口看上去好像没有用，但实际上interface{}被称为空接口类型是不可或缺的。因为空接口类型对实现它的类型没有要求，所以我们可以将任意一个值赋给空接口类型。
+* 每一个具体类型的组基于它们相同的行为可以表示成一个接口类型。不像基于类的语言，他们一个类实现的接口集合需要进行显式的定义，在Go语言中我们可以在需要的时候定义一个新的抽象或者特定特点的组，而不需要修改具体类型的定义。当具体的类型来自不同的作者时这种方式会特别有用。当然也确实没有必要在具体的类型中指出这些共性。
+
+## flag.Value 接口实践
+
+```
+type Celsius float64    // 摄氏温度
+type Fahrenheit float64 // 华氏温度
+
+const (
+	AbsoluteZeroC Celsius = -273.15 // 绝对零度
+	FreezingC     Celsius = 0       // 结冰点温度
+	BoilingC      Celsius = 100     // 沸水温度
+)
+
+func CToF(c Celsius) Fahrenheit { return Fahrenheit(c*9/5 + 32) }
+
+func FToC(f Fahrenheit) Celsius { return Celsius((f - 32) * 5 / 9) }
+// *celsiusFlag satisfies the flag.Value interface.
+func (c Celsius) String() string { return fmt.Sprintf("%g°C", c) }
+
+type celsiusFlag struct{ Celsius }
+
+func (f *celsiusFlag) Set(s string) error {
+	var unit string
+	var value float64
+	fmt.Sscanf(s, "%f%s", &value, &unit) // no error check needed
+	switch unit {
+	case "C", "°C":
+		f.Celsius = Celsius(value)
+		return nil
+	case "F", "°F":
+		f.Celsius = FToC(Fahrenheit(value))
+		return nil
+	}
+	return fmt.Errorf("invalid temperature %q", s)
+}
+
+func CelsiusFlag(name string, value Celsius, usage string) *Celsius {
+	f := celsiusFlag{value}
+	flag.CommandLine.Var(&f, name, usage)
+	return &f.Celsius
+}
+
+var temp = CelsiusFlag("temp", 20.0, "the temperature")
+
+func TestFlag() {
+	flag.Parse()
+	fmt.Println(*temp)
+}
+
+```
+
+>总结：其实接口就是不同类型之间的桥梁，将要使用的不同类型，通过接口类型实现相同的接口类型，从而在各异性的基础上又产生出相同的接口类型的共性，实现逻辑复用。
+
+## 接口值
+* 概念上讲一个接口的值，接口值，由两个部分组成，一个具体的类型和那个类型的值。
+* 在Go语言中，变量总是被一个定义明确的值初始化，即使接口类型也不例外。对于一个接口的零值就是它的类型和值的部分都是nil
+* 零值接口时可以跟nil进行比较的来判断是否为零值接口
+* 调用空接口上的任意方法都会产生panic
+* 接口值可以使用＝＝和！＝来进行比较。两个接口值相等仅当它们都是nil值或者它们的动态类型相同并且动态值也根据这个动态类型的＝＝操作相等。因为接口值是可比较的，所以它们可以用在map的键或者作为switch语句的操作数，然而，如果两个接口值的动态类型相同，但是这个动态类型是不可比较的（比如切片），将它们进行比较就会失败并且panic。
+考虑到这点，接口类型是非常与众不同的。其它类型要么是安全的可比较类型（如基本类型和指针）要么是完全不可比较的类型（如切片，映射类型，和函数），但是在比较接口值或者包含了接口值的聚合类型时，我们必须要意识到潜在的panic。同样的风险也存在于使用接口作为map的键或者switch的操作数。只能比较你非常确定它们的动态值是可比较类型的接口值。
+* 一个不包含任何值的nil接口值和一个刚好包含nil指针的接口值是不同的
+
+```
+const debug = true
+
+func main() {
+    var buf *bytes.Buffer
+    if debug {
+        buf = new(bytes.Buffer) // enable collection of output
+    }
+    f(buf) // NOTE: subtly incorrect!
+    if debug {
+        // ...use buf...
+    }
+}
+
+// If out is non-nil, output will be written to it.func f(out io.Writer) {
+    // ...do something...
+    if out != nil {
+        out.Write([]byte("done!\n"))
+    }
+}
+```
+
+## 重点参考的接口包
+* sort.Interface接口
+* http.Handler接口
+* error 接口
+
+## 类型断言
+* 类型断言是一个使用在接口值上的操作。语法上它看起来像x.(T)被称为断言类型，这里x表示一个接口的类型和T表示一个类型。一个类型断言检查它操作对象的动态类型是否和断言的类型匹配。
+    * 第一种，如果断言的类型T是一个具体类型，然后类型断言检查x的动态类型是否和T相同。如果这个检查成功了，类型断言的结果是x的动态值，当然它的类型是T。
+    * 第二种，如果相反断言的类型T是一个接口类型，然后类型断言检查是否x的动态类型满足T。如果这个检查成功了，动态值没有获取到；这个结果仍然是一个有相同类型和值部分的接口值，但是结果有类型T。
+    
+    > 注意：第二种的意思是指，一个类型可以使多种接口的组合，有时候需要扩大可访问方法，所以可以通过类型断言来改变接口类型，但是不改变接口的动态类性值。
+
+## 类型开关
+* 利用switch做类型开关
+
+```
+func sqlQuote(x interface{}) string {
+    switch x := x.(type) {
+    case nil:
+        return "NULL"
+    case int, uint:
+        return fmt.Sprintf("%d", x) // x has type interface{} here.
+    case bool:
+        if x {
+            return "TRUE"
+        }
+        return "FALSE"
+    case string:
+        return sqlQuoteString(x) // (not shown)
+    default:
+        panic(fmt.Sprintf("unexpected type %T: %v", x, x))
+    }
+}
+```
+
+## 总结
+接口主要是学习设计的模式，如何用简单的不重复的代码写出通用性良好的程序，Go在语言设计层面做了很多文章，接口就是一个我认为非常重要的一种特性，它抽象整体的执行流程，只需将关键流程封装，在使用不同类型当参数时，以实现接口的方式来传入，实现类工厂模式你只需要按照接口的标准传入参数即可。*接口是不同包中类型的粘合剂*，所以说在同一个包内如果没有必要不要过度抽象，过多的接口也会影响运行时效率。

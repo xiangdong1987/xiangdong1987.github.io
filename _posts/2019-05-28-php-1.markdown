@@ -1,0 +1,46 @@
+---
+layout: post
+title:  php组件化实践
+date:   2019-05-28
+categories: PHP
+---
+最近学习了go语言，非常钦佩它从语言上对于Coder的友好化，对于它的包规划也感到很用心，其实做为一个phper，我们php也是有很好的工具的，那就是composer,它同样起到了规范化和组件化的作用。一个人的作用总归是有限的，只有集合广大人民的力量才是正道。
+
+# 实践过程
+1. 组件化什么？
+    * 我一直有个想法做一套后台组件，能快速拼装后台功能，对于一些开源组件，内部实现复杂，自定义困难。所以想自己实现一套可复用的后台组件。 方便以后的开发。
+2. 如何实现组件化？
+    * 对于php来说，composer是不二选择，规范的定义，简单的维护，版本控制，大大减少心理负担。
+3. 如何定义自己的composer 组件？
+    1. 实现自己的组件
+    2. 上传github
+    3. 定义composer.json
+    
+        ```  
+        {
+          "name": "xdd/x-template",    //包名  必须是二级的
+          "description": "后台模板组件",
+          "license": "MIT",
+          "authors": [
+            {
+              "name": "xdd",
+              "email": "xiangdong198719@gmail.com"
+            }
+          ],
+          "autoload": {
+            "psr-4": {
+              "Component\\": "src/component",    //命名空间目录
+              "Interfaces\\": "src/interface"          //命名空间目录
+            }
+          },
+          "require": {}
+        }
+        ```
+   
+    4. 在packagist检出自己的github就完成了一个自己的composer
+    5. composer版本是根据github的tag来创建的只需要给github 打版本标签即可。
+> 根据上面的步骤可以轻松完成组件化
+> 我实现的后台组件模块化 [https://github.com/xiangdong1987/xTemplate](https://github.com/xiangdong1987/xTemplate)
+> 希望大家来贡献代码
+# 总结
+最为一个特别懒的程序员，如何把一个复杂重复的工作，做的有趣和简单是我唯一能促使我不断写代码的唯一动力。

@@ -1,0 +1,41 @@
+---
+layout: post
+title:  "linux 高性能学习笔记3"
+date:   2018-11-30 16:39:26 +0800
+categories: linux
+---
+
+本节主要是对cpu使用率进行学习
+
+### 相关概念
+* cup使用率
+    * linux 是多任务操作系统，他会将cup时间切片，通过轮流调度分配给各个任务
+    * 节拍率，就是将cup时间分为多少分
+    
+```
+grep 'CONFIG_HZ'= /boot/config-$(uname -r)
+```
+
+* 系统分析工具都是计算的间隔时间的使用率
+* 性能分析工具perf
+
+```
+//性能分析
+perf top 
+//记录性能日志 会生成 perf.data文件
+perf record     
+//查看日志
+perf report
+```
+
+* 相关参数
+    * overhead 所占比例
+    * shared 进程名称
+    * object 动态共享对象类型
+    * symbol 符号名--函数名
+
+### 总结
+* cup和nice占用过多说明，用户态进程占用过多的cpu需要着重排查
+* 系统cup高，排查系统调用过多排查系统调用问题
+* io等待过高，排查系统存储是否出现问题
+* 软中断和硬中断，排查内核中的中断服务是否出现问题

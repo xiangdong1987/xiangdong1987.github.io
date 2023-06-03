@@ -1,0 +1,112 @@
+---
+layout: post
+title:  整体理解kubenets各种组件
+date:   2019-04-03
+categories: kubernets
+---
+在学习编排之前，认识kubernets的各种组件是很重要的。他们之间的关系是怎么样的？如果构建一个合理的服务？都是要在开始之前需要学习的。
+
+## Containers (容器) 
+
+容器就是我们之前将的docker，或其他虚拟化容器。不过docker应该是主流。一般人认为容器应该是kubernets的最小单位，其实并不是它是组成最小的单位的主要成分。接下来要讲的Pod才是最小的kubernets组成单位。
+
+[如何搭建本地docker registry](https://xiangdong1987.github.io/docker/2019/04/03/docker-local-registry.html)
+
+## Pod (豆荚)
+
+pod是组成kebernet的最小单位，每个pod中会包含一个或多个docker容器，为了管理pod的就引入了Replication controller.
+
+## Replication Controller (RC)
+
+副本控制器不明思议，就是管理副本的，副本的单位就是pod，随着程序的发展，RC已经被正在被Replication Set所替换，他们之间的区别RS堆label有更多的功能，可以利用表达式去匹配label标签。
+
+## Replication Set (RS)
+
+跟RC相比它多了一些功能，对于selector 有更多的功能，可以使整个RS的意义更清晰，更能让维护人员理解。比如如下配置
+
+```angular2html
+apiVersion: extensions/v1beta1
+ kind: ReplicaSet
+ metadata:
+   name: soaktestrs
+ spec:
+   replicas: 3
+   selector:
+     matchLabels:
+       app: soaktestrs
+   template:
+     metadata:
+       labels:
+         app: soaktestrs
+         environment: dev
+     spec:
+       containers:
+       - name: soaktestrs
+         image: nickchase/soaktest
+         ports:
+         - containerPort: 80
+```
+管是这样无法表这个服务到底是做什么用的
+
+```angular2html
+...
+spec:
+   replicas: 3
+   selector:
+     matchExpressions:
+      - {key: app, operator: In, values: [soaktestrs, soaktestrs, soaktest]}
+      - {key: teir, operator: NotIn, values: [production]}
+  template:
+     metadata:
+...
+```
+
+我们可以通过描述得到如下：
+
+```angular2html
+
+# kubectl create -f replicaset.yaml
+replicaset "soaktestrs" created
+
+# kubectl describe rs soaktestrs
+Name:           soaktestrs
+Namespace:      default
+Image(s):       nickchase/soaktest
+Selector:       app in (soaktest,soaktestrs),teir notin (production)
+Labels:         app=soaktestrs
+Replicas:       3 current / 3 desired
+Pods Status:    3 Running / 0 Waiting / 0 Succeeded / 0 Failed
+No volumes.
+Events:
+  FirstSeen     LastSeen        Count   From                            SubobjectPath   Type    Reason                   Message
+  ---------     --------        -----   ----                            -------------   --------------                   -------
+  1m            1m              1       {replicaset-controller }                        Normal  SuccessfulCreate Created pod: soaktestrs-it2hf
+  1m            1m              1       {replicaset-controller }                       Normal  SuccessfulCreate Created pod: soaktestrs-kimmm
+  1m            1m              1       {replicaset-controller }                        Normal  SuccessfulCreate Created pod: soaktestrs-8i4ra
+
+# kubectl get pods
+NAME               READY     STATUS    RESTARTS   AGE
+soaktestrs-8i4ra   1/1       Running   0          1m
+soaktestrs-it2hf   1/1       Running   0          1m
+soaktestrs-kimmm   1/1       Running   0          1m
+```
+
+## Deployment 
+
+Deployment以RC做为管理单元实现Roll updating 和 Roll Back,实现动态更新和回滚的功能。
+
+## Service 
+
+service 主要是在deployment的基础上，管理ip Port Dns ,并且自动实现负载均衡和调度。
+
+## Yaml的种类
+
+* Replication Controller
+* Replication Set
+* Deployment 
+* Service
+
+四中yaml是逐层递增的向上的上层依赖下层，实现一个层级。
+
+## 总结
+kubernets 的整理部署由上面的几个部分组成，副本的是为了实现系统稳定性，副本管理是为了实现环境的滚动更新和回滚，service是为了实现统一的网关入口和负载均衡。整体的架构就是如此，细节就是要在实践中不断的学习和积累了。

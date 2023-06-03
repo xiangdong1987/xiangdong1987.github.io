@@ -1,0 +1,106 @@
+---
+layout: post
+title:  Go学习笔记2
+date:   2019-04-17
+categories: Go
+---
+Go数据类型有如下类型。
+* 基础类型
+* 符合类型
+* 引用类型
+* 接口类型
+类型内容很多只能慢慢学习，今天学习基础类型。
+
+## 基础类型
+ * 数字
+     * 有符号无符号
+     * Unicode字符rune类型是和int32等价的类型
+     * byte也是uint8类型的等价类型
+     * 计算溢出 高位截断
+     ```
+    var u uint8 = 255
+    fmt.Println(u, u+1, u*u) // "255 0 1"
+    var i int8 = 127
+    fmt.Println(i, i+1, i*i) // "127 -128 1"
+     ```
+     * 位运算
+     ```
+    var x uint8 = 1<<1 | 1<<5var y uint8 = 1<<1 | 1<<2
+
+    fmt.Printf("%08b\n", x) // "00100010", the set {1, 5}
+    fmt.Printf("%08b\n", y) // "00000110", the set {1, 2}
+
+    fmt.Printf("%08b\n", x&y)  // "00000010", the intersection {1}
+    fmt.Printf("%08b\n", x|y)  // "00100110", the union {1, 2, 5}
+    fmt.Printf("%08b\n", x^y)  // "00100100", the symmetric difference {2, 5}
+    fmt.Printf("%08b\n", x&^y) // "00100000", the difference {5}
+
+    for i := uint(0); i < 8; i++ {
+        if x&(1<<i) != 0 { // membership test
+            fmt.Println(i) // "1", "5"
+        }
+    }
+
+    fmt.Printf("%08b\n", x<<1) // "01000100", the set {2, 6}
+    fmt.Printf("%08b\n", x>>1) // "00010001", the set {0, 4}
+     ```
+     * 浮点型
+         > 一个float32类型的浮点数可以提供大约6个十进制数的精度，而float64则可以提供约15个十进制数的精度；通常应该优先使用float64类型，因为float32类型的累计计算误差很容易扩散，并且float32能精确表示的正整数并不是很大（译注：因为float32的有效bit位只有23个，其它的bit位用于指数和符号；当整数大于23bit能表达的范围时，float32的表示将出现误差）
+
+
+ * 字符串:一个字符串是一个不可改变的字节序列
+     * 不变性意味如果两个字符串共享相同的底层数据的话也是安全的，这使得复制任何长度的字符串代价是低廉的
+     * 编码：编码是一个基础，但是很复杂的东西，很多原理都跟编码有关。
+         * ASC II：是最初的编码定义，用一个字节来表示 0-127 表示英文和符号
+         * Unicode：随着计算机的广泛使用，其他国家的语言和文字需要展示，一个字节不够用了所以用4个字节来保存，诞生了unicode编码，至今unicode已经120000的字符了
+         * [Unicode官方](http://unicode.org )
+         * UTF-8:由于unicode 需要4个字节，有字符实际用不到这么多存储为，但是占用了这么的空间很浪费，所以UTF-8可变长字编码格式产生了，它位不同的长度的Uicode编码使用不用的表示方式。如下
+         ```
+        0xxxxxxx                                                   runes 0-127    (ASCII)
+        110xxxxx 10xxxxxx                                  128-2047       (values <128 unused)
+        1110xxxx 10xxxxxx 10xxxxxx                   2048-65535     (values <2048 unused)
+        11110xxx 10xxxxxx 10xxxxxx 10xxxxxx   65536-0x10ffff (other values unused)
+         ```
+         * Go语言的range循环在处理字符串的时候，会自动隐式解码UTF8字符串
+    * 标准库中四个重要的库
+        * btyes:btye的查找，替换，比较，截取，拆分，合并等功能
+            * 因为字符串是只读的，因此逐步构建字符串会导致很多分配和复制
+        * strings：字符串btye的查找，替换，比较，截取，拆分，合并等功能
+        * strconv：字符串转化
+        * unicode：给字符分类
+ * 布尔：没有什么特别注意的，就是要讲数字当bool值需要做一个函数转换
+     ``` 
+    func itob(i int) bool { return i != 0 }
+     ```     
+ * 常量：常量表达式的值在编译期计算，而不是在运行期。
+    * iota 可以批量生成常量
+    ```angular2html
+    type Weekday int
+    
+    const (
+        Sunday Weekday = iota
+        Monday
+        Tuesday
+        Wednesday
+        Thursday
+        Friday
+        Saturday
+    )
+    //复杂例子
+    const (
+        _ = 1 << (10 * iota)
+        KiB // 1024
+        MiB // 1048576
+        GiB // 1073741824
+        TiB // 1099511627776             (exceeds 1 << 32)
+        PiB // 1125899906842624
+        EiB // 1152921504606846976
+        ZiB // 1180591620717411303424    (exceeds 1 << 64)
+        YiB // 1208925819614629174706176
+    )
+    ```
+    * 无类型常量：我个人理解无类型常量有点像php不定义变量类型，系统自动识别，后面学习到接口时有重要的作用。
+
+## 总结
+虽然每种语言都有这些类型，但是每种语言在细节处理上有相似也有不同，这些相似和不同就体现出了不同人的思考方式，总之代码是死的，思维是活的。多思考多实践，形成自己的思维体系更重要。    
+    

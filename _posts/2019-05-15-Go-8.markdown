@@ -1,0 +1,171 @@
+---
+layout: post
+title:  Go学习笔记8
+date:   2019-05-15
+categories: Go
+---
+前面的学习，只学习了直接使用goroutine和channel的并发程序，忽略其他细微问题，尤其在包含共享变量的并发程序，接下来我们来学习，有共享变量的并发程序。
+
+## 竞争条件
+* 一般情况下我们没法去知道分别位于两个goroutine的事件x和y的执行顺序，x是在y之前还是之后还是同时发生是没法判断的。当我们能够没有办法自信地确认一个事件是在另一个事件的前面或者后面发生的话，就说明x和y这两个事件是并发的。
+    * 并发安全：一个函数在线性程序中可以正确地工作。如果在并发的情况下，这个函数依然可以正确地工作的话，那么我们就说这个函数是并发安全的，并发安全的函数不需要额外的同步工作
+    * 非并发安全：反之。单并发非安全的程序也可以通过某些方式变成线程安全的，并发安全的类型是例外，而不是规则，所以只有当文档中明确地说明了其是并发安全的情况下，你才可以并发地去访问它
+    > 导出包级别的函数一般情况下都是并发安全的。由于package级的变量没法被限制在单一的gorouine，所以修改这些变量“必须”使用互斥条件。
+* 竞争条件：竞争条件指的是程序在多个goroutine交叉执行操作时，没有给出正确的结果。竞争条件是很恶劣的一种场景，因为这种问题会一直潜伏在你的程序里，然后在非常少见的时候蹦出来，或许只是会在很大的负载时才会发生，又或许是会在使用了某一个编译器、某一种平台或者某一种架构的时候才会出现。这些使得竞争条件带来的问题非常难以复现而且难以分析诊断。
+* 如何避免竞争条件
+    * 第一种方法是不要去写变量。（不太可能）
+    * 第二种避免数据竞争的方法是，避免从多个goroutine访问变量。
+    * 第三种避免数据竞争的方法是允许很多goroutine去访问变量，但是在同一个时刻最多只有一个goroutine在访问。这种方式被称为“互斥”
+
+## sync.Mutex互斥锁
+* 前面学习的时候我们可以利用buffer channel控制gorontine的深度，如果我们用buffer等于的channel 就可以控制变量的访问如下代码：
+
+```
+var (
+    sema    = make(chan struct{}, 1) // a binary semaphore guarding balance
+    balance int
+)
+
+func Deposit(amount int) {
+    sema <- struct{}{} // acquire token
+    balance = balance + amount
+    <-sema // release token
+}
+
+func Balance() int {
+    sema <- struct{}{} // acquire token
+    b := balance
+    <-sema // release token
+    return b
+}
+```
+
+* 这种互斥很实用，而且被sync包里的Mutex类型直接支持。它的Lock方法能够获取到token(这里叫锁)，并且Unlock方法会释放这个token
+* 在锁之间的区域叫做临界区，为了使用临界区的临界关闭正确一般我会选择使用defer来控制临界区的关闭。
+
+```
+func Balance() int {
+    mu.Lock()
+    defer mu.Unlock()
+    return balance
+}
+```
+
+* Go 是没有重入锁的（java中是有重入锁：锁上锁）关于Go的互斥量不能重入这一点我们有很充分的理由。互斥量的目的是为了确保共享变量在程序执行时的关键点上能够保证不变性。不变性的其中之一是“没有goroutine访问共享变量”。
+* 所以在包的封装上，一个通用的解决方案是将一个函数分离为多个函数，比如我们把Deposit分离成两个：一个不导出的函数deposit，这个函数假设锁总是会被保持并去做实际的操作，另一个是导出的函数Deposit，这个函数会调用deposit，但在调用前会先去获取锁。
+
+## sync.RWMutex读写锁
+* 利用互斥锁，会将变量的读也锁住，如果系统中包含大量的读操作，互斥锁就完全限制了系统的功能。所以Go支持读写锁，只有在写的时候会锁定。
+* RWMutex只有当获得锁的大部分goroutine都是读操作，而锁在竞争条件下，也就是说，goroutine们必须等待才能获取到锁的时候，RWMutex才是最能带来好处的。RWMutex需要更复杂的内部记录，所以会让它比一般的无竞争锁的mutex慢一些
+## sync.Once初始化
+* 有些时候当我们初始化一些慢操作时，如果不使用锁机制进行控制的话，会造成非并发安全的情况。所以时候需要同时使用互斥锁和读写锁
+
+```
+var mu sync.RWMutex // guards iconsvar icons map[string]image.Image
+// Concurrency-safe.func Icon(name string) image.Image {
+    mu.RLock()
+    if icons != nil {
+        icon := icons[name]
+        mu.RUnlock()
+        return icon
+    }
+    mu.RUnlock()
+
+    // acquire an exclusive lock
+    mu.Lock()
+    if icons == nil { // NOTE: must recheck for nil
+        loadIcons()
+    }
+    icon := icons[name]
+    mu.Unlock()
+    return icon
+}
+```
+
+* 这样写比较麻烦所以Go使用了sync.Once简化了整个流程
+
+```
+var loadIconsOnce sync.Once
+var icons map[string]image.Image
+// Concurrency-safe.
+func Icon(name string) image.Image {
+    loadIconsOnce.Do(loadIcons)
+    return icons[name]
+}
+```
+
+## 竞争条件检测
+
+* 即使我们小心到不能再小心，但在并发程序中犯错还是太容易了。幸运的是，Go的runtime和工具链为我们装备了一个复杂但好用的动态分析工具，竞争检查器(the race detector)。只要在go build，go run或者go test命令后面加上-race的flag，就会使编译器创建一个你的应用的“修改”版或者一个附带了能够记录所有运行期对共享变量访问工具的test，并且会记录下每一个读或者写共享变量的goroutine的身份信息。
+
+## 并发无阻塞
+
+* 想实现并发无阻塞，必须避免竞争条件的产生。一下实现了一个并发无阻塞的缓存。
+
+```
+type entry struct {
+    res   result
+    ready chan struct{} // closed when res is ready
+}
+
+func New(f Func) *Memo {
+    return &Memo{f: f, cache: make(map[string]*entry)}
+}
+
+type Memo struct {
+    f     Func
+    mu    sync.Mutex // guards cache
+    cache map[string]*entry
+}
+
+func (memo *Memo) Get(key string) (value interface{}, err error) {
+    memo.mu.Lock()
+    e := memo.cache[key]
+    if e == nil {
+        // This is the first request for this key.
+        // This goroutine becomes responsible for computing
+        // the value and broadcasting the ready condition.
+        e = &entry{ready: make(chan struct{})}
+        memo.cache[key] = e
+        memo.mu.Unlock()
+
+        e.res.value, e.res.err = memo.f(key)
+
+        close(e.ready) // broadcast ready condition
+    } else {
+        // This is a repeat request for this key.
+        memo.mu.Unlock()
+
+        <-e.ready // wait for ready condition
+    }
+    return e.res.value, e.res.err
+}
+```
+
+> 以上利用ready channel 实现了读广播，变量是否准备完毕。使用特性是当一个无buffer的channel会阻塞读取channel的代码位置，当关闭channel时，是会通知到读取的地方channel已经关闭，并不产生错误（但是向已经关闭的channel，传输数据会产生painc）
+
+## Goroutine和线程
+* 栈空间的区别
+    * 线程的栈是固定大小的2m
+    * Goroutine初始是2k，可以根据程序的变化动态改变，最大有1GB，在Go中叫动态栈。
+    > 知识点：
+    > 栈：一个栈的作用是用来保存函数调用上下文和内部变量
+* 调度的区别
+    * 线程间的切换时需要保存线程上下文，切换到替他线程，是利用系统的shedule函数，由cup来调度。
+    * Goruntine的切换是在，go Runtime 中实现的，由Go本身控制调度，并且采用了一种n:m的方式，利用n个系统线程分别处理m个Goruntine，所以一个goruntine的切换消耗比线程小的多
+    > 线程相比Goroutine它多调用了局部内存，增加了cpu运行周期（由于切换和读内存引起的）
+    > Goruntine 的调度方式也类似系统的调度方式
+    > GOMAXPROCS 参数是用来设定Go用多少个系统线程同时工作。
+* 自身标识
+    * 线程是有线程id的
+    * Goruntine是没有的，原因是防止由于thread-local storage（TLS）总是会被滥用，所引起的过分依赖线程的局部变量，程序变幻莫测。
+
+## 总结：
+并发带来的问题就是，竞争条件，如果竞争条件不处理好，会造成意料不到的结果。所以并发主要处理的就是竞争条件问题，处理竞争条件主要有如下三个方向：
+* 避免写操作
+* 避免从多个goroutine，写入数据
+* 允许多个goruntine访问一个变量，但是同一时刻只能有一个能访问，就是互斥
+第一种方式，使用的场景特别少，只有少量静态服务才会这样使用。
+第二种方式，在设计时，由一个主Goruntine去处理些操作，其他Goruntine作为生产者利用channel处理
+第三种方式，允许多个Goruntine写变量，但是同一时刻只能有一个可以生效，利用互斥锁+channel广播的形式实现并发非阻塞
+Go实现并发的优势主要是在goruntine和线程的区别和自身的runtime并发调度，优化了线程调度之间的损耗，实现了更高效的并发。

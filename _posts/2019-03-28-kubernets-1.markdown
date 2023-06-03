@@ -1,0 +1,98 @@
+---
+layout: post
+title:  "kubernets理解总结"
+date:   2019-03-28
+categories: Kubernets
+---
+总体理解kubernets架构以及各个结构中的api使用
+
+## Node
+
+* 节点：可以使虚拟机，也可以是实体机
+* 每个节点上都安装kubernets
+* 有主节点和子节点的区分
+
+## Pods
+* 是组成节点的最小单位，是任意独立的容器,pos都存储在Node中，每个pos有自己的功能
+* 获取Pods
+
+```
+    kubectl get pods
+```
+
+* 查看Pods 描述
+
+```    
+    kubectl describe deployment
+```
+
+* 进入pods中
+
+```
+    kubectl exec -ti $POD_NAME
+```
+
+## Service 
+* 通过service向外暴露pods
+
+```
+    kubectl expose deployment/kubernetes-bootcamp --type="NodePort" --port 8080
+```
+
+* 查看service
+
+```
+    kubectl get services
+```
+
+* 查看service描述
+
+```
+    kubectl describe services/kubernetes-bootcamp
+```
+
+* 根据标签删除services
+
+```
+    kubectl delete service -l run=kubernetes-bootcamp
+```
+
+## Label
+* 每个部署的pods 都会自动创建标签
+* 通过标签查询pods
+
+```
+    kubectl get pods -l kubectl describe deployment
+```
+
+* 重新设置标签
+
+```
+    kubectl label pod $POD_NAME app=v1
+```
+
+## Scale
+* 自动扩容缩容
+    * 各种状态
+        1. DESIRED 想要的容器数量
+        2. CURRENT 当前的数量
+        3. UP-TO-DATE ？？
+        4. AVAILABLE 有效的
+        
+```
+    kubectl scale deployments/kubernetes-bootcamp --replicas=4
+```
+
+## Rolling Update
+* 滚动更新
+    * 通过镜像更新pods
+    
+```
+    kubectl set image deployments/kubernetes-bootcamp kubernetes-bootcamp=jocatalin/kubernetes-bootcamp:v2
+```
+
+* 检查滚动更新状态
+
+```
+    kubectl rollout status deployments/kubernetes-bootcamp
+```

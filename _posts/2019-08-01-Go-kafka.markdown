@@ -1,0 +1,158 @@
+---
+layout: post
+title:  折腾kafka
+date:   2019-08-01
+categories: go
+---
+kafka 实践学习，对于一个java大生态的工具，还是需要学习和了解的，毕竟java大佬这么多年了，值得学习的地方非常多。
+
+## Apache Kafka
+Apache Kafka是一个分布式发布 - 订阅消息系统和一个强大的队列，可以处理大量的数据，并使您能够将消息从一个端点传递到另一个端点。
+* 特点
+    * 分布系统
+    * 订阅消息
+    * 强大队列
+    * 数据落地到硬盘
+## 安装
+* 前置条件：需要zookeeper。
+* 安装zookeeper
+    * [官方下载](https://www.apache.org/dyn/closer.cgi/zookeeper/)
+    * 接下即安装（java 生态就是好）
+    * conf 下 sample 文件改成 zoo.cfg (默认单机模式)
+    * zookeeper 常用命令
+    
+    ```
+        //开启 zookeeper
+        bin/zkServer.sh start
+        //使用客户端连接
+        bin/zkCli.sh
+        //远程连接
+        bin/zkCli.sh -server ip:port
+        //停止zookeeper
+        bin/zkServer.sh stop
+    ```
+    
+    * 其他相关zookeeper不细讲用到在学习
+* 安装kafaka
+    * [官方下载](
+https://www.apache.org/dyn/closer.cgi?path=/kafka/2.3.0/kafka-2.3.0-src.tgz)
+    * 接下即安装（java 生态就是好）
+    * kafaka 常用命令
+    
+    ```
+        //开启kafaka
+        bin/kafka-server-start.sh config/server.properties
+        //创建Topic  
+        bin/kafka-topics.sh --create --zookeeper 192.168.112.20:2181 --replication-factor 1 --partitions 1 --topic test
+        //Topic展示
+        bin/kafka-topics.sh --list --zookeeper 192.168.112.20:2181
+    ```
+    
+> 遇到的问题：下载的是kafka的源码包，执行报错 
+classpath is empty. please build the project first e.g. by running 'gradlew jarall' 应该下载二进制包
+下载地址：[https://kafka.apache.org/downloads](https://kafka.apache.org/downloads)
+
+ ## 使用Go实现生产消费
+ * 实现生产者
+ 
+```
+package main
+
+import (
+	"bufio"
+	"fmt"
+	"github.com/Shopify/sarama"
+	"os"
+	"strings"
+)
+
+func main() {
+    config := sarama.NewConfig()
+    config.Producer.Return.Successes = true
+    config.Producer.RequiredAcks = sarama.WaitForAll
+    config.Producer.Partitioner = sarama.NewRandomPartitioner
+    //初始化生产者
+    producer, err := sarama.NewSyncProducer([]string{"192.168.112.20:9092"}, config)
+
+    if err != nil {
+        panic(err)
+    }
+    defer producer.Close()
+    
+    msg := &sarama.ProducerMessage{
+        Topic:     "testGo",
+        Partition: int32(-1),
+        Key:       sarama.StringEncoder("key"),
+    }
+
+    var value string
+    for {
+        // 生产消息
+        inputReader := bufio.NewReader(os.Stdin)
+        value, err = inputReader.ReadString('\n')
+        if err != nil {
+            panic(err)
+        }
+        value = strings.Replace(value, "\n", "", -1)
+        msg.Value = sarama.ByteEncoder(value)
+        //发送消息
+        paritition, offset, err := producer.SendMessage(msg)
+        if err != nil {
+            fmt.Println("Send Message Fail")
+        }
+        //输出结果
+        fmt.Printf("Partion = %d, offset = %d\n", paritition, offset)
+    }
+}
+
+```
+
+* 实现消费者
+
+```
+package main
+
+import (
+	"fmt"
+	"github.com/Shopify/sarama"
+	"sync"
+)
+//协成锁 等待所有协成执行完毕退出
+var wg sync.WaitGroup
+func main() {
+    //消费者初始化
+    consumer, err := sarama.NewConsumer([]string{"192.168.112.20:9092"}, nil)
+    if err != nil {
+        panic(err)
+    }
+    partitionList, err := consumer.Partitions("testGo")
+    if err != nil {
+        panic(err)
+    }
+    for partition := range partitionList {
+        pc, err := consumer.ConsumePartition("testGo", int32(partition), sarama.OffsetNewest)
+        if err != nil {
+            panic(err)
+        }
+        defer pc.AsyncClose()
+        //上锁
+        wg.Add(1)
+        go func(sarama.PartitionConsumer) {
+            //解锁
+            defer wg.Done()
+            for msg := range pc.Messages() {
+                //接受消息
+                fmt.Printf("Partition:%d, Offset:%d, Key:%s, Value:%s\n", msg.Partition, msg.Offset, string(msg.Key), string(msg.Value))
+            }
+        }(pc)
+        //等待全部解锁
+        wg.Wait()
+        consumer.Close()
+    }
+}
+```
+
+> 遇到问题 github.com/Shopify/sarama 包在windows 环境下需要gcc，懒得搞直接虚拟机。
+
+## 总结
+利用go + kafka 实现生产者消费模型非常简单和快速，在日常业务上使用消息队列可以考虑kafka+go快速迭代，后续应用上采坑在来分享。

@@ -1,0 +1,168 @@
+---
+layout: post
+title:  Go学习笔记7
+date:   2019-05-09
+categories: Go
+---
+重头戏要来了，并发编程。这是Go的主打优势，Go通过自身设计层面，隐藏了比较晦涩难懂的并发过程，我们只需要通过goroutine和channel的配合就能实现自己想要的并发程序，实现CSP（communicating sequential processes）并发变成模型，像我这么懒得人特别喜欢站在巨人的肩膀上眺望。
+
+## Goroutines
+* 在Go语言中，每一个并发的执行单元叫作一个goroutine。
+* 当一个程序启动时，其主函数即在一个单独的goroutine中运行，我们叫它main goroutine。新的goroutine会用go语句来创建。在语法上，go语句是一个普通的函数或方法调用前加上关键字go。go语句会使其语句中的函数在一个新创建的goroutine中运行。而go语句本身会迅速地完成。
+* Goroutines是并发体
+## Channels
+* 如果说goroutine是Go语言程序的并发体的话，那么channels则是它们之间的通信机制。
+* channels 就是一个顺序的消息队列可分为下面两类
+    * 有buffer的channel:
+        * 读取时：队列非空不阻塞
+        * 写入时：队列非满不阻塞
+    * 有buffer示例代码：
+    ```
+    func mirroredQuery() string {
+        responses := make(chan string, 3)
+        go func() { responses <- request("asia.gopl.io") }()
+        go func() { responses <- request("europe.gopl.io") }()
+        go func() { responses <- request("americas.gopl.io") }()
+        return <-responses // return the quickest response
+    }
+
+    func request(hostname string) (response string) { /* ... */ }
+    ```
+    > 如果我们使用了无缓存的channel，那么两个慢的goroutines将会因为没有人接收而被永远卡住。这种情况，称为goroutines泄漏，这将是一个BUG。和垃圾变量不同，泄漏的goroutines并不会被自动回收，因此确保每个不再需要的goroutine能正常退出是重要的。
+    * 没有buffer的channel
+        * 读取时：有写入不阻塞
+        * 写入时：空channnel不阻塞
+* 串联channnel实现pipeline。让各个程序同时并发处理
+* 使用单方向的channel 避免一些异常写入和读取
+
+```
+func counter(out chan<- int) {
+    for x := 0; x < 100; x++ {
+        out <- x
+    }
+    close(out)
+}
+
+func squarer(out chan<- int, in <-chan int) {
+    for v := range in {
+        out <- v * v
+    }
+    close(out)
+}
+
+func printer(in <-chan int) {
+    for v := range in {
+        fmt.Println(v)
+    }
+}
+
+func main() {
+    naturals := make(chan int)
+    squares := make(chan int)
+    go counter(naturals)
+    go squarer(squares, naturals)
+    printer(squares)
+}
+```
+
+* Channel的缓存也可能影响程序的性能。想象一家蛋糕店有三个厨师，一个烘焙，一个上糖衣，还有一个将每个蛋糕传递到它下一个厨师在生产线。在狭小的厨房空间环境，每个厨师在完成蛋糕后必须等待下一个厨师已经准备好接受它；这类似于在一个无缓存的channel上进行沟通。
+* 合理的设置缓存，就是合理的利用生产者和消费者之间的关系。尽量不要过度生产或者过度消费
+
+## 并发循环
+* 利用循环迭代进行并发是最长见的并发模型，如果不在main gorouintine 进行控制程序会瞬间执行完毕，不等待其他goroutine 完成，所以一般我们会用channel进行控制代码如下：
+
+```
+// makeThumbnails3 makes thumbnails of the specified files in parallel.func makeThumbnails3(filenames []string) {
+    ch := make(chan struct{})
+    for _, f := range filenames {
+        go func(f string) {
+            thumbnail.ImageFile(f) // NOTE: ignoring errors
+            ch <- struct{}{}
+        }(f)
+    }
+    // Wait for goroutines to complete.
+    for range filenames {
+        <-ch
+    }
+}
+```
+
+* 前面讲的都是知道并行次数的情况，在不知道并行次数的情况下我们需要一个完全的计数器来控制并行的结束，通过sync.WaitGroup来控制循环进程结束
+```
+// makeThumbnails6 makes thumbnails for each file received from the channel.
+// It returns the number of bytes occupied by the files it creates.
+func makeThumbnails6(filenames <-chan string) int64 {
+    sizes := make(chan int64)
+    var wg sync.WaitGroup // number of working goroutines
+    for f := range filenames {
+        wg.Add(1)
+        // worker
+        go func(f string) {
+            defer wg.Done()
+            thumb, err := thumbnail.ImageFile(f)
+            if err != nil {
+                log.Println(err)
+                return
+            }
+            info, _ := os.Stat(thumb) // OK to ignore error
+            sizes <- info.Size()
+        }(f)
+    }
+
+    // closer
+    go func() {
+        wg.Wait()
+        close(sizes)
+    }()
+
+    var total int64
+    for size := range sizes {
+        total += size
+    }
+    return total
+}
+```
+* 时序图如下：
+![设置1](/images/11.png)
+
+## 实例分析
+* 网络爬虫
+    * 工作channel,用于保存正在抓取的链接
+    * 接受命令行的goroutine
+    * 记录访问记录的map
+    * 循环消耗工作channel 
+ * 优化思路
+    * 当无限开启goroutine时，会造打开过多的文件描述符，所以我们必须控制goroutine的数量，这个时候我们需要一个新的channel，token的channel,相当于令牌桶合理的有缓存channel 当做令牌桶,在go的函数获取令牌，执行结束后释放令牌。
+    * 如何防止无限抓取，要检查工作channel是否已经完成
+## 多路复用select
+* 当你有多个channel 想同时检测时你可以使用select，它保证随机的获取你要检测的channel代码如下：
+
+```
+
+func main() {
+    // ...create abort channel...
+
+    fmt.Println("Commencing countdown.  Press return to abort.")
+    tick := time.Tick(1 * time.Second)
+    for countdown := 10; countdown > 0; countdown-- {
+        fmt.Println(countdown)
+        select {
+        case <-tick:
+            // Do nothing.
+        case <-abort:
+            fmt.Println("Launch aborted!")
+            return
+        }
+    }
+    launch()
+}
+```
+## 总结
+并发编程并不像，想象的那么难，也没有说的那么容易，其中很多方式方法还是需要在不断的学习和实践中总结比如：
+* channel 有误buffer选用
+* goroutine 泄漏问题
+* goroutine 开启的限制
+* 程序结束的限制
+* 并发深度的限制等等
+只有不断学习和实践才是做为一名coder 的终身事业。
+

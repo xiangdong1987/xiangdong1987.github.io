@@ -1,0 +1,236 @@
+---
+layout: post
+title:  Go学习笔记4
+date:   2019-04-26
+categories: Go
+---
+函数是一组逻辑的集合，能把大的任务拆成一个一个小的任务，供软件的各个位置去调用。
+
+### 函数声明
+```
+func name(parameter-list) (result-list) {
+    body
+}
+```
+* 参数列表：参数类型相同可以只在最后一个相同参数后面定义参数类型
+    * 形参与实参：按顺序赋值形参，只有当实参是引用类型，如指针，slice(切片)、map、function、channel等类型当做引用传递可以在函数内部修改实参的值，否则其他情况，形参只是实参的拷贝。
+* 返回值：返回值可以没有或者多个返回值，只有一个返回值时，可以只写一个返回值类型即可
+```
+func add(x int, y int) int   {return x + y}
+func sub(x, y int) (z int)   { z = x - y; return}
+func first(x int, _ int) int { return x }
+func zero(int, int) int      { return 0 }
+
+fmt.Printf("%T\n", add)   // "func(int, int) int"
+fmt.Printf("%T\n", sub)   // "func(int, int) int"
+fmt.Printf("%T\n", first) // "func(int, int) int"
+fmt.Printf("%T\n", zero)  // "func(int, int) int"
+```
+### 递归
+* 递归：函数自己调用自己就是递归调用。
+* 大部分编程语言使用固定大小的函数调用栈，常见的大小从64KB到2MB不等。固定大小栈会限制递归的深度，当你用递归处理大量数据时，需要避免栈溢出；除此之外，还会导致安全性问题。与相反,Go语言使用可变栈，栈的大小按需增加(初始时很小)。这使得我们使用递归时不必考虑溢出和安全问题。
+### 多指返回函数
+* 惯例前面返回期望的值，最后一个返回erro值
+* 不需要处理的返回值，用_来处理
+* 如果在返回值列表里定义好了返回值的名字，可以用默认return。可以减少代码量，但是增加维护难度。不宜过度使用。
+```
+// CountWordsAndImages does an HTTP GET request for the HTML
+// document url and returns the number of words and images in it.
+func CountWordsAndImages(url string) (words, images int, err error) {
+    resp, err := http.Get(url)
+    if err != nil {
+        return
+    }
+    doc, err := html.Parse(resp.Body)
+    resp.Body.Close()
+    if err != nil {
+        err = fmt.Errorf("parsing HTML: %s", err)
+    return
+    }
+    words, images = countWordsAndImages(doc)
+    return
+}
+func countWordsAndImages(n *html.Node) (words, images int) { /* ... */ }
+```
+### 错误
+* go不将返回的erro 类型当初异常来处理，值当做预期的值来看待。
+* go 错误处理策略
+    * 第一种传播的方式
+    * 第二种重试的方式：注意设置重试时间和次数
+    * 第三种输出错误并退出：这种策略只应在main中执行。对库函数而言，应仅向上传播错误，除非该错误意味着程序内部包含不一致性，即遇到了bug，才能在库函数中结束程序
+    * 第四种有时，我们只需要输出错误信息就足够了，不需要中断程序的运行。我们可以通过log包提供函数
+    * 第五种，也是最后一种策略：我们可以直接忽略掉错误。
+* 固定类型错误：io.EOF,可以根据错误信息执行特别的操作
+### 函数值
+* 在Go 语言中函数被定义为第一类值，有类型，可以被赋值给其他变量，传递个给函数。
+```
+//利用函数变量便利html 标签
+
+// forEachNode针对每个结点x,都会调用pre(x)和post(x)。// pre和post都是可选的。// 遍历孩子结点之前,pre被调用// 遍历孩子结点之后，post被调用func forEachNode(n *html.Node, pre, post func(n *html.Node)) {
+    if pre != nil {
+        pre(n)
+    }
+    for c := n.FirstChild; c != nil; c = c.NextSibling {
+        forEachNode(c, pre, post)
+    }
+    if post != nil {
+        post(n)
+    }
+}
+
+var depth intfunc startElement(n *html.Node) {
+    if n.Type == html.ElementNode {
+        fmt.Printf("%*s<%s>\n", depth*2, "", n.Data)
+        depth++
+    }
+}
+func endElement(n *html.Node) {
+    if n.Type == html.ElementNode {
+        depth--
+        fmt.Printf("%*s</%s>\n", depth*2, "", n.Data)
+    }
+}
+```
+### 匿名函数
+* 通过这种方式定义的函数可以访问完整的词法环境（lexical environment），这意味着在函数中定义的内部函数可以 **引用** 该函数的变量
+```
+// squares返回一个匿名函数。// 该匿名函数每次被调用时都会返回下一个数的平方。func squares() func() int {
+    var x int
+    return func() int {
+        x++
+        return x * x
+    }
+}
+func main() {
+    f := squares()
+    fmt.Println(f()) // "1"
+    fmt.Println(f()) // "4"
+    fmt.Println(f()) // "9"
+    fmt.Println(f()) // "16"
+}
+```
+* 利用匿名函数实现拓扑排序算法
+```
+// prereqs记录了每个课程的前置课程var prereqs = map[string][]string{
+    "algorithms": {"data structures"},
+    "calculus": {"linear algebra"},
+    "compilers": {
+        "data structures",
+        "formal languages",
+        "computer organization",
+    },
+    "data structures":       {"discrete math"},
+    "databases":             {"data structures"},
+    "discrete math":         {"intro to programming"},
+    "formal languages":      {"discrete math"},
+    "networks":              {"operating systems"},
+    "operating systems":     {"data structures", "computer organization"},
+    "programming languages": {"data structures", "computer organization"},
+}
+
+
+func main() {
+    for i, course := range topoSort(prereqs) {
+        fmt.Printf("%d:\t%s\n", i+1, course)
+    }
+}
+
+func topoSort(m map[string][]string) []string {
+    var order []string
+    seen := make(map[string]bool)
+    var visitAll func(items []string)
+    visitAll = func(items []string) {
+        for _, item := range items {
+            if !seen[item] {
+                seen[item] = true
+                visitAll(m[item])
+                order = append(order, item)
+            }
+        }
+    }
+    var keys []string
+    for key := range m {
+        keys = append(keys, key)
+    }
+    sort.Strings(keys)
+    visitAll(keys)
+    return order
+}
+```
+* 利用匿名函数实现广度搜索
+```
+// breadthFirst calls f for each item in the worklist.
+// Any items returned by f are added to the worklist.
+// f is called at most once for each item.func 
+breadthFirst(f func(item string) []string, worklist []string) {
+    seen := make(map[string]bool)
+    for len(worklist) > 0 {
+        items := worklist
+        worklist = nil
+        for _, item := range items {
+            if !seen[item] {
+                seen[item] = true
+                worklist = append(worklist, f(item)...)
+            }
+        }
+    }
+}
+
+func crawl(url string) []string {
+    fmt.Println(url)
+    list, err := links.Extract(url)
+    if err != nil {
+        log.Print(err)
+    }
+    return list
+}
+
+func main() {
+    // Crawl the web breadth-first,
+    // starting from the command-line arguments.
+    breadthFirst(crawl, os.Args[1:])
+}
+```
+* for的循环词法块中局部变量是引用的
+### 可变参数函数
+* 用...来做变量名，一般可变参数函数用来处理字符串
+```
+func errorf(linenum int, format string, args ...interface{}) {
+    fmt.Fprintf(os.Stderr, "Line %d: ", linenum)
+    fmt.Fprintf(os.Stderr, format, args...)
+    fmt.Fprintln(os.Stderr)
+}
+linenum, name := 12, "count"
+errorf(linenum, "undefined: %s", name) // "Line 12: undefined: count"
+```
+### Deferred函数
+* defer语句经常被用于处理成对的操作，如打开、关闭、连接、断开连接、加锁、释放锁。通过defer机制，不论函数逻辑多复杂，都能保证在任何执行路径下，资源被释放。释放资源的defer应该直接跟在请求资源的语句后。
+* defer的声明是从前往后，触发是从后往前的触发
+* 可以做调试函数
+```
+func bigSlowOperation() {
+    defer trace("bigSlowOperation")() // don't forget the
+    extra parentheses
+    // ...lots of work…
+    time.Sleep(10 * time.Second) // simulate slow
+    operation by sleeping
+}
+func trace(msg string) func() {
+    start := time.Now()
+    log.Printf("enter %s", msg)
+    return func() { 
+        log.Printf("exit %s (%s)", msg,time.Since(start)) 
+    }
+}
+```
+### Panic 异常
+* 类似php throw 如果不捕获也会直接中断程序
+* 一般只有严重错误，影响到程序的正常执行才会用到panic
+
+### Recover捕获异常
+* 无法捕获的情况
+    * 沒加recover的goroutine里panic
+    * os.Exit
+    * map 中特殊情况锁机制
+## 总结
+函数是程序逻辑的基本单位，是整个程序的基石，了解它的结构是，帮助我们写出合理优雅的代码的基础。总体来说Go的匿名函数给我比较深的印象，没想到用法可以大大减少代码量。
