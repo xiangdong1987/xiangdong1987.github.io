@@ -4,10 +4,9 @@ title:  Go文件处理scan的坑
 date:   2023-07-03
 categories: go
 ---
-十年老兵还是依然的奋战在一线，感觉既幸运，又不幸。幸运是还能有机会再战斗，不幸的是自己依然是个兵。不过在怎么样，还是要学习，学习的脚步不能停。今天我连讲讲我在go scan方法上遇到的坑。
+十年老兵还是依然的奋战在一线，感觉既幸运，又不幸。幸运是还能有机会再战斗，不幸的是自己依然是个兵。不过在怎么样，还是要学习，学习的脚步不能停。今天我来讲讲我在go scanner方法上遇到的坑。
 ## 背景
 文件处理在每种语言来说都是老生常谈的一个问题，每一种语言都有它自己的一套封装。对于Go来说也不例外，个人觉得Go的封装还是不错的，该有的还是有的。
-
 我的场景是，在一个Go的命令行调用上，我需要接受命令行的标准输出返回，继而后续处理进行操作。Demo如下
 ```go
 //正常输出，将错误放在最后处理，并返回其他相关参数
@@ -62,7 +61,8 @@ func NewScanner(r io.Reader) *Scanner {
 		maxTokenSize: MaxScanTokenSize,
 	}
 }
-//很明显在初始化的scanner时会初始化一个sanTokenSize凭借直觉，这个肯定是一个防呆设计，设定一个最大值保证，程序不会无限制增长
+//很明显在初始化的scanner时会初始化一个sanTokenSize凭借直觉，
+//这个肯定是一个防呆设计，设定一个最大值保证，程序不会无限制增长
 //果然当单行文件超过当前token大小，程序会抛出异常
 if len(s.buf) >= s.maxTokenSize || len(s.buf) > maxInt/2 {
     s.setErr(ErrTooLong)
@@ -73,7 +73,8 @@ if len(s.buf) >= s.maxTokenSize || len(s.buf) > maxInt/2 {
 ## 解决问题
 还是要回到问题原点，查看代用的代码，在使用scanner程序的位置，发现我既没限定文件的大小也没处理scanner返回的error，所以才导致后续出现不可预测的问题。卡死的原因也是因为未处理error导致的。
 ```go
-    //在读取标准输出后，还读取的error输出，由于未处理scanner的错误返回导致后续读取error输出阻塞读取形成假死现象
+    //在读取标准输出后，还读取的error输出，
+    //由于未处理scanner的错误返回导致后续读取error输出阻塞读取形成假死现象
 	res, err = copyOutput(CReport, stdout, res)
 	if err != nil {
 		rlog.Errorf("cmd.Start() failed with '%v'\n", err)
