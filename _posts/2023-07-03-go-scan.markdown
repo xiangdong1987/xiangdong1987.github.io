@@ -1,0 +1,129 @@
+---
+layout: post
+title:  Go文件处理scan的坑
+date:   2023-07-03
+categories: go
+---
+十年老兵还是依然的奋战在一线，感觉既幸运，又不幸。幸运是还能有机会再战斗，不幸的是自己依然是个兵。不过在怎么样，还是要学习，学习的脚步不能停。今天我连讲讲我在go scan方法上遇到的坑。
+## 背景
+文件处理在每种语言来说都是老生常谈的一个问题，每一种语言都有它自己的一套封装。对于Go来说也不例外，个人觉得Go的封装还是不错的，该有的还是有的。
+
+我的场景是，在一个Go的命令行调用上，我需要接受命令行的标准输出返回，继而后续处理进行操作。Demo如下
+```go
+//正常输出，将错误放在最后处理，并返回其他相关参数
+func copyOutput(CReport chan string, r io.Reader, res *CMDResult) (*CMDResult, error) {
+	scanner := bufio.NewScanner(r)
+	for scanner.Scan() {
+		out := scanner.Text()
+		var tmp *CMDResult
+		err := json.Unmarshal([]byte(out), &tmp)
+		if err != nil {
+			return nil, err
+		}
+		if tmp.Log != "" {
+			rlog.Infof(tmp.Log)
+		}
+		if tmp.PLog != "" {
+			plog.InfoP(CReport, tmp.PLog)
+		}
+		if tmp.Runtime != nil {
+			res.Runtime = tmp.Runtime
+		}
+		if tmp.Output != nil {
+			res.Output = tmp.Output
+		}
+		if tmp.Result != nil {
+			res.Result = tmp.Result
+		}
+		if tmp.Next != nil {
+			res.Next = tmp.Next
+		}
+		if tmp.Error != "" {
+			return res, fmt.Errorf(tmp.Error)
+		}
+	}
+	return res, nil
+}
+```
+## 遇到的问题
+有些场景下，调用执行命令会出现卡死的现象，百思不得其解，由于我们是调用的python脚本，以为是python脚本导致任务卡死，从而不能继续执行。由于不是必现问题一直没有排查到问题的根因导致问题搁置了一段时间。
+## 发现问题
+在一次联调程序的时候，发现标准输出达到了某些长度的时候，假死的问题就重现了，既然能重现那就研究一下到底是为什么吧？开始不断的尝试输出的长度，发现当长度达到65000+的时候就会出现假死。开始debug,我们使用的是如下
+```go
+//默认创建的scanner 他会自动按照行进行对文件的扫描
+scanner := bufio.NewScanner(r)
+//进入NewScanner
+// NewScanner returns a new Scanner to read from r.
+// The split function defaults to ScanLines.
+func NewScanner(r io.Reader) *Scanner {
+	return &Scanner{
+		r:            r,
+		split:        ScanLines,
+		maxTokenSize: MaxScanTokenSize,
+	}
+}
+//很明显在初始化的scanner时会初始化一个sanTokenSize凭借直觉，这个肯定是一个防呆设计，设定一个最大值保证，程序不会无限制增长
+//果然当单行文件超过当前token大小，程序会抛出异常
+if len(s.buf) >= s.maxTokenSize || len(s.buf) > maxInt/2 {
+    s.setErr(ErrTooLong)
+    return false
+}
+```
+通过分析上面代码发现，scanner是有单行上线的，并且当超过上线读取会返回错误，那为什么我还会卡死的呢？
+## 解决问题
+还是要回到问题原点，查看代用的代码，在使用scanner程序的位置，发现我既没限定文件的大小也没处理scanner返回的error，所以才导致后续出现不可预测的问题。卡死的原因也是因为未处理error导致的。
+```go
+    //在读取标准输出后，还读取的error输出，由于未处理scanner的错误返回导致后续读取error输出阻塞读取形成假死现象
+	res, err = copyOutput(CReport, stdout, res)
+	if err != nil {
+		rlog.Errorf("cmd.Start() failed with '%v'\n", err)
+		return res, err
+	}
+	copyErrOut(stderr)
+```
+所以优化后代码如下：
+```go
+//正常输出，将错误放在最后处理，并返回其他相关参数
+func copyOutput(CReport chan string, r io.Reader, res *CMDResult) (*CMDResult, error) {
+	scanner := bufio.NewScanner(r)
+	//设定最大5m内容
+	scanner.Buffer(make([]byte, 4096), MaxTextSize)
+	for scanner.Scan() {
+		out := scanner.Text()
+		var tmp *CMDResult
+		err := json.Unmarshal([]byte(out), &tmp)
+		if err != nil {
+			return nil, err
+		}
+		if tmp.Log != "" {
+			rlog.Infof(tmp.Log)
+		}
+		if tmp.PLog != "" {
+			plog.InfoP(CReport, tmp.PLog)
+		}
+		if tmp.Runtime != nil {
+			res.Runtime = tmp.Runtime
+		}
+		if tmp.Output != nil {
+			res.Output = tmp.Output
+		}
+		if tmp.Result != nil {
+			res.Result = tmp.Result
+		}
+		if tmp.Next != nil {
+			res.Next = tmp.Next
+		}
+		if tmp.Error != "" {
+			return res, fmt.Errorf(tmp.Error)
+		}
+	}
+	//报错返回错误信息
+	if err := scanner.Err(); err != nil {
+		return res, err
+	}
+	return res, nil
+}
+```
+## 总结
+Go的错误机制，总有人吐槽太麻烦不好用，但是我认为正确的处理错误，才能防止诡异的异常问题出现，所以go的错误机制是非常合理的，而且在go
+的代码中也有一些值得我们学习的，比如在单行读取时内存的分配机制，它如何从一个小内存逐渐的分配为大内存，运用到的copy模式，设置限制的值防止过大内存分配等等，所以细节才是魔鬼。
