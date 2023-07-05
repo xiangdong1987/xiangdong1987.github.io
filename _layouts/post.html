@@ -25,7 +25,7 @@ layout: default
     <script src="https://jjeejj.github.io/js/gitment.js"></script>
     <script>
         var gitment = new Gitment({
-            id: '{{ page.date }}',
+            id: '{{ page.date | date date_format }}',
             owner: 'xiangdong1987',
             repo: 'xiangdong1987.github.io',
             oauth: {
