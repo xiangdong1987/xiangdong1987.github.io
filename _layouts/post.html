@@ -18,21 +18,6 @@ layout: default
     <div class="post-content e-content" itemprop="articleBody">
         {{ content }}
     </div>
-    <div id="container"></div>
-    <link rel="stylesheet" href="https://jjeejj.github.io/css/gitment.css">
-    <script src="https://jjeejj.github.io/js/gitment.js"></script>
-    <script>
-        var gitment = new Gitment({
-            id: '{{ page.date | date_to_xmlschema }}',
-            owner: 'xiangdong1987',
-            repo: 'xiangdong1987.github.io',
-            oauth: {
-                client_id: 'Iv1.a137608e669c6fa3',
-                client_secret: 'cbf442108c5b61669e7a6a390bec0ebd29755a0f',
-            },
-        })
-        gitment.render('container')
-    </script>
     {%- if site.disqus.shortname -%}
     {%- include disqus_comments.html -%}
     {%- endif -%}
