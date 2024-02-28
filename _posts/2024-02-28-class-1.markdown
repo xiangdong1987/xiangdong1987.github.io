@@ -22,6 +22,7 @@ brew install go
 #Execute and wait for completion
 brew install npm
 ```
+
 # Prepare the tools
 ## Code tools
 Use the VSCode tool, you should all have it installed.
