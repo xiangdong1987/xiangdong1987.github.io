@@ -1,0 +1,35 @@
+---
+layout: post
+title:  Preparation work
+date:   2024-02-28
+categories: Lession
+---
+# Preparation work
+## Sign up for GitHub 
+GitHub is the largest open-source community and a free version control tool that helps with the rapid evolution of projects. You may need to download the app and bind it with your phone.定。
+## Prepare the environment
+Using a Mac computer is the most convenient; you can use Homebrew to manage programming software, and it can be installed according to the following official installation method.
+
+link：https://brew.sh/ 
+
+* Prepare the Go environment
+```shell
+#Execute and wait for completion
+brew install go
+```
+* Prepare the npm environment
+```shell
+#Execute and wait for completion
+brew install npm
+```
+# Prepare the tools
+## Code tools
+Use the VSCode tool, you should all have it installed.
+## Plugin installation
+You can install the following plugins
+* SQLite
+* Go
+* Swagger Viewer
+* Vue Language Features (Volar)
+# Finish
+Once the above operations are completed, we can play together. Contact me and I will add you to my project.
